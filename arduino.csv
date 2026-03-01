@@ -1,0 +1,8514 @@
+prompt,code
+Measure distance using ultrasonic sensor (HC-SR04).,"const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+
+  Serial.println(distance);
+  delay(500);
+}"
+Display a counter on 7-segment display using shift register.,"int latchPin = 8;
+int clockPin = 12;
+int dataPin  = 11;
+
+byte digits[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66,
+                 0x6D, 0x7D, 0x07, 0x7F, 0x6F};
+
+void setup() {
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, MSBFIRST, digits[i]);
+    digitalWrite(latchPin, HIGH);
+    delay(1000);
+  }
+}"
+Detect light level using LDR and turn on LED if dark.,"void setup() {
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  int lightLevel = analogRead(A0);
+  if (lightLevel < 300) {
+    digitalWrite(8, HIGH);
+  } else {
+    digitalWrite(8, LOW);
+  }
+}"
+Log temperature to Serial every 5 seconds using millis().,"unsigned long prevTime = 0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (millis() - prevTime >= 5000) {
+    int reading = analogRead(A1);
+    float temp = (reading * 5.0 / 1023.0) * 100;
+    Serial.println(temp);
+    prevTime = millis();
+  }
+}"
+Control LED brightness with 2 buttons (up/down).,"int brightness = 128;
+
+void setup() {
+  pinMode(2, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(2) == LOW && brightness < 255) {
+    brightness += 5;
+    delay(200);
+  }
+  if (digitalRead(3) == LOW && brightness > 0) {
+    brightness -= 5;
+    delay(200);
+  }
+  analogWrite(9, brightness);
+}"
+Simulate traffic light system with LEDs.,"void setup() {
+  pinMode(6, OUTPUT); // Red
+  pinMode(5, OUTPUT); // Yellow
+  pinMode(4, OUTPUT); // Green
+}
+
+void loop() {
+  digitalWrite(6, HIGH); // Red
+  delay(3000);
+  digitalWrite(6, LOW);
+  digitalWrite(5, HIGH); // Yellow
+  delay(1000);
+  digitalWrite(5, LOW);
+  digitalWrite(4, HIGH); // Green
+  delay(3000);
+  digitalWrite(4, LOW);
+}"
+Light chase effect with 6 LEDs.,"int leds[] = {2, 3, 4, 5, 6, 7};
+
+void setup() {
+  for (int i = 0; i < 6; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+}
+
+void loop() {
+  for (int i = 0; i < 6; i++) {
+    digitalWrite(leds[i], HIGH);
+    delay(100);
+    digitalWrite(leds[i], LOW);
+  }
+}"
+Control LED brightness using serial input (0–255).,"void setup() {
+  Serial.begin(9600);
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  if (Serial.available()) {
+    int val = Serial.parseInt();
+    val = constrain(val, 0, 255);
+    analogWrite(9, val);
+  }
+}"
+Buzzer alarm on motion detection with PIR sensor.,"void setup() {
+  pinMode(2, INPUT);
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(2) == HIGH) {
+    tone(8, 1000);
+    delay(1000);
+    noTone(8);
+  }
+}"
+Countdown timer from 10 seconds on Serial.,"void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  for (int i = 10; i >= 0; i--) {
+    Serial.println(i);
+    delay(1000);
+  }
+  Serial.println(""Time's up!"");
+  while (1);
+}"
+Read temperature and humidity using DHT11 sensor.,"#include <DHT.h>
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  Serial.print(""Temp: "");
+  Serial.print(t);
+  Serial.print(""°C  Humidity: "");
+  Serial.print(h);
+  Serial.println(""%"");
+  delay(2000);
+}"
+Display scrolling text on OLED screen using SSD1306.,"#include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+void setup() {
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+}
+
+void loop() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 30);
+  display.print(""Hello Arduino!"");
+  display.display();
+  delay(1000);
+}"
+Control servo motor angle with potentiometer.,"#include <Servo.h>
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  int val = analogRead(A0);
+  int angle = map(val, 0, 1023, 0, 180);
+  myServo.write(angle);
+  delay(15);
+}"
+Store and read value from EEPROM.,"#include <EEPROM.h>
+
+void setup() {
+  Serial.begin(9600);
+  EEPROM.write(0, 123);
+  delay(1000);
+  int value = EEPROM.read(0);
+  Serial.print(""EEPROM Value: "");
+  Serial.println(value);
+}
+
+void loop() {
+}"
+Measure light intensity with LDR and display on LCD.,"#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  lcd.begin(16, 2);
+}
+
+void loop() {
+  int lightVal = analogRead(A0);
+  lcd.setCursor(0, 0);
+  lcd.print(""Light: "");
+  lcd.print(lightVal);
+  delay(1000);
+}"
+Control a DC motor with L298N and pushbutton.,"int in1 = 6;
+int in2 = 7;
+int button = 2;
+
+void setup() {
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(button, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(button) == LOW) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+  } else {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+  }
+}"
+Display analog sensor data as bar graph on LED strip (Neopixel).,"#include <Adafruit_NeoPixel.h>
+
+#define PIN 6
+#define NUMPIXELS 10
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show();
+}
+
+void loop() {
+  int val = analogRead(A0);
+  int num = map(val, 0, 1023, 0, NUMPIXELS);
+  for (int i = 0; i < NUMPIXELS; i++) {
+    if (i < num) strip.setPixelColor(i, strip.Color(0, 150, 0));
+    else strip.setPixelColor(i, 0);
+  }
+  strip.show();
+  delay(100);
+}"
+Detect tilt using accelerometer (MPU6050).,"#include <Wire.h>
+#include <MPU6050.h>
+
+MPU6050 mpu;
+
+void setup() {
+  Serial.begin(9600);
+  Wire.begin();
+  mpu.initialize();
+}
+
+void loop() {
+  int16_t ax, ay, az;
+  mpu.getAcceleration(&ax, &ay, &az);
+  Serial.print(""X: ""); Serial.print(ax);
+  Serial.print("" Y: ""); Serial.print(ay);
+  Serial.print("" Z: ""); Serial.println(az);
+  delay(500);
+}"
+Scan I2C bus for connected devices.,"#include <Wire.h>
+
+void setup() {
+  Wire.begin();
+  Serial.begin(9600);
+  Serial.println(""Scanning..."");
+  for (byte addr = 1; addr < 127; addr++) {
+    Wire.beginTransmission(addr);
+    if (Wire.endTransmission() == 0) {
+      Serial.print(""Found device at 0x"");
+      Serial.println(addr, HEX);
+    }
+  }
+  Serial.println(""Done."");
+}
+
+void loop() {
+}"
+Control relay module to turn on lamp for 10 seconds.,"int relayPin = 7;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, LOW);
+}
+
+void loop() {
+  digitalWrite(relayPin, HIGH);
+  delay(10000);
+  digitalWrite(relayPin, LOW);
+  delay(5000);
+}"
+Control relay module to turn on lamp for 10 seconds.,"int relayPin = 7;
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, LOW);
+}
+void loop() {
+  digitalWrite(relayPin, HIGH);
+  delay(10000);
+  digitalWrite(relayPin, LOW);
+  delay(5000);
+}"
+Read temperature from DHT11 sensor and display on serial monitor.,"#include <DHT.h>
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+void loop() {
+  float t = dht.readTemperature();
+  if (!isnan(t)) {
+    Serial.print(""Temperature: "");
+    Serial.print(t);
+    Serial.println("" °C"");
+  }
+  delay(2000);
+}"
+Motion-activated LED using PIR sensor.,"int pirPin = 3;
+int ledPin = 13;
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+void loop() {
+  if (digitalRead(pirPin) == HIGH) {
+    digitalWrite(ledPin, HIGH);
+    Serial.println(""Motion detected!"");
+    delay(3000);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(100);
+}"
+Ultrasonic sensor distance measurement.,"#define TRIG_PIN 9
+#define ECHO_PIN 10
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+}
+void loop() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  int distance = duration * 0.034 / 2;
+  
+  Serial.print(""Distance: "");
+  Serial.print(distance);
+  Serial.println("" cm"");
+  delay(500);
+}"
+Soil moisture sensor for plant watering system.,"int moisturePin = A0;
+int pumpPin = 8;
+int threshold = 500;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pumpPin, OUTPUT);
+  digitalWrite(pumpPin, LOW);
+}
+void loop() {
+  int moisture = analogRead(moisturePin);
+  Serial.print(""Moisture: "");
+  Serial.println(moisture);
+  
+  if (moisture < threshold) {
+    digitalWrite(pumpPin, HIGH);
+    delay(2000);
+    digitalWrite(pumpPin, LOW);
+  }
+  delay(5000);
+}"
+RGB LED color cycle.,"int redPin = 9;
+int greenPin = 10;
+int bluePin = 11;
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+void loop() {
+  // Red
+  setColor(255, 0, 0);
+  delay(1000);
+  // Green
+  setColor(0, 255, 0);
+  delay(1000);
+  // Blue
+  setColor(0, 0, 255);
+  delay(1000);
+  // Yellow
+  setColor(255, 255, 0);
+  delay(1000);
+}
+void setColor(int red, int green, int blue) {
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+}"
+Light-dependent resistor to control LED brightness.,"int ldrPin = A0;
+int ledPin = 9;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+}
+void loop() {
+  int lightLevel = analogRead(ldrPin);
+  int brightness = map(lightLevel, 0, 1023, 255, 0);
+  analogWrite(ledPin, brightness);
+  
+  Serial.print(""Light: "");
+  Serial.print(lightLevel);
+  Serial.print("" | Brightness: "");
+  Serial.println(brightness);
+  delay(100);
+}"
+Button-controlled servo motor position.,"#include <Servo.h>
+int buttonPin = 2;
+int servoPin = 9;
+Servo myServo;
+int angle = 0;
+
+void setup() {
+  myServo.attach(servoPin);
+  pinMode(buttonPin, INPUT_PULLUP);
+  myServo.write(angle);
+}
+void loop() {
+  if (digitalRead(buttonPin) == LOW) {
+    angle += 45;
+    if (angle > 180) {
+      angle = 0;
+    }
+    myServo.write(angle);
+    delay(500);
+  }
+}"
+Sound sensor to detect claps and toggle LED.,"int soundPin = A0;
+int ledPin = 13;
+boolean ledState = false;
+int threshold = 500;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+}
+void loop() {
+  int soundValue = analogRead(soundPin);
+  Serial.println(soundValue);
+  
+  if (soundValue > threshold) {
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+    delay(300);
+  }
+  delay(10);
+}"
+Temperature-controlled cooling fan.,"#include <DHT.h>
+#define DHTPIN 4
+#define DHTTYPE DHT22
+#define FANPIN 8
+#define TEMP_THRESHOLD 27.0
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  pinMode(FANPIN, OUTPUT);
+  digitalWrite(FANPIN, LOW);
+}
+void loop() {
+  float temp = dht.readTemperature();
+  
+  if (!isnan(temp)) {
+    Serial.print(""Temperature: "");
+    Serial.print(temp);
+    Serial.println("" °C"");
+    
+    if (temp >= TEMP_THRESHOLD) {
+      digitalWrite(FANPIN, HIGH);
+      Serial.println(""Fan ON"");
+    } else {
+      digitalWrite(FANPIN, LOW);
+      Serial.println(""Fan OFF"");
+    }
+  }
+  delay(2000);
+}"
+WiFi weather fetch using ESP8266 and display on Serial.,"#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+
+const char* ssid = ""YOUR_SSID"";
+const char* password = ""YOUR_PASS"";
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(""."");
+  }
+  Serial.println(""\nConnected!"");
+}
+
+void loop() {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin(""http://api.weatherapi.com/v1/current.json?key=YOUR_KEY&q=London"");
+    int httpCode = http.GET();
+    if (httpCode == 200) {
+      String payload = http.getString();
+      Serial.println(payload);
+    } else {
+      Serial.println(""Failed to fetch data"");
+    }
+    http.end();
+  }
+  delay(60000);
+}"
+RFID door lock using MFRC522 module.,"#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+MFRC522 rfid(SS_PIN, RST_PIN);
+byte masterCard[] = {0xDE, 0xAD, 0xBE, 0xEF};
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+  pinMode(8, OUTPUT); // Lock control
+}
+
+void loop() {
+  if (!rfid.PICC_IsNewCardPresent()) return;
+  if (!rfid.PICC_ReadCardSerial()) return;
+
+  bool match = true;
+  for (byte i = 0; i < 4; i++) {
+    if (rfid.uid.uidByte[i] != masterCard[i]) {
+      match = false;
+      break;
+    }
+  }
+
+  if (match) {
+    digitalWrite(8, HIGH);
+    delay(5000);
+    digitalWrite(8, LOW);
+  } else {
+    Serial.println(""Access Denied"");
+  }
+  rfid.PICC_HaltA();
+}"
+Data logger using SD card and temperature sensor.,"#include <SD.h>
+#include <SPI.h>
+
+File logFile;
+
+void setup() {
+  Serial.begin(9600);
+  if (!SD.begin(4)) {
+    Serial.println(""SD fail"");
+    return;
+  }
+}
+
+void loop() {
+  int temp = analogRead(A0);
+  float c = temp * 5.0 / 1023.0 * 100;
+
+  logFile = SD.open(""log.txt"", FILE_WRITE);
+  if (logFile) {
+    logFile.println(c);
+    logFile.close();
+  }
+  delay(10000);
+}"
+Stepper motor control with A4988 and potentiometer.,"const int dirPin = 2;
+const int stepPin = 3;
+
+void setup() {
+  pinMode(stepPin, OUTPUT);
+  pinMode(dirPin, OUTPUT);
+}
+
+void loop() {
+  int speedVal = analogRead(A0);
+  int delayTime = map(speedVal, 0, 1023, 1000, 10);
+  digitalWrite(dirPin, HIGH);
+  digitalWrite(stepPin, HIGH);
+  delayMicroseconds(delayTime);
+  digitalWrite(stepPin, LOW);
+  delayMicroseconds(delayTime);
+}"
+Capacitive touch sensor to toggle LED.,"int touchPin = 2;
+int ledPin = 13;
+bool ledState = false;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(touchPin) == HIGH) {
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+    delay(500);
+  }
+}"
+Control NeoPixel colors with 3 potentiometers (RGB).,"#include <Adafruit_NeoPixel.h>
+#define PIN 6
+
+Adafruit_NeoPixel strip(1, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show();
+}
+
+void loop() {
+  int r = analogRead(A0) / 4;
+  int g = analogRead(A1) / 4;
+  int b = analogRead(A2) / 4;
+  strip.setPixelColor(0, strip.Color(r, g, b));
+  strip.show();
+  delay(50);
+}"
+Ultrasonic parking sensor with buzzer warning.,"#define trigPin 9
+#define echoPin 10
+#define buzzer 8
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW); delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  int distance = duration * 0.034 / 2;
+
+  if (distance < 20) {
+    tone(buzzer, 1000);
+  } else {
+    noTone(buzzer);
+  }
+  delay(100);
+}"
+Touchless hand sanitizer trigger with IR sensor and relay.,"int irSensor = 2;
+int relay = 7;
+
+void setup() {
+  pinMode(irSensor, INPUT);
+  pinMode(relay, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(irSensor) == LOW) {
+    digitalWrite(relay, HIGH);
+    delay(1000);
+    digitalWrite(relay, LOW);
+  }
+}"
+Display system time using DS3231 RTC module.,"#include <Wire.h>
+#include <RTClib.h>
+
+RTC_DS3231 rtc;
+
+void setup () {
+  Serial.begin(9600);
+  rtc.begin();
+}
+
+void loop () {
+  DateTime now = rtc.now();
+  Serial.print(now.hour());
+  Serial.print(':');
+  Serial.print(now.minute());
+  Serial.print(':');
+  Serial.println(now.second());
+  delay(1000);
+}"
+DIY digital lock with keypad and servo.,"#include <Keypad.h>
+#include <Servo.h>
+
+const byte ROWS = 4, COLS = 4;
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'}, {'4','5','6','B'},
+  {'7','8','9','C'}, {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {9,8,7,6};
+byte colPins[COLS] = {5,4,3,2};
+
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+Servo lockServo;
+
+String password = ""1234"";
+String input = """";
+
+void setup() {
+  lockServo.attach(10);
+  lockServo.write(0);
+}
+
+void loop() {
+  char key = keypad.getKey();
+  if (key) {
+    if (key == '#') {
+      if (input == password) {
+        lockServo.write(90);
+        delay(3000);
+        lockServo.write(0);
+      }
+      input = """";
+    } else {
+      input += key;
+    }
+  }
+}"
+Water Sensor connected to A0,"const int waterSensorPin = A0;
+const int ledPin = 13;
+
+int sensorValue = 0;
+int threshold = 500; // Adjust based on your sensor calibration
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600); // For debugging via Serial Monitor
+}
+
+void loop() {
+  sensorValue = analogRead(waterSensorPin); // Read water sensor value
+  Serial.print(""Water Sensor Value: "");
+  Serial.println(sensorValue);
+
+  if (sensorValue > threshold) {
+    digitalWrite(ledPin, HIGH); // Turn on LED
+  } else {
+    digitalWrite(ledPin, LOW);  // Turn off LED
+  }
+
+  delay(500); // Wait half a second
+}"
+Blink LED,"const int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(ledPin, HIGH);
+  delay(1000);
+  digitalWrite(ledPin, LOW);
+  delay(1000);
+}"
+Button Press,"const int buttonPin = 2;
+const int ledPin = 13;
+int buttonState = 0;
+
+void setup() {
+  pinMode(buttonPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  buttonState = digitalRead(buttonPin);
+  if (buttonState == HIGH) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}"
+Ultrasonic Sensor,"const int trigPin = 9;
+const int echoPin = 10;
+long duration;
+int distance;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+  
+  Serial.print(""Distance: "");
+  Serial.print(distance);
+  Serial.println("" cm"");
+  delay(1000);
+}"
+Temperature Sensor,"const int tempPin = A0;
+float voltage, temperature;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int raw = analogRead(tempPin);
+  voltage = raw * (5.0 / 1023.0);
+  temperature = voltage * 100;
+  Serial.print(""Temp: "");
+  Serial.print(temperature);
+  Serial.println("" °C"");
+  delay(1000);
+}"
+Buzzer with Button Trigger,"const int buzzerPin = 8;
+const int buttonPin = 2;
+
+void setup() {
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(buttonPin, INPUT);
+}
+
+void loop() {
+  if (digitalRead(buttonPin) == HIGH) {
+    digitalWrite(buzzerPin, HIGH);
+  } else {
+    digitalWrite(buzzerPin, LOW);
+  }
+}"
+LDR Sensor,"const int ldrPin = A0;
+int ldrValue;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  ldrValue = analogRead(ldrPin);
+  Serial.print(""LDR Value: "");
+  Serial.println(ldrValue);
+  delay(500);
+}"
+Servo Motor Control,"#include <Servo.h>
+Servo myServo;
+const int potPin = A0;
+int angle;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  int val = analogRead(potPin);
+  angle = map(val, 0, 1023, 0, 180);
+  myServo.write(angle);
+  delay(15);
+}"
+Soil Moisture Sensor with Relay Pump,"const int soilPin = A0;
+const int relayPin = 8;
+int moistureLevel;
+int threshold = 400;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  moistureLevel = analogRead(soilPin);
+  Serial.print(""Moisture: "");
+  Serial.println(moistureLevel);
+
+  if (moistureLevel < threshold) {
+    digitalWrite(relayPin, HIGH); // Water pump ON
+  } else {
+    digitalWrite(relayPin, LOW);  // Water pump OFF
+  }
+
+  delay(1000);
+}"
+MPU6050 Accelerometer/Gyro Sensor,"#include <Wire.h>
+const int MPU = 0x68;
+
+int16_t AccX, AccY, AccZ;
+
+void setup() {
+  Wire.begin();
+  Wire.beginTransmission(MPU);
+  Wire.write(0x6B);
+  Wire.write(0);
+  Wire.endTransmission(true);
+  Serial.begin(9600);
+}
+
+void loop() {
+  Wire.beginTransmission(MPU);
+  Wire.write(0x3B);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU, 6, true);
+
+  AccX = Wire.read() << 8 | Wire.read();
+  AccY = Wire.read() << 8 | Wire.read();
+  AccZ = Wire.read() << 8 | Wire.read();
+
+  Serial.print(""AccX: ""); Serial.print(AccX);
+  Serial.print("" | AccY: ""); Serial.print(AccY);
+  Serial.print("" | AccZ: ""); Serial.println(AccZ);
+
+  delay(500);
+}"
+ESP8266 WiFi Module (AT Commands),"void setup() {
+  Serial.begin(9600);       // Arduino Serial Monitor
+  Serial1.begin(115200);    // ESP8266 Communication
+}
+
+void loop() {
+  Serial1.println(""AT"");    // Test communication
+  delay(1000);
+
+  if (Serial1.available()) {
+    while (Serial1.available()) {
+      char c = Serial1.read();
+      Serial.write(c);
+    }
+  }
+}"
+Magnetic Door Sensor (Reed Switch),"const int reedPin = 2;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(reedPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int state = digitalRead(reedPin);
+  if (state == LOW) {
+    Serial.println(""Door Closed"");
+    digitalWrite(ledPin, LOW);
+  } else {
+    Serial.println(""Door Open"");
+    digitalWrite(ledPin, HIGH);
+  }
+  delay(500);
+}"
+PIR Motion Sensor,"const int pirPin = 2;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int motion = digitalRead(pirPin);
+  if (motion == HIGH) {
+    digitalWrite(ledPin, HIGH);
+    Serial.println(""Motion Detected!"");
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(1000);
+}"
+4x4 Keypad Interface,"#include <Keypad.h>
+
+const byte ROWS = 4;
+const byte COLS = 4;
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {9, 8, 7, 6};
+byte colPins[COLS] = {5, 4, 3, 2};
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  char key = keypad.getKey();
+  if (key) {
+    Serial.print(""Key Pressed: "");
+    Serial.println(key);
+  }
+}"
+Relay Module Control,"const int relayPin = 7;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(relayPin, HIGH);  // Turn ON relay
+  Serial.println(""Relay ON"");
+  delay(2000);
+
+  digitalWrite(relayPin, LOW);   // Turn OFF relay
+  Serial.println(""Relay OFF"");
+  delay(2000);
+}"
+RFID Module (RC522),"#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+MFRC522 rfid(SS_PIN, RST_PIN);
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+  Serial.println(""Scan RFID Card"");
+}
+
+void loop() {
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) return;
+
+  Serial.print(""UID: "");
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    Serial.print(rfid.uid.uidByte[i], HEX);
+    Serial.print("" "");
+  }
+  Serial.println();
+  rfid.PICC_HaltA();
+}"
+Sound Sensor (Microphone Module),"const int soundPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int soundLevel = analogRead(soundPin);
+  Serial.print(""Sound Level: "");
+  Serial.println(soundLevel);
+  delay(500);
+}"
+IR Obstacle Avoidance Sensor,"const int irPin = 7;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(irPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (digitalRead(irPin) == LOW) {
+    Serial.println(""Obstacle Detected"");
+    digitalWrite(ledPin, HIGH);
+  } else {
+    Serial.println(""No Obstacle"");
+    digitalWrite(ledPin, LOW);
+  }
+  delay(300);
+}"
+DC Motor Control with L298N Driver,"const int ENA = 9;
+const int IN1 = 8;
+const int IN2 = 7;
+
+void setup() {
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(ENA, 200); // Speed
+  delay(3000);
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  delay(3000);
+}"
+OLED Display (SSD1306 via I2C),"#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+void setup() {
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10);
+  display.println(""Hello, OLED!"");
+  display.display();
+}
+
+void loop() {
+  delay(2000);
+}"
+HC-05 Bluetooth Module,"void setup() {
+  Serial.begin(9600);     // Serial monitor
+  Serial1.begin(9600);    // Bluetooth module
+}
+
+void loop() {
+  if (Serial.available()) {
+    Serial1.write(Serial.read());
+  }
+  if (Serial1.available()) {
+    Serial.write(Serial1.read());
+  }
+}"
+MQ-2 Gas Sensor,"const int gasPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(gasPin);
+  Serial.print(""Gas Level: "");
+  Serial.println(value);
+  delay(1000);
+}"
+Real-Time Clock (DS3231),"#include <Wire.h>
+#include ""RTClib.h""
+
+RTC_DS3231 rtc;
+
+void setup () {
+  Serial.begin(9600);
+  rtc.begin();
+}
+
+void loop () {
+  DateTime now = rtc.now();
+  Serial.print(now.hour());
+  Serial.print(':');
+  Serial.print(now.minute());
+  Serial.print(':');
+  Serial.println(now.second());
+  delay(1000);
+}"
+GPS Module (NEO-6M),"#include <SoftwareSerial.h>
+SoftwareSerial gpsSerial(4, 3);
+
+void setup() {
+  Serial.begin(9600);
+  gpsSerial.begin(9600);
+}
+
+void loop() {
+  while (gpsSerial.available()) {
+    char c = gpsSerial.read();
+    Serial.write(c);
+  }
+}"
+EEPROM Read/Write,"#include <EEPROM.h>
+
+void setup() {
+  Serial.begin(9600);
+  EEPROM.write(0, 123);
+  int val = EEPROM.read(0);
+  Serial.print(""Stored value: "");
+  Serial.println(val);
+}
+
+void loop() {}"
+7-Segment Display (Common Cathode),"int segPins[] = {2, 3, 4, 5, 6, 7, 8};
+
+byte digits[10][7] = {
+  {1,1,1,1,1,1,0},
+  {0,1,1,0,0,0,0},
+  {1,1,0,1,1,0,1},
+  {1,1,1,1,0,0,1},
+  {0,1,1,0,0,1,1},
+  {1,0,1,1,0,1,1},
+  {1,0,1,1,1,1,1},
+  {1,1,1,0,0,0,0},
+  {1,1,1,1,1,1,1},
+  {1,1,1,1,0,1,1}
+};
+
+void setup() {
+  for (int i = 0; i < 7; i++) {
+    pinMode(segPins[i], OUTPUT);
+  }
+}
+
+void loop() {
+  for (int num = 0; num < 10; num++) {
+    for (int i = 0; i < 7; i++) {
+      digitalWrite(segPins[i], digits[num][i]);
+    }
+    delay(1000);
+  }
+}"
+Light Chaser LEDs,"int leds[] = {2, 3, 4, 5, 6};
+
+void setup() {
+  for (int i = 0; i < 5; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+}
+
+void loop() {
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(leds[i], HIGH);
+    delay(100);
+    digitalWrite(leds[i], LOW);
+  }
+}"
+Analog Joystick,"const int xPin = A0;
+const int yPin = A1;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int xVal = analogRead(xPin);
+  int yVal = analogRead(yPin);
+  Serial.print(""X: ""); Serial.print(xVal);
+  Serial.print("" | Y: ""); Serial.println(yVal);
+  delay(200);
+}"
+Servo Motor Control (with Potentiometer),"#include <Servo.h>
+
+Servo myServo;
+int potPin = A0;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  int potVal = analogRead(potPin);
+  int angle = map(potVal, 0, 1023, 0, 180);
+  myServo.write(angle);
+  delay(15);
+}"
+Push Button LED Toggle,"const int buttonPin = 2;
+const int ledPin = 13;
+bool ledState = false;
+bool lastButtonState = LOW;
+
+void setup() {
+  pinMode(buttonPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  bool currentState = digitalRead(buttonPin);
+  if (currentState == HIGH && lastButtonState == LOW) {
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+    delay(200); // Debounce
+  }
+  lastButtonState = currentState;
+}"
+Temperature Sensor (LM35),"const int tempPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int rawValue = analogRead(tempPin);
+  float voltage = rawValue * 5.0 / 1023.0;
+  float temperature = voltage * 100; // LM35 gives 10mV per °C
+  Serial.print(""Temperature: "");
+  Serial.print(temperature);
+  Serial.println("" °C"");
+  delay(1000);
+}"
+Buzzer with Tone,"const int buzzerPin = 8;
+
+void setup() {
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  tone(buzzerPin, 1000); // 1kHz
+  delay(500);
+  noTone(buzzerPin);
+  delay(500);
+}"
+Ultrasonic Sensor with LED Alert,"const int trigPin = 9;
+const int echoPin = 10;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+
+  Serial.print(""Distance: "");
+  Serial.print(distance);
+  Serial.println("" cm"");
+
+  if (distance < 20) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+
+  delay(500);
+}"
+Heartbeat Sensor,"const int pulsePin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int signal = analogRead(pulsePin);
+  Serial.println(signal);
+  delay(20);
+}"
+Flame Sensor,"const int flamePin = 2;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(flamePin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int state = digitalRead(flamePin);
+  if (state == LOW) {
+    Serial.println(""Flame Detected!"");
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(500);
+}"
+4-Digit 7-Segment Display (TM1637),"#include <TM1637Display.h>
+
+#define CLK 2
+#define DIO 3
+
+TM1637Display display(CLK, DIO);
+
+void setup() {
+  display.setBrightness(0x0f);
+}
+
+void loop() {
+  for (int i = 0; i < 10000; i++) {
+    display.showNumberDec(i);
+    delay(200);
+  }
+}"
+Capacitive Touch Sensor (TTP223),"const int touchPin = 4;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(touchPin) == HIGH) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}"
+Photodiode Light Detector,"const int lightPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int lightValue = analogRead(lightPin);
+  Serial.print(""Light Intensity: "");
+  Serial.println(lightValue);
+  delay(500);
+}"
+Rain Sensor,"const int rainPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int rainValue = analogRead(rainPin);
+  Serial.print(""Rain Sensor Value: "");
+  Serial.println(rainValue);
+  delay(1000);
+}"
+Relay Module Control (for Lamp),"const int relayPin = 7;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(relayPin, HIGH);  // Turn ON
+  delay(2000);
+  digitalWrite(relayPin, LOW);   // Turn OFF
+  delay(2000);
+}"
+Smoke Sensor (MQ-135),"const int smokePin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int level = analogRead(smokePin);
+  Serial.print(""Air Quality Level: "");
+  Serial.println(level);
+  delay(1000);
+}"
+Motion Alert using PIR + Buzzer,"const int pirPin = 2;
+const int buzzer = 8;
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(pirPin) == HIGH) {
+    tone(buzzer, 1000);
+    delay(1000);
+    noTone(buzzer);
+  }
+}"
+Bluetooth-Controlled LED,"char incoming;
+void setup() {
+  Serial.begin(9600);
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  if (Serial.available()) {
+    incoming = Serial.read();
+    if (incoming == '1') digitalWrite(13, HIGH);
+    else if (incoming == '0') digitalWrite(13, LOW);
+  }
+}"
+MQ-7 CO Gas Sensor,"const int coPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int level = analogRead(coPin);
+  Serial.print(""CO Level: "");
+  Serial.println(level);
+  delay(1000);
+}"
+Soil Moisture Controlled Pump (via Relay),"const int soilPin = A0;
+const int relayPin = 7;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(soilPin);
+  Serial.print(""Moisture: "");
+  Serial.println(value);
+
+  if (value < 500) {
+    digitalWrite(relayPin, HIGH); // Turn pump ON
+  } else {
+    digitalWrite(relayPin, LOW);  // Turn pump OFF
+  }
+  delay(1000);
+}"
+Tilt Sensor,"const int tiltPin = 2;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(tiltPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int state = digitalRead(tiltPin);
+  digitalWrite(ledPin, state);
+}"
+16x2 LCD with I2C,"#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+void setup() {
+  lcd.begin();
+  lcd.backlight();
+  lcd.print(""Hello, LCD!"");
+}
+
+void loop() {
+  lcd.setCursor(0, 1);
+  lcd.print(millis() / 1000);
+  delay(1000);
+}"
+Pulse Width Modulation (PWM) LED Fading,"const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  for (int brightness = 0; brightness <= 255; brightness++) {
+    analogWrite(ledPin, brightness);
+    delay(10);
+  }
+  for (int brightness = 255; brightness >= 0; brightness--) {
+    analogWrite(ledPin, brightness);
+    delay(10);
+  }
+}"
+IR Remote Controlled LED,"#include <IRremote.h>
+
+const int recv_pin = 11;
+IRrecv irrecv(recv_pin);
+decode_results results;
+const int ledPin = 13;
+
+void setup() {
+  Serial.begin(9600);
+  irrecv.enableIRIn();
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (irrecv.decode(&results)) {
+    Serial.println(results.value, HEX);
+    if (results.value == 0xFF30CF) {
+      digitalWrite(ledPin, HIGH);
+    } else if (results.value == 0xFF18E7) {
+      digitalWrite(ledPin, LOW);
+    }
+    irrecv.resume();
+  }
+}"
+Joystick Module (2-Axis),"const int xPin = A0;
+const int yPin = A1;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int xVal = analogRead(xPin);
+  int yVal = analogRead(yPin);
+
+  Serial.print(""X: "");
+  Serial.print(xVal);
+  Serial.print("" | Y: "");
+  Serial.println(yVal);
+  delay(500);
+}"
+MQ-2 Smoke & LPG Gas Sensor,"const int mq2Pin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(mq2Pin);
+  Serial.print(""MQ-2 Sensor Value: "");
+  Serial.println(value);
+  delay(1000);
+}"
+Water Flow Sensor (YF-S201),"volatile int flowCount;
+const int flowPin = 2;
+
+void setup() {
+  pinMode(flowPin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(flowPin), countFlow, RISING);
+  Serial.begin(9600);
+}
+
+void loop() {
+  flowCount = 0;
+  interrupts();
+  delay(1000);
+  noInterrupts();
+  float flowRate = flowCount / 7.5; // adjust based on sensor
+  Serial.print(""Flow Rate: "");
+  Serial.print(flowRate);
+  Serial.println("" L/min"");
+}
+
+void countFlow() {
+  flowCount++;
+}"
+RTC DS3231 Time Display,"#include <Wire.h>
+#include <RTClib.h>
+
+RTC_DS3231 rtc;
+
+void setup() {
+  Serial.begin(9600);
+  rtc.begin();
+}
+
+void loop() {
+  DateTime now = rtc.now();
+  Serial.print(now.hour());
+  Serial.print("":"");
+  Serial.print(now.minute());
+  Serial.print("":"");
+  Serial.println(now.second());
+  delay(1000);
+}"
+Sound Sensor LED Blink,"const int soundPin = A0;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int soundVal = analogRead(soundPin);
+  if (soundVal > 500) {
+    digitalWrite(ledPin, HIGH);
+    delay(100);
+    digitalWrite(ledPin, LOW);
+  }
+  delay(200);
+}"
+GPS Module (Neo-6M),"#include <SoftwareSerial.h>
+
+SoftwareSerial gpsSerial(4, 3); // RX, TX
+
+void setup() {
+  Serial.begin(9600);
+  gpsSerial.begin(9600);
+}
+
+void loop() {
+  while (gpsSerial.available()) {
+    char c = gpsSerial.read();
+    Serial.print(c);
+  }
+}"
+LDR Sensor Street Light (Auto ON at Night),"const int ldrPin = A0;
+const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int ldrValue = analogRead(ldrPin);
+  if (ldrValue < 500) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}"
+DC Motor Control with L298N,"const int in1 = 8;
+const int in2 = 9;
+
+void setup() {
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);  // Forward
+  delay(2000);
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH); // Reverse
+  delay(2000);
+}"
+RFID Door Lock System,"#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+MFRC522 rfid(SS_PIN, RST_PIN);
+const int relay = 8;
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+  pinMode(relay, OUTPUT);
+}
+
+void loop() {
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) return;
+
+  String uid = """";
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    uid += String(rfid.uid.uidByte[i], HEX);
+  }
+  Serial.println(uid);
+
+  if (uid == ""12345678"") {  // Replace with your tag UID
+    digitalWrite(relay, HIGH);
+    delay(3000);
+    digitalWrite(relay, LOW);
+  }
+  rfid.PICC_HaltA();
+}"
+Capacitive Soil Moisture Sensor,"const int sensorPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int moisture = analogRead(sensorPin);
+  Serial.print(""Soil Moisture: "");
+  Serial.println(moisture);
+  delay(1000);
+}"
+DC Fan Control with Temperature (LM35 + Transistor),"const int tempPin = A0;
+const int fanPin = 9;
+
+void setup() {
+  pinMode(fanPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int reading = analogRead(tempPin);
+  float tempC = (reading * 5.0 * 100.0) / 1024.0;
+
+  if (tempC > 30) {
+    digitalWrite(fanPin, HIGH);
+  } else {
+    digitalWrite(fanPin, LOW);
+  }
+
+  Serial.print(""Temp: "");
+  Serial.print(tempC);
+  Serial.println("" C"");
+  delay(1000);
+}"
+Flame Sensor Fire Alarm,"const int flamePin = A0;
+const int buzzer = 9;
+
+void setup() {
+  pinMode(buzzer, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(flamePin);
+  if (value < 200) {
+    tone(buzzer, 1000);
+    Serial.println(""Flame Detected!"");
+  } else {
+    noTone(buzzer);
+  }
+  delay(500);
+}"
+RFID Tag Counter System,"#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+int count = 0;
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  mfrc522.PCD_Init();
+}
+
+void loop() {
+  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) return;
+
+  count++;
+  Serial.print(""RFID Count: "");
+  Serial.println(count);
+  delay(1000);
+  mfrc522.PICC_HaltA();
+}"
+Servo Motor Control with Potentiometer,"#include <Servo.h>
+
+Servo myServo;
+const int potPin = A0;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  int potValue = analogRead(potPin);
+  int angle = map(potValue, 0, 1023, 0, 180);
+  myServo.write(angle);
+  delay(15);
+}"
+PIR Sensor with LED Strip,"const int pirPin = 2;
+const int ledPin = 6;
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(pirPin) == HIGH) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}"
+Rain Alert System with Buzzer,"const int rainPin = A0;
+const int buzzerPin = 8;
+
+void setup() {
+  pinMode(buzzerPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int rainVal = analogRead(rainPin);
+  if (rainVal < 300) {
+    tone(buzzerPin, 1000);
+    Serial.println(""🌧 Rain Detected!"");
+  } else {
+    noTone(buzzerPin);
+  }
+  delay(1000);
+}"
+IR Obstacle Avoidance Sensor,"const int irPin = 7;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(irPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(irPin) == LOW) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}"
+GSM Module Send SMS (SIM800L),"#include <SoftwareSerial.h>
+
+SoftwareSerial gsm(7, 8); // RX, TX
+
+void setup() {
+  gsm.begin(9600);
+  delay(1000);
+  gsm.println(""AT+CMGF=1"");
+  delay(1000);
+  gsm.println(""AT+CMGS=\""+1234567890\""""); // Replace with your number
+  delay(1000);
+  gsm.print(""Hello from Arduino!"");
+  delay(500);
+  gsm.write(26); // Ctrl+Z
+}
+
+void loop() {}"
+Arduino Morse Code Blinker,"const int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  dot(); dot(); dot();
+  delay(300);
+  dash(); dash(); dash();
+  delay(300);
+  dot(); dot(); dot();
+  delay(3000);
+}
+
+void dot() {
+  digitalWrite(ledPin, HIGH);
+  delay(250);
+  digitalWrite(ledPin, LOW);
+  delay(250);
+}
+
+void dash() {
+  digitalWrite(ledPin, HIGH);
+  delay(750);
+  digitalWrite(ledPin, LOW);
+  delay(250);
+}"
+Gas Sensor Alert System (MQ-135),"const int gasPin = A0;
+const int buzzerPin = 9;
+
+void setup() {
+  pinMode(buzzerPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int gasValue = analogRead(gasPin);
+  Serial.print(""Gas Level: "");
+  Serial.println(gasValue);
+
+  if (gasValue > 400) {
+    tone(buzzerPin, 1000);
+  } else {
+    noTone(buzzerPin);
+  }
+  delay(1000);
+}"
+Bluetooth Controlled LED (HC-05),"#include <SoftwareSerial.h>
+SoftwareSerial bt(2, 3); // RX, TX
+const int led = 13;
+
+void setup() {
+  bt.begin(9600);
+  pinMode(led, OUTPUT);
+}
+
+void loop() {
+  if (bt.available()) {
+    char cmd = bt.read();
+    if (cmd == '1') digitalWrite(led, HIGH);
+    if (cmd == '0') digitalWrite(led, LOW);
+  }
+}"
+Touch Sensor Module (TTP223),"const int touchPin = 4;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(touchPin) == HIGH) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}"
+Real-Time Clock Alarm (DS1307 + Buzzer),"#include <Wire.h>
+#include <RTClib.h>
+
+RTC_DS1307 rtc;
+const int buzzer = 8;
+
+void setup() {
+  Serial.begin(9600);
+  rtc.begin();
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  DateTime now = rtc.now();
+  if (now.hour() == 7 && now.minute() == 0) {
+    tone(buzzer, 1000);
+    delay(5000);
+    noTone(buzzer);
+  }
+  delay(1000);
+}"
+Vibration Sensor Alarm System (SW-420),"const int vibPin = 2;
+const int buzzer = 8;
+
+void setup() {
+  pinMode(vibPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int state = digitalRead(vibPin);
+  if (state == HIGH) {
+    tone(buzzer, 1000);
+    Serial.println(""Vibration Detected!"");
+    delay(1000);
+    noTone(buzzer);
+  }
+}"
+Ultrasonic Distance Logger to Serial Monitor,"const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW); delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+  
+  Serial.print(""Distance: "");
+  Serial.print(distance);
+  Serial.println("" cm"");
+  delay(1000);
+}"
+Automatic Plant Watering System,"const int pump = 8;
+const int soil = A0;
+
+void setup() {
+  pinMode(pump, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int moisture = analogRead(soil);
+  Serial.print(""Moisture: "");
+  Serial.println(moisture);
+
+  if (moisture < 400) {
+    digitalWrite(pump, HIGH);
+    delay(2000);
+    digitalWrite(pump, LOW);
+  }
+  delay(1000);
+}"
+Temperature Logger to SD Card,"#include <SD.h>
+#include <SPI.h>
+
+const int chipSelect = 4;
+const int tempPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+  SD.begin(chipSelect);
+}
+
+void loop() {
+  int val = analogRead(tempPin);
+  float temp = val * 5.0 * 100 / 1024.0;
+  
+  File dataFile = SD.open(""datalog.txt"", FILE_WRITE);
+  if (dataFile) {
+    dataFile.println(temp);
+    dataFile.close();
+  }
+  delay(2000);
+}"
+Relay Control via Push Button,"const int button = 2;
+const int relay = 7;
+bool state = false;
+
+void setup() {
+  pinMode(button, INPUT_PULLUP);
+  pinMode(relay, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(button) == LOW) {
+    state = !state;
+    digitalWrite(relay, state);
+    delay(500);
+  }
+}"
+Air Quality Monitoring (MQ-135 + OLED Display),"#include <Wire.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+const int airPin = A0;
+
+void setup() {
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+}
+
+void loop() {
+  int airQuality = analogRead(airPin);
+
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print(""Air Quality: "");
+  display.println(airQuality);
+  display.display();
+  delay(1000);
+}"
+Stepper Motor Control (28BYJ-48 + ULN2003),"#include <Stepper.h>
+
+const int stepsPerRevolution = 2048;
+Stepper myStepper(stepsPerRevolution, 8, 10, 9, 11);
+
+void setup() {
+  myStepper.setSpeed(15);
+}
+
+void loop() {
+  myStepper.step(stepsPerRevolution);
+  delay(1000);
+  myStepper.step(-stepsPerRevolution);
+  delay(1000);
+}"
+Hall Effect Sensor (Magnetic Field Detection),"const int hallPin = 2;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(hallPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int state = digitalRead(hallPin);
+  digitalWrite(ledPin, state);
+}"
+Motor Driver (L298N) with Joystick,"const int in1 = 9;
+const int in2 = 8;
+const int joyY = A0;
+
+void setup() {
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+}
+
+void loop() {
+  int y = analogRead(joyY);
+  if (y > 700) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+  } else if (y < 300) {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+  } else {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+  }
+}"
+LED Brightness Control with LDR,"const int ldrPin = A0;
+const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int ldrValue = analogRead(ldrPin);
+  int brightness = map(ldrValue, 0, 1023, 255, 0);
+  analogWrite(ledPin, brightness);
+  delay(100);
+}"
+Arduino Controlled Lock System (Solenoid + Keypad),"#include <Keypad.h>
+
+const byte ROWS = 4;
+const byte COLS = 4;
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'}, {'4','5','6','B'},
+  {'7','8','9','C'}, {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {9, 8, 7, 6};
+byte colPins[COLS] = {5, 4, 3, 2};
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+const String password = ""1234"";
+String input = """";
+const int lockPin = 10;
+
+void setup() {
+  pinMode(lockPin, OUTPUT);
+  digitalWrite(lockPin, LOW);
+}
+
+void loop() {
+  char key = keypad.getKey();
+  if (key) {
+    input += key;
+    if (input.length() == 4) {
+      if (input == password) {
+        digitalWrite(lockPin, HIGH);
+        delay(3000);
+        digitalWrite(lockPin, LOW);
+      }
+      input = """";
+    }
+  }
+}"
+LED Toggle with IR Remote (TSOP1738),"#include <IRremote.h>
+
+const int RECV_PIN = 11;
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+
+const int ledPin = 13;
+bool ledState = false;
+
+void setup() {
+  irrecv.enableIRIn();
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (irrecv.decode(&results)) {
+    if (results.value == 0xFFA25D) { // Replace with your remote's key code
+      ledState = !ledState;
+      digitalWrite(ledPin, ledState);
+    }
+    irrecv.resume();
+  }
+}"
+Pulse Sensor Heartbeat Monitor,"const int pulsePin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int pulseValue = analogRead(pulsePin);
+  Serial.println(pulseValue);
+  delay(100);
+}"
+GY-521 MPU6050 Accelerometer,"#include <Wire.h>
+const int MPU = 0x68;
+
+void setup() {
+  Wire.begin();
+  Wire.beginTransmission(MPU);
+  Wire.write(0x6B);
+  Wire.write(0);
+  Wire.endTransmission(true);
+  Serial.begin(9600);
+}
+
+void loop() {
+  Wire.beginTransmission(MPU);
+  Wire.write(0x3B);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU, 6, true);
+
+  int16_t ax = Wire.read() << 8 | Wire.read();
+  int16_t ay = Wire.read() << 8 | Wire.read();
+  int16_t az = Wire.read() << 8 | Wire.read();
+
+  Serial.print(""X = ""); Serial.print(ax);
+  Serial.print("" | Y = ""); Serial.print(ay);
+  Serial.print("" | Z = ""); Serial.println(az);
+  delay(500);
+}"
+Gas Leakage Auto Fan Control (MQ-2 + Relay),"const int gasPin = A0;
+const int fanRelay = 7;
+
+void setup() {
+  pinMode(fanRelay, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int gasLevel = analogRead(gasPin);
+  Serial.println(gasLevel);
+  if (gasLevel > 350) {
+    digitalWrite(fanRelay, HIGH);
+  } else {
+    digitalWrite(fanRelay, LOW);
+  }
+  delay(1000);
+}"
+Clap Switch using Sound Sensor,"const int soundPin = A0;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int soundValue = analogRead(soundPin);
+  Serial.println(soundValue);
+  if (soundValue > 600) {
+    digitalWrite(ledPin, !digitalRead(ledPin));
+    delay(500);
+  }
+}"
+LED Blinking Morse Code Translator,"const int ledPin = 13;
+String message = ""HELLO"";
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void dot() {
+  digitalWrite(ledPin, HIGH);
+  delay(200);
+  digitalWrite(ledPin, LOW);
+  delay(200);
+}
+
+void dash() {
+  digitalWrite(ledPin, HIGH);
+  delay(600);
+  digitalWrite(ledPin, LOW);
+  delay(200);
+}
+
+void morse(char c) {
+  switch (c) {
+    case 'H': dot(); dot(); dot(); dot(); break;
+    case 'E': dot(); break;
+    case 'L': dot(); dash(); dot(); dot(); break;
+    case 'O': dash(); dash(); dash(); break;
+  }
+  delay(600); // pause between letters
+}
+
+void loop() {
+  for (int i = 0; i < message.length(); i++) {
+    morse(message[i]);
+  }
+  delay(3000);
+}"
+Voice Controlled Home Automation (via Bluetooth Voice App),"#include <SoftwareSerial.h>
+SoftwareSerial bt(2, 3);
+const int fan = 6;
+const int light = 7;
+
+void setup() {
+  bt.begin(9600);
+  pinMode(fan, OUTPUT);
+  pinMode(light, OUTPUT);
+}
+
+void loop() {
+  if (bt.available()) {
+    String cmd = bt.readStringUntil('\n');
+    cmd.trim();
+    if (cmd == ""fan on"") digitalWrite(fan, HIGH);
+    else if (cmd == ""fan off"") digitalWrite(fan, LOW);
+    else if (cmd == ""light on"") digitalWrite(light, HIGH);
+    else if (cmd == ""light off"") digitalWrite(light, LOW);
+  }
+}"
+Soil Temperature Sensor (DS18B20),"#include <OneWire.h>
+#include <DallasTemperature.h>
+
+#define ONE_WIRE_BUS 2
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+
+void setup() {
+  Serial.begin(9600);
+  sensors.begin();
+}
+
+void loop() {
+  sensors.requestTemperatures();
+  float temp = sensors.getTempCByIndex(0);
+  Serial.print(""Soil Temp: "");
+  Serial.println(temp);
+  delay(2000);
+}"
+GSM Module SMS Alert (SIM800L),"#include <SoftwareSerial.h>
+SoftwareSerial gsm(7, 8);
+
+void setup() {
+  gsm.begin(9600);
+  delay(1000);
+  gsm.println(""AT+CMGF=1"");
+  delay(1000);
+  gsm.println(""AT+CMGS=\""+1234567890\"""");
+  delay(1000);
+  gsm.print(""Intruder Alert!"");
+  gsm.write(26);
+}
+
+void loop() {
+}"
+Servo Controlled Solar Tracker,"#include <Servo.h>
+
+Servo servo;
+const int ldrLeft = A0;
+const int ldrRight = A1;
+
+void setup() {
+  servo.attach(9);
+}
+
+void loop() {
+  int leftVal = analogRead(ldrLeft);
+  int rightVal = analogRead(ldrRight);
+  int diff = leftVal - rightVal;
+
+  int pos = servo.read();
+  if (diff > 50 && pos < 180) pos++;
+  else if (diff < -50 && pos > 0) pos--;
+
+  servo.write(pos);
+  delay(100);
+}"
+WiFi-Controlled LED (ESP8266 AT Commands),"#include <SoftwareSerial.h>
+SoftwareSerial esp(2, 3);
+
+void setup() {
+  esp.begin(9600);
+  Serial.begin(9600);
+  pinMode(13, OUTPUT);
+
+  esp.println(""AT+CWMODE=1"");
+  delay(2000);
+  esp.println(""AT+CWJAP=\""SSID\"",\""PASSWORD\"""");
+  delay(5000);
+  esp.println(""AT+CIPMUX=1"");
+  delay(2000);
+  esp.println(""AT+CIPSERVER=1,80"");
+}
+
+void loop() {
+  if (esp.available()) {
+    String req = esp.readString();
+    if (req.indexOf(""LED=ON"") != -1) digitalWrite(13, HIGH);
+    if (req.indexOf(""LED=OFF"") != -1) digitalWrite(13, LOW);
+  }
+}"
+Traffic Light System,"const int red = 2;
+const int yellow = 3;
+const int green = 4;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(yellow, OUTPUT);
+  pinMode(green, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(green, HIGH);
+  delay(5000);
+  digitalWrite(green, LOW);
+
+  digitalWrite(yellow, HIGH);
+  delay(2000);
+  digitalWrite(yellow, LOW);
+
+  digitalWrite(red, HIGH);
+  delay(5000);
+  digitalWrite(red, LOW);
+}"
+Buzzer Alert with Delay Using Timer,"const int buzzer = 8;
+
+void setup() {
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  tone(buzzer, 1000);
+  delay(1000);
+  noTone(buzzer);
+  delay(1000);
+}"
+Capacitive Touch Lamp Control (TTP229),"const int touchPin = 2;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(touchPin) == HIGH) {
+    digitalWrite(ledPin, !digitalRead(ledPin));
+    delay(300);
+  }
+}"
+Ultrasonic Sensor Parking Assistant with LED,"const int trigPin = 9;
+const int echoPin = 10;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW); delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+  Serial.print(""Distance: "");
+  Serial.println(distance);
+
+  if (distance < 20) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(500);
+}"
+Blink the built-in LED every second.,"void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(1000);
+}"
+Gradually fade an LED in and out using PWM.,"int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  for (int brightness = 0; brightness <= 255; brightness++) {
+    analogWrite(ledPin, brightness);
+    delay(10);
+  }
+  for (int brightness = 255; brightness >= 0; brightness--) {
+    analogWrite(ledPin, brightness);
+    delay(10);
+  }
+}"
+Read an analog sensor value from pin A0 and print it to the Serial Monitor.,"void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int sensorValue = analogRead(A0);
+  Serial.println(sensorValue);
+  delay(500);
+}"
+Turn on an LED when a button is pressed.,"int buttonPin = 2;
+int ledPin = 13;
+
+void setup() {
+  pinMode(buttonPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int buttonState = digitalRead(buttonPin);
+  digitalWrite(ledPin, buttonState);
+}"
+Read temperature in Celsius from an LM35 sensor.,"void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int reading = analogRead(A0);
+  float voltage = reading * (5.0 / 1023.0);
+  float temperatureC = voltage * 100;
+  Serial.println(temperatureC);
+  delay(1000);
+}"
+Control a servo motor to sweep between 0 and 180 degrees.,"#include <Servo.h>
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  myServo.write(0);
+  delay(1000);
+  myServo.write(180);
+  delay(1000);
+}"
+Measure distance using an HC-SR04 ultrasonic sensor.,"#define trigPin 9
+#define echoPin 10
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+
+  Serial.print(""Distance: "");
+  Serial.print(distance);
+  Serial.println("" cm"");
+
+  delay(1000);
+}"
+Play a 1kHz tone on a buzzer every half second.,"void setup() {
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  tone(8, 1000);
+  delay(500);
+  noTone(8);
+  delay(500);
+}"
+Toggle an LED on/off each time a button is pressed.,"int buttonPin = 2;
+int ledPin = 13;
+int ledState = LOW;
+int lastButtonState = HIGH;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int buttonState = digitalRead(buttonPin);
+  if (buttonState == LOW && lastButtonState == HIGH) {
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+    delay(200);
+  }
+  lastButtonState = buttonState;
+}"
+Echo received serial characters back to the sender.,"void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (Serial.available()) {
+    char incoming = Serial.read();
+    Serial.print(""Received: "");
+    Serial.println(incoming);
+  }
+}"
+Blink an external LED connected to pin 7 every half second.,"void setup() {
+  pinMode(7, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(7, HIGH);
+  delay(500);
+  digitalWrite(7, LOW);
+  delay(500);
+}"
+Turn on a fan connected to pin 6 when the temperature from LM35 exceeds 30°C.,"void setup() {
+  pinMode(6, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(A0);
+  float voltage = value * (5.0 / 1023.0);
+  float temperature = voltage * 100;
+  
+  if (temperature > 30) {
+    digitalWrite(6, HIGH);
+  } else {
+    digitalWrite(6, LOW);
+  }
+
+  Serial.println(temperature);
+  delay(1000);
+}"
+"Flash an LED 3 times quickly, then pause for 2 seconds.","void setup() {
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(13, HIGH);
+    delay(200);
+    digitalWrite(13, LOW);
+    delay(200);
+  }
+  delay(2000);
+}"
+Use a potentiometer to control the brightness of an LED on pin 9.,"void setup() {
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  int potValue = analogRead(A0);
+  int brightness = map(potValue, 0, 1023, 0, 255);
+  analogWrite(9, brightness);
+  delay(50);
+}"
+Make an LED blink faster as a button is held down.,"int buttonPin = 2;
+int ledPin = 13;
+
+void setup() {
+  pinMode(buttonPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int buttonState = digitalRead(buttonPin);
+  int delayTime = buttonState == HIGH ? 1000 : 200;
+
+  digitalWrite(ledPin, HIGH);
+  delay(delayTime);
+  digitalWrite(ledPin, LOW);
+  delay(delayTime);
+}"
+Use two buttons to turn an LED on (button A) and off (button B).,"int buttonA = 2;
+int buttonB = 3;
+int ledPin = 13;
+
+void setup() {
+  pinMode(buttonA, INPUT);
+  pinMode(buttonB, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(buttonA) == HIGH) {
+    digitalWrite(ledPin, HIGH);
+  }
+  if (digitalRead(buttonB) == HIGH) {
+    digitalWrite(ledPin, LOW);
+  }
+}"
+"Print ""Hello, World!"" to the Serial Monitor every second.","void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.println(""Hello, World!"");
+  delay(1000);
+}"
+Light up an LED if a light sensor (photoresistor) reads low light levels.,"void setup() {
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  int lightLevel = analogRead(A0);
+  if (lightLevel < 300) {
+    digitalWrite(9, HIGH);
+  } else {
+    digitalWrite(9, LOW);
+  }
+  delay(100);
+}"
+Control the speed of a DC motor using a potentiometer on pin A0 and output on pin 5.,"void setup() {
+  pinMode(5, OUTPUT);
+}
+
+void loop() {
+  int potValue = analogRead(A0);
+  int motorSpeed = map(potValue, 0, 1023, 0, 255);
+  analogWrite(5, motorSpeed);
+}"
+Blink two LEDs alternately on pins 8 and 9.,"void setup() {
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(8, HIGH);
+  digitalWrite(9, LOW);
+  delay(500);
+  digitalWrite(8, LOW);
+  digitalWrite(9, HIGH);
+  delay(500);
+}"
+"Cycle through 3 LEDs connected to pins 3, 4, and 5 like a traffic light.","int leds[] = {3, 4, 5};
+
+void setup() {
+  for (int i = 0; i < 3; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+}
+
+void loop() {
+  digitalWrite(leds[0], HIGH); // Red
+  delay(2000);
+  digitalWrite(leds[0], LOW);
+
+  digitalWrite(leds[1], HIGH); // Yellow
+  delay(1000);
+  digitalWrite(leds[1], LOW);
+
+  digitalWrite(leds[2], HIGH); // Green
+  delay(3000);
+  digitalWrite(leds[2], LOW);
+}"
+Count button presses and display the count on the Serial Monitor.,"int buttonPin = 2;
+int lastState = LOW;
+int count = 0;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int currentState = digitalRead(buttonPin);
+  if (lastState == HIGH && currentState == LOW) {
+    count++;
+    Serial.print(""Button Pressed: "");
+    Serial.println(count);
+    delay(200);
+  }
+  lastState = currentState;
+}"
+"Turn on an LED for 5 seconds when a button is pressed, then ignore further presses until time ends.","int buttonPin = 2;
+int ledPin = 13;
+bool isOn = false;
+unsigned long startTime = 0;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (!isOn && digitalRead(buttonPin) == LOW) {
+    isOn = true;
+    startTime = millis();
+    digitalWrite(ledPin, HIGH);
+  }
+
+  if (isOn && millis() - startTime >= 5000) {
+    digitalWrite(ledPin, LOW);
+    isOn = false;
+  }
+}"
+Use a light sensor to gradually fade an LED based on ambient light.,"int ledPin = 9;
+int lightSensor = A0;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int light = analogRead(lightSensor);
+  int brightness = map(light, 0, 1023, 255, 0); // Inverted
+  analogWrite(ledPin, brightness);
+  delay(100);
+}"
+Simulate a basic security alarm that triggers a buzzer if motion is detected.,"int pirPin = 2;
+int buzzer = 8;
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int motion = digitalRead(pirPin);
+  if (motion == HIGH) {
+    digitalWrite(buzzer, HIGH);
+    Serial.println(""Motion detected!"");
+  } else {
+    digitalWrite(buzzer, LOW);
+  }
+  delay(200);
+}"
+Flash SOS in Morse code using an LED.,"int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void dot() {
+  digitalWrite(ledPin, HIGH);
+  delay(200);
+  digitalWrite(ledPin, LOW);
+  delay(200);
+}
+
+void dash() {
+  digitalWrite(ledPin, HIGH);
+  delay(600);
+  digitalWrite(ledPin, LOW);
+  delay(200);
+}
+
+void loop() {
+  // S
+  dot(); dot(); dot();
+  delay(600);
+  // O
+  dash(); dash(); dash();
+  delay(600);
+  // S
+  dot(); dot(); dot();
+  delay(2000);
+}"
+Rotate a servo to match the angle set by a potentiometer.,"#include <Servo.h>
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  int potValue = analogRead(A0);
+  int angle = map(potValue, 0, 1023, 0, 180);
+  myServo.write(angle);
+  delay(15);
+}"
+Log temperature every 5 seconds and show max/min recorded on Serial Monitor.,"float maxTemp = -1000;
+float minTemp = 1000;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int val = analogRead(A0);
+  float temp = (val * 5.0 / 1023.0) * 100;
+
+  if (temp > maxTemp) maxTemp = temp;
+  if (temp < minTemp) minTemp = temp;
+
+  Serial.print(""Current: "");
+  Serial.print(temp);
+  Serial.print("" °C | Max: "");
+  Serial.print(maxTemp);
+  Serial.print("" °C | Min: "");
+  Serial.print(minTemp);
+  Serial.println("" °C"");
+
+  delay(5000);
+}"
+Make a tone that increases in pitch every half second.,"void setup() {
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  for (int freq = 100; freq <= 1000; freq += 100) {
+    tone(8, freq);
+    delay(500);
+  }
+  noTone(8);
+  delay(1000);
+}"
+Implement a basic password system using button presses.,"const int buttonPin = 2;
+const int ledPin = 13;
+const int password[] = {1, 0, 1}; // ON, OFF, ON
+int input[3];
+int index = 0;
+int lastState = HIGH;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int state = digitalRead(buttonPin);
+  if (lastState == HIGH && state == LOW) {
+    input[index] = digitalRead(ledPin); // Simulate input (manual toggle logic)
+    index++;
+
+    if (index >= 3) {
+      bool correct = true;
+      for (int i = 0; i < 3; i++) {
+        if (input[i] != password[i]) correct = false;
+      }
+
+      if (correct) {
+        digitalWrite(ledPin, HIGH);
+        Serial.println(""Access Granted"");
+      } else {
+        digitalWrite(ledPin, LOW);
+        Serial.println(""Access Denied"");
+      }
+
+      index = 0;
+    }
+
+    delay(300);
+  }
+  lastState = state;
+}"
+Create a Knight Rider / KITT scanner effect with 8 LEDs,"void setup() {
+  // Initialize pins 2 through 9 as outputs
+  for (int i = 2; i <= 9; i++) {
+    pinMode(i, OUTPUT);
+  }
+}
+
+void loop() {
+  // Left to right
+  for (int i = 2; i <= 9; i++) {
+    digitalWrite(i, HIGH);
+    delay(50);
+    digitalWrite(i, LOW);
+  }
+  
+  // Right to left
+  for (int i = 8; i >= 3; i--) {
+    digitalWrite(i, HIGH);
+    delay(50);
+    digitalWrite(i, LOW);
+  }
+}"
+Read temperature from DHT22 sensor and display on LCD with warning indicator,"#include <DHT.h>
+#include <LiquidCrystal_I2C.h>
+
+#define DHTPIN 2
+#define DHTTYPE DHT22
+#define WARNING_LED 13
+#define WARNING_TEMP 30.0
+
+DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+void setup() {
+  pinMode(WARNING_LED, OUTPUT);
+  dht.begin();
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print(""Temp Monitor"");
+  delay(2000);
+}
+
+void loop() {
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+  
+  // Check if readings are valid
+  if (isnan(temperature) || isnan(humidity)) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(""Sensor Error!"");
+    return;
+  }
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(""Temp: "");
+  lcd.print(temperature, 1);
+  lcd.print(""C"");
+  
+  lcd.setCursor(0, 1);
+  lcd.print(""Humidity: "");
+  lcd.print(humidity, 1);
+  lcd.print(""%"");
+  
+  // Warning light for high temperature
+  if (temperature > WARNING_TEMP) {
+    digitalWrite(WARNING_LED, HIGH);
+  } else {
+    digitalWrite(WARNING_LED, LOW);
+  }
+  
+  delay(2000);
+}"
+Multi-tone doorbell with button input and state management,"#define BUTTON_PIN 2
+#define SPEAKER_PIN 8
+#define LED_PIN 13
+
+// Musical notes frequencies
+#define NOTE_C5 523
+#define NOTE_D5 587
+#define NOTE_E5 659
+#define NOTE_G5 784
+#define NOTE_A5 880
+
+volatile bool buttonPressed = false;
+bool isPlaying = false;
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 50;
+
+void setup() {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(SPEAKER_PIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
+  
+  // Set up interrupt for button press
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), buttonInterrupt, FALLING);
+}
+
+void loop() {
+  // Debounce and handle button press
+  if (buttonPressed && (millis() - lastDebounceTime > debounceDelay)) {
+    buttonPressed = false;
+    
+    if (!isPlaying) {
+      isPlaying = true;
+      playDoorbell();
+      isPlaying = false;
+    }
+  }
+}
+
+void playDoorbell() {
+  // First melody pattern
+  digitalWrite(LED_PIN, HIGH);
+  playNote(NOTE_C5, 200);
+  playNote(NOTE_G5, 200);
+  playNote(NOTE_E5, 200);
+  playNote(NOTE_A5, 400);
+  
+  delay(300);
+  
+  // Second melody pattern
+  playNote(NOTE_D5, 200);
+  playNote(NOTE_A5, 200);
+  playNote(NOTE_G5, 600);
+  digitalWrite(LED_PIN, LOW);
+}
+
+void playNote(int frequency, int duration) {
+  for (long i = 0; i < duration * 1000L; i += frequency * 2) {
+    digitalWrite(SPEAKER_PIN, HIGH);
+    delayMicroseconds(frequency);
+    digitalWrite(SPEAKER_PIN, LOW);
+    delayMicroseconds(frequency);
+  }
+}
+
+void buttonInterrupt() {
+  buttonPressed = true;
+  lastDebounceTime = millis();
+}"
+Multi-tasking LED controller with non-blocking operation,"#define LED1 9
+#define LED2 10
+#define LED3 11
+
+unsigned long previousMillisLED1 = 0;
+unsigned long previousMillisLED2 = 0;
+unsigned long previousMillisLED3 = 0;
+
+const long interval1 = 1000;  // 1 second
+const long interval2 = 2500;  // 2.5 seconds
+const long interval3 = 500;   // 0.5 seconds
+
+int brightnessLED1 = 0;
+int brightnessStepLED1 = 5;
+bool stateLED2 = false;
+int pulseCycleLED3 = 0;
+
+void setup() {
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
+  Serial.begin(9600);
+  Serial.println(""Multi-tasking LED Controller"");
+}
+
+void loop() {
+  unsigned long currentMillis = millis();
+  
+  // LED1: Fade in and out
+  if (currentMillis - previousMillisLED1 >= interval1 / 50) {
+    previousMillisLED1 = currentMillis;
+    
+    brightnessLED1 += brightnessStepLED1;
+    if (brightnessLED1 <= 0 || brightnessLED1 >= 255) {
+      brightnessStepLED1 = -brightnessStepLED1;
+    }
+    
+    analogWrite(LED1, brightnessLED1);
+  }
+  
+  // LED2: Binary counter (on/off pattern)
+  if (currentMillis - previousMillisLED2 >= interval2) {
+    previousMillisLED2 = currentMillis;
+    stateLED2 = !stateLED2;
+    digitalWrite(LED2, stateLED2);
+    
+    Serial.print(""LED2: "");
+    Serial.println(stateLED2 ? ""ON"" : ""OFF"");
+  }
+  
+  // LED3: Sine wave pulsing
+  if (currentMillis - previousMillisLED3 >= interval3 / 100) {
+    previousMillisLED3 = currentMillis;
+    
+    // Sine wave brightness (0-255)
+    float sinVal = sin(radians(pulseCycleLED3));
+    int brightness = 128 + (sinVal * 127);
+    analogWrite(LED3, brightness);
+    
+    pulseCycleLED3 = (pulseCycleLED3 + 2) % 360;
+  }
+}"
+Smart motion-activated lighting system with automatic dimming,"#define PIR_SENSOR 2
+#define LIGHT_SENSOR A0
+#define LED_PIN 9
+
+// Configuration
+const unsigned long MOTION_TIMEOUT = 30000; // 30 seconds
+const unsigned long FADE_DURATION = 5000;   // 5 seconds
+const int LIGHT_THRESHOLD = 300;           // Light sensor threshold
+const int MAX_BRIGHTNESS = 255;
+
+// State variables
+volatile bool motionDetected = false;
+unsigned long lastMotionTime = 0;
+bool lightOn = false;
+int currentBrightness = 0;
+unsigned long fadeStartTime = 0;
+
+void setup() {
+  pinMode(PIR_SENSOR, INPUT);
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(LIGHT_SENSOR, INPUT);
+  
+  // Attach interrupt for motion sensor
+  attachInterrupt(digitalPinToInterrupt(PIR_SENSOR), motionInterrupt, RISING);
+  
+  Serial.begin(9600);
+  Serial.println(""Smart Lighting System Initialized"");
+}
+
+void loop() {
+  unsigned long currentTime = millis();
+  int lightLevel = analogRead(LIGHT_SENSOR);
+  
+  // Only activate lights when it's dark enough
+  bool isDarkEnough = (lightLevel < LIGHT_THRESHOLD);
+  
+  // Handle motion detection
+  if (motionDetected) {
+    lastMotionTime = currentTime;
+    motionDetected = false;
+    
+    if (isDarkEnough && !lightOn) {
+      // Turn on lights when motion detected in dark conditions
+      lightOn = true;
+      fadeStartTime = currentTime;
+      Serial.println(""Motion detected - Turning lights on"");
+    }
+  }
+  
+  // Handle light state
+  if (lightOn) {
+    // Check if timeout period has elapsed since last motion
+    if (currentTime - lastMotionTime > MOTION_TIMEOUT) {
+      // Begin fading out
+      if (currentBrightness == MAX_BRIGHTNESS) {
+        fadeStartTime = currentTime;  
+        Serial.println(""No motion - Fading lights out"");
+      }
+      
+      // Calculate fade progress
+      float fadeProgress = (float)(currentTime - fadeStartTime) / FADE_DURATION;
+      if (fadeProgress >= 1.0) {
+        // Fade complete, turn off the light
+        lightOn = false;
+        currentBrightness = 0;
+      } else {
+        // Gradually decrease brightness
+        currentBrightness = MAX_BRIGHTNESS * (1.0 - fadeProgress);
+      }
+    } else {
+      // Motion is recent, ensure full brightness
+      currentBrightness = MAX_BRIGHTNESS;
+    }
+  } else if (motionDetected && isDarkEnough) {
+    // Turn on with full brightness instantly on new motion
+    currentBrightness = MAX_BRIGHTNESS;
+    lightOn = true;
+  }
+  
+  // Update LED brightness
+  analogWrite(LED_PIN, currentBrightness);
+  
+  delay(20); // Small delay for stability
+}
+
+void motionInterrupt() {
+  motionDetected = true;
+}"
+RGB LED color cycling with custom easing function,"#define RED_PIN 9
+#define GREEN_PIN 10
+#define BLUE_PIN 11
+
+typedef struct {
+  int r;
+  int g;
+  int b;
+} RGBColor;
+
+// Predefined colors
+const RGBColor COLORS[] = {
+  {255, 0, 0},    // Red
+  {255, 127, 0},  // Orange
+  {255, 255, 0},  // Yellow
+  {0, 255, 0},    // Green
+  {0, 0, 255},    // Blue
+  {75, 0, 130},   // Indigo
+  {148, 0, 211}   // Violet
+};
+
+const int NUM_COLORS = sizeof(COLORS) / sizeof(RGBColor);
+const unsigned long TRANSITION_TIME = 3000; // 3 seconds per transition
+
+RGBColor currentColor = {0, 0, 0};
+int colorIndex = 0;
+unsigned long transitionStartTime = 0;
+
+void setup() {
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
+  
+  transitionStartTime = millis();
+}
+
+void loop() {
+  unsigned long currentTime = millis();
+  float progress = (float)(currentTime - transitionStartTime) / TRANSITION_TIME;
+  
+  if (progress >= 1.0) {
+    // Move to next color
+    colorIndex = (colorIndex + 1) % NUM_COLORS;
+    transitionStartTime = currentTime;
+    progress = 0;
+  }
+  
+  // Get source and target colors
+  RGBColor fromColor = COLORS[colorIndex];
+  RGBColor toColor = COLORS[(colorIndex + 1) % NUM_COLORS];
+  
+  // Apply cubic easing function for smoother transitions
+  float easedProgress = cubicEaseInOut(progress);
+  
+  // Interpolate between colors
+  currentColor.r = interpolate(fromColor.r, toColor.r, easedProgress);
+  currentColor.g = interpolate(fromColor.g, toColor.g, easedProgress);
+  currentColor.b = interpolate(fromColor.b, toColor.b, easedProgress);
+  
+  // Set LED color
+  analogWrite(RED_PIN, currentColor.r);
+  analogWrite(GREEN_PIN, currentColor.g);
+  analogWrite(BLUE_PIN, currentColor.b);
+  
+  delay(10);
+}
+
+// Cubic easing function for smoother transitions
+float cubicEaseInOut(float t) {
+  if (t < 0.5) {
+    return 4 * t * t * t;
+  } else {
+    float f = ((2 * t) - 2);
+    return 0.5 * f * f * f + 1;
+  }
+}
+
+// Linear interpolation between two values
+int interpolate(int a, int b, float t) {
+  return a + (int)((b - a) * t);
+}"
+Sound reactive LED strip with FFT analysis,"#include <arduinoFFT.h>
+
+#define AUDIO_IN_PIN A0
+#define LED_DATA_PIN 6
+#define NUM_LEDS 60
+#define SAMPLES 128
+#define SAMPLING_FREQUENCY 5000
+
+// FFT variables
+arduinoFFT FFT = arduinoFFT();
+double vReal[SAMPLES];
+double vImag[SAMPLES];
+unsigned long sampling_period_us;
+unsigned long microseconds;
+
+// LED strip variables
+byte ledBrightness = 0;
+byte ledHue = 0;
+byte bassIntensity = 0;
+byte midIntensity = 0;
+byte trebleIntensity = 0;
+
+void setup() {
+  pinMode(AUDIO_IN_PIN, INPUT);
+  pinMode(LED_DATA_PIN, OUTPUT);
+  
+  Serial.begin(115200);
+  sampling_period_us = round(1000000 * (1.0 / SAMPLING_FREQUENCY));
+  
+  // Initialize LED strip (implementation depends on your LED library)
+  initLEDs();
+}
+
+void loop() {
+  // Sample audio data
+  for (int i = 0; i < SAMPLES; i++) {
+    microseconds = micros();
+    
+    vReal[i] = analogRead(AUDIO_IN_PIN);
+    vImag[i] = 0;
+    
+    // Wait for precise sampling frequency
+    while (micros() < (microseconds + sampling_period_us)) {
+      // Wait...
+    }
+  }
+  
+  // Perform FFT
+  FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+  FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
+  FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
+  
+  // Analyze frequency bands
+  bassIntensity = analyzeFrequencyBand(1, 4);    // Bass: ~40-160Hz
+  midIntensity = analyzeFrequencyBand(4, 10);    // Mid: ~160-400Hz
+  trebleIntensity = analyzeFrequencyBand(10, 20); // Treble: ~400-800Hz
+  
+  // Map audio characteristics to visual effects
+  updateLEDVisuals();
+  
+  // Short delay for stability
+  delay(10);
+}
+
+// Analyze specific frequency bands from FFT data
+byte analyzeFrequencyBand(int startBin, int endBin) {
+  double sum = 0;
+  
+  // Sum the magnitudes of the specified frequency bins
+  for (int i = startBin; i <= endBin; i++) {
+    if (i < SAMPLES/2) {
+      sum += vReal[i];
+    }
+  }
+  
+  // Calculate average and map to 0-255 range
+  double average = sum / (endBin - startBin + 1);
+  return constrain(map(average, 0, 300, 0, 255), 0, 255);
+}
+
+// Initialize LED strip (placeholder)
+void initLEDs() {
+  // Implementation depends on your LED library
+  // Example with FastLED:
+  // FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(leds, NUM_LEDS);
+}
+
+// Update LED visuals based on audio analysis
+void updateLEDVisuals() {
+  // Calculate overall brightness based on audio intensity
+  byte overallIntensity = (bassIntensity + midIntensity + trebleIntensity) / 3;
+  
+  // Hue shifts based on treble content
+  ledHue = (ledHue + map(trebleIntensity, 0, 255, 0, 3)) % 255;
+  
+  // Apply different patterns based on frequency distribution
+  if (bassIntensity > 200) {
+    // Bass pulse pattern
+    pulseAllLEDs(bassIntensity);
+  } else if (midIntensity > 150) {
+    // Mid-frequency wave pattern
+    wavePattern(midIntensity, ledHue);
+  } else {
+    // Default pattern
+    gradientPattern(ledHue, overallIntensity);
+  }
+  
+  // Update LEDs (implementation depends on your LED library)
+  // FastLED.show();
+}
+
+// LED pattern functions (placeholders)
+void pulseAllLEDs(byte intensity) {
+  // Implementation depends on your LED library
+}
+
+void wavePattern(byte intensity, byte hue) {
+  // Implementation depends on your LED library
+}
+
+void gradientPattern(byte hue, byte brightness) {
+  // Implementation depends on your LED library
+}"
+Weather station with barometric pressure trend analysis,"#include <Wire.h>
+#include <SPI.h>
+#include <Adafruit_BMP280.h>
+#include <LiquidCrystal_I2C.h>
+#include <RTClib.h>
+
+// Pin definitions
+#define RAIN_SENSOR_PIN A0
+#define WIND_SENSOR_PIN A1
+#define STATUS_LED_PIN 13
+
+// Object initialization
+Adafruit_BMP280 bmp;
+LiquidCrystal_I2C lcd(0x27, 20, 4);
+RTC_DS3231 rtc;
+
+// Constants
+const float PRESSURE_CHANGE_THRESHOLD = 1.0; // hPa
+const int TREND_INTERVAL = 3600000; // 1 hour in milliseconds
+const int DISPLAY_CYCLE_INTERVAL = 5000; // 5 seconds
+const int NUM_HISTORICAL_READINGS = 24; // 24 hours of data
+
+// Global variables
+float pressureHistory[NUM_HISTORICAL_READINGS];
+int historyIndex = 0;
+unsigned long lastTrendUpdateTime = 0;
+unsigned long lastDisplayCycleTime = 0;
+int displayPage = 0;
+const int TOTAL_PAGES = 3;
+
+enum WeatherTrend {
+  STABLE,
+  RISING_SLOW,
+  RISING_RAPID,
+  FALLING_SLOW,
+  FALLING_RAPID
+};
+
+WeatherTrend currentTrend = STABLE;
+float rainIntensity = 0.0;
+float windSpeed = 0.0;
+
+void setup() {
+  pinMode(STATUS_LED_PIN, OUTPUT);
+  pinMode(RAIN_SENSOR_PIN, INPUT);
+  pinMode(WIND_SENSOR_PIN, INPUT);
+  
+  Serial.begin(9600);
+  
+  // Initialize the BMP280 sensor
+  if (!bmp.begin(0x76)) {
+    Serial.println(""Could not find BMP280 sensor!"");
+    while (1) {
+      digitalWrite(STATUS_LED_PIN, HIGH);
+      delay(300);
+      digitalWrite(STATUS_LED_PIN, LOW);
+      delay(300);
+    }
+  }
+  
+  // Initialize LCD
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print(""Weather Station"");
+  lcd.setCursor(0, 1);
+  lcd.print(""Initializing..."");
+  
+  // Initialize RTC
+  if (!rtc.begin()) {
+    Serial.println(""Could not find RTC!"");
+    lcd.clear();
+    lcd.print(""RTC Error!"");
+    while (1) {
+      digitalWrite(STATUS_LED_PIN, HIGH);
+      delay(100);
+      digitalWrite(STATUS_LED_PIN, LOW);
+      delay(100);
+    }
+  }
+  
+  // Initialize pressureHistory with current reading
+  float initialPressure = bmp.readPressure() / 100.0F; // hPa
+  for (int i = 0; i < NUM_HISTORICAL_READINGS; i++) {
+    pressureHistory[i] = initialPressure;
+  }
+  
+  // Show startup message
+  lcd.clear();
+  lcd.print(""System Ready"");
+  delay(2000);
+}
+
+void loop() {
+  unsigned long currentTime = millis();
+  
+  // Read sensors
+  float temperature = bmp.readTemperature();
+  float pressure = bmp.readPressure() / 100.0F; // Convert Pa to hPa
+  float altitude = bmp.readAltitude(1013.25); // Standard pressure at sea level
+  rainIntensity = readRainSensor();
+  windSpeed = readWindSensor();
+  
+  // Update pressure history at regular intervals
+  if (currentTime - lastTrendUpdateTime >= TREND_INTERVAL) {
+    lastTrendUpdateTime = currentTime;
+    updatePressureHistory(pressure);
+    analyzePressureTrend();
+  }
+  
+  // Cycle display pages
+  if (currentTime - lastDisplayCycleTime >= DISPLAY_CYCLE_INTERVAL) {
+    lastDisplayCycleTime = currentTime;
+    displayPage = (displayPage + 1) % TOTAL_PAGES;
+    updateDisplay(temperature, pressure, altitude);
+  }
+  
+  // Check for extreme conditions and alert
+  checkForWeatherAlerts(pressure, rainIntensity, windSpeed);
+  
+  delay(100);
+}
+
+void updatePressureHistory(float currentPressure) {
+  historyIndex = (historyIndex + 1) % NUM_HISTORICAL_READINGS;
+  pressureHistory[historyIndex] = currentPressure;
+}
+
+void analyzePressureTrend() {
+  // Calculate pressure change over past 3 hours
+  int threeHoursAgo = (historyIndex + NUM_HISTORICAL_READINGS - 3) % NUM_HISTORICAL_READINGS;
+  float pressureChange3h = pressureHistory[historyIndex] - pressureHistory[threeHoursAgo];
+  
+  // Calculate pressure change over past 6 hours
+  int sixHoursAgo = (historyIndex + NUM_HISTORICAL_READINGS - 6) % NUM_HISTORICAL_READINGS;
+  float pressureChange6h = pressureHistory[historyIndex] - pressureHistory[sixHoursAgo];
+  
+  // Determine trend
+  if (abs(pressureChange3h) < PRESSURE_CHANGE_THRESHOLD) {
+    currentTrend = STABLE;
+  } else if (pressureChange3h > 0) {
+    if (pressureChange3h > 3.0 || pressureChange6h > 6.0) {
+      currentTrend = RISING_RAPID;
+    } else {
+      currentTrend = RISING_SLOW;
+    }
+  } else {
+    if (pressureChange3h < -3.0 || pressureChange6h < -6.0) {
+      currentTrend = FALLING_RAPID;
+    } else {
+      currentTrend = FALLING_SLOW;
+    }
+  }
+  
+  // Log the trend for debugging
+  Serial.print(""Pressure trend: "");
+  Serial.println(getTrendDescription(currentTrend));
+}
+
+String getTrendDescription(WeatherTrend trend) {
+  switch (trend) {
+    case STABLE: return ""Stable Weather"";
+    case RISING_SLOW: return ""Gradually Improving"";
+    case RISING_RAPID: return ""Rapidly Improving"";
+    case FALLING_SLOW: return ""Gradually Deteriorating"";
+    case FALLING_RAPID: return ""Rapidly Deteriorating"";
+    default: return ""Unknown"";
+  }
+}
+
+String getWeatherForecast() {
+  // Simple weather forecast based on pressure trend
+  switch (currentTrend) {
+    case STABLE:
+      return ""Continued stable weather"";
+    case RISING_SLOW:
+      return ""Gradually improving conditions"";
+    case RISING_RAPID:
+      return ""Clear weather approaching"";
+    case FALLING_SLOW:
+      return ""Gradually worsening, rain possible"";
+    case FALLING_RAPID:
+      return ""Weather deteriorating rapidly"";
+    default:
+      return ""Forecast unavailable"";
+  }
+}
+
+void updateDisplay(float temperature, float pressure, float altitude) {
+  lcd.clear();
+  
+  // Current time from RTC
+  DateTime now = rtc.now();
+  
+  switch (displayPage) {
+    case 0: // Main readings
+      lcd.setCursor(0, 0);
+      lcd.print(now.timestamp());
+      lcd.setCursor(0, 1);
+      lcd.print(""Temp: "");
+      lcd.print(temperature, 1);
+      lcd.print(""C"");
+      lcd.setCursor(0, 2);
+      lcd.print(""Pressure: "");
+      lcd.print(pressure, 1);
+      lcd.print(""hPa"");
+      lcd.setCursor(0, 3);
+      lcd.print(""Alt: "");
+      lcd.print(altitude, 1);
+      lcd.print(""m"");
+      break;
+      
+    case 1: // Weather conditions
+      lcd.setCursor(0, 0);
+      lcd.print(""Weather Conditions"");
+      lcd.setCursor(0, 1);
+      lcd.print(""Wind: "");
+      lcd.print(windSpeed, 1);
+      lcd.print(""km/h"");
+      lcd.setCursor(0, 2);
+      lcd.print(""Rain: "");
+      lcd.print(rainIntensity > 0.5 ? ""Detected"" : ""None"");
+      lcd.setCursor(0, 3);
+      lcd.print(getTrendDescription(currentTrend));
+      break;
+      
+    case 2: // Forecast
+      lcd.setCursor(0, 0);
+      lcd.print(""Weather Forecast"");
+      lcd.setCursor(0, 1);
+      lcd.print(getWeatherForecast());
+      lcd.setCursor(0, 3);
+      lcd.print(""Press chg: "");
+      
+      // Calculate 3-hour pressure change
+      int threeHoursAgo = (historyIndex + NUM_HISTORICAL_READINGS - 3) % NUM_HISTORICAL_READINGS;
+      float pressureChange = pressureHistory[historyIndex] - pressureHistory[threeHoursAgo];
+      
+      lcd.print(pressureChange > 0 ? ""+"" : """");
+      lcd.print(pressureChange, 1);
+      lcd.print(""hPa"");
+      break;
+  }
+}
+
+float readRainSensor() {
+  // Simple reading from analog rain sensor
+  int rawValue = analogRead(RAIN_SENSOR_PIN);
+  return map(rawValue, 0, 1023, 0, 100) / 100.0;
+}
+
+float readWindSensor() {
+  // Simulation of wind speed sensor reading
+  int rawValue = analogRead(WIND_SENSOR_PIN);
+  return map(rawValue, 0, 1023, 0, 50); // 0-50 km/h range
+}
+
+void checkForWeatherAlerts(float pressure, float rain, float wind) {
+  bool alert = false;
+  
+  // Check for rapid pressure drop (storm approaching)
+  int threeHoursAgo = (historyIndex + NUM_HISTORICAL_READINGS - 3) % NUM_HISTORICAL_READINGS;
+  float pressureChange3h = pressureHistory[historyIndex] - pressureHistory[threeHoursAgo];
+  
+  if (pressureChange3h < -5.0) {
+    Serial.println(""ALERT: Rapid pressure drop detected!"");
+    alert = true;
+  }
+  
+  // Check for high wind
+  if (wind > 30.0) {
+    Serial.println(""ALERT: High wind detected!"");
+    alert = true;
+  }
+  
+  // Heavy rain
+  if (rain > 0.8) {
+    Serial.println(""ALERT: Heavy rain detected!"");
+    alert = true;
+  }
+  
+  // Show alert on LED
+  digitalWrite(STATUS_LED_PIN, alert ? HIGH : LOW);
+}"
+Capacitive touch musical keyboard with multiple sound effects,"#include <CapacitiveSensor.h>
+
+#define SPEAKER_PIN 8
+#define NUM_KEYS 8
+#define THRESHOLD 100
+#define LED_START_PIN 2
+
+CapacitiveSensor keys[NUM_KEYS] = {
+  CapacitiveSensor(12, 2),
+  CapacitiveSensor(12, 3),
+  CapacitiveSensor(12, 4),
+  CapacitiveSensor(12, 5),
+  CapacitiveSensor(12, 6),
+  CapacitiveSensor(12, 7),
+  CapacitiveSensor(12, 8),
+  CapacitiveSensor(12, 9)
+};
+
+const int notes[] = {262, 294, 330, 349, 392, 440, 494, 523};
+byte soundEffect = 0;
+unsigned long lastEffectChange = 0;
+
+void setup() {
+  pinMode(SPEAKER_PIN, OUTPUT);
+  for (int i = 0; i < NUM_KEYS; i++) {
+    keys[i].set_CS_AutocaL_Millis(0xFFFFFFFF);
+    pinMode(LED_START_PIN + i, OUTPUT);
+  }
+  
+  pinMode(A0, INPUT_PULLUP);
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (digitalRead(A0) == LOW && millis() - lastEffectChange > 500) {
+    soundEffect = (soundEffect + 1) % 3;
+    lastEffectChange = millis();
+    Serial.print(""Sound Effect: "");
+    Serial.println(soundEffect);
+  }
+  
+  for (int i = 0; i < NUM_KEYS; i++) {
+    long measurement = keys[i].capacitiveSensor(30);
+    
+    if (measurement > THRESHOLD) {
+      digitalWrite(LED_START_PIN + i, HIGH);
+      
+      switch (soundEffect) {
+        case 0:
+          tone(SPEAKER_PIN, notes[i]);
+          break;
+        case 1:
+          playArpeggio(notes[i]);
+          break;
+        case 2:
+          playPulseTone(notes[i], measurement);
+          break;
+      }
+    } else {
+      digitalWrite(LED_START_PIN + i, LOW);
+    }
+  }
+  
+  noTone(SPEAKER_PIN);
+  delay(10);
+}
+
+void playArpeggio(int baseNote) {
+  tone(SPEAKER_PIN, baseNote);
+  delay(50);
+  tone(SPEAKER_PIN, baseNote * 5/4);
+  delay(50);
+  tone(SPEAKER_PIN, baseNote * 6/4);
+  delay(50);
+}
+
+void playPulseTone(int baseNote, long intensity) {
+  int modulation = map(intensity, THRESHOLD, 1000, 1, 20);
+  tone(SPEAKER_PIN, baseNote + (sin(millis() * 0.01) * modulation));
+}"
+Ultrasonic distance measurement with calibration and averaging,"#define TRIG_PIN 9
+#define ECHO_PIN 10
+#define CAL_BUTTON_PIN 2
+#define LED_PIN 13
+
+#define SOUND_SPEED 0.0343
+#define NUM_SAMPLES 10
+#define MAX_DISTANCE 400
+#define MIN_DISTANCE 2
+
+volatile bool calibrationRequested = false;
+float calibrationFactor = 1.0;
+float distanceHistory[NUM_SAMPLES];
+int historyIndex = 0;
+unsigned long lastMeasurementTime = 0;
+bool ledState = false;
+
+void setup() {
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(CAL_BUTTON_PIN, INPUT_PULLUP);
+  pinMode(LED_PIN, OUTPUT);
+  
+  attachInterrupt(digitalPinToInterrupt(CAL_BUTTON_PIN), requestCalibration, FALLING);
+  
+  Serial.begin(9600);
+  
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    distanceHistory[i] = 0;
+  }
+  
+  Serial.println(""Ultrasonic Measurement System"");
+  Serial.println(""Press button to calibrate"");
+}
+
+void loop() {
+  if (calibrationRequested) {
+    performCalibration();
+    calibrationRequested = false;
+  }
+  
+  if (millis() - lastMeasurementTime >= 100) {
+    float rawDistance = measureDistance();
+    float calibratedDistance = rawDistance * calibrationFactor;
+    
+    distanceHistory[historyIndex] = calibratedDistance;
+    historyIndex = (historyIndex + 1) % NUM_SAMPLES;
+    
+    float avgDistance = calculateAverageDistance();
+    
+    if (avgDistance < MAX_DISTANCE && avgDistance > MIN_DISTANCE) {
+      Serial.print(""Distance: "");
+      Serial.print(avgDistance);
+      Serial.println("" cm"");
+      
+      ledState = !ledState;
+      digitalWrite(LED_PIN, ledState);
+    }
+    
+    lastMeasurementTime = millis();
+  }
+}
+
+float measureDistance() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  
+  long duration = pulseIn(ECHO_PIN, HIGH, 30000);
+  
+  return (duration * SOUND_SPEED) / 2;
+}
+
+void requestCalibration() {
+  calibrationRequested = true;
+}
+
+void performCalibration() {
+  Serial.println(""Place object at exactly 30cm and wait..."");
+  delay(3000);
+  
+  float totalDistance = 0;
+  for (int i = 0; i < 20; i++) {
+    totalDistance += measureDistance();
+    delay(50);
+  }
+  
+  float measuredAverage = totalDistance / 20.0;
+  calibrationFactor = 30.0 / measuredAverage;
+  
+  Serial.print(""Calibration factor: "");
+  Serial.println(calibrationFactor, 4);
+  
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(LED_PIN, HIGH);
+    delay(100);
+    digitalWrite(LED_PIN, LOW);
+    delay(100);
+  }
+}
+
+float calculateAverageDistance() {
+  float sum = 0;
+  int validSamples = 0;
+  
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    if (distanceHistory[i] > 0) {
+      sum += distanceHistory[i];
+      validSamples++;
+    }
+  }
+  
+  return (validSamples > 0) ? (sum / validSamples) : 0;
+}"
+Digital clock with alarm function and persistence,"#include <Wire.h>
+#include <RTClib.h>
+#include <EEPROM.h>
+#include <LiquidCrystal_I2C.h>
+
+#define ALARM_BUTTON 2
+#define SET_BUTTON 3
+#define UP_BUTTON 4
+#define DOWN_BUTTON 5
+#define ALARM_LED 13
+#define BUZZER 9
+
+RTC_DS3231 rtc;
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+enum ClockMode {
+  DISPLAY_TIME,
+  SET_HOUR,
+  SET_MINUTE,
+  SET_ALARM_HOUR,
+  SET_ALARM_MINUTE
+};
+
+volatile ClockMode currentMode = DISPLAY_TIME;
+volatile bool buttonPressed = false;
+volatile int buttonPressCount = 0;
+
+byte alarmHour = 7;
+byte alarmMinute = 0;
+bool alarmEnabled = false;
+bool alarmTriggered = false;
+
+unsigned long lastButtonTime = 0;
+unsigned long lastBlinkTime = 0;
+unsigned long lastAlarmCheckTime = 0;
+bool blinkState = false;
+
+void setup() {
+  pinMode(ALARM_BUTTON, INPUT_PULLUP);
+  pinMode(SET_BUTTON, INPUT_PULLUP);
+  pinMode(UP_BUTTON, INPUT_PULLUP);
+  pinMode(DOWN_BUTTON, INPUT_PULLUP);
+  pinMode(ALARM_LED, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  
+  attachInterrupt(digitalPinToInterrupt(ALARM_BUTTON), alarmButtonISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(SET_BUTTON), setButtonISR, FALLING);
+  
+  Serial.begin(9600);
+  
+  if (!rtc.begin()) {
+    Serial.println(""Couldn't find RTC"");
+    while (1);
+  }
+  
+  if (rtc.lostPower()) {
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  }
+  
+  lcd.init();
+  lcd.backlight();
+  
+  loadAlarmSettings();
+  
+  lcd.setCursor(0, 0);
+  lcd.print(""Clock ready"");
+  delay(1000);
+}
+
+void loop() {
+  DateTime now = rtc.now();
+  
+  switch (currentMode) {
+    case DISPLAY_TIME:
+      displayTimeAndAlarm(now);
+      checkAlarm(now);
+      break;
+      
+    case SET_HOUR:
+    case SET_MINUTE:
+    case SET_ALARM_HOUR:
+    case SET_ALARM_MINUTE:
+      handleSetMode(now);
+      break;
+  }
+  
+  handleButtonPresses();
+}
+
+void displayTimeAndAlarm(DateTime now) {
+  lcd.setCursor(0, 0);
+  lcd.print(""Time: "");
+  printDigits(now.hour());
+  lcd.print("":"");
+  printDigits(now.minute());
+  lcd.print("":"");
+  printDigits(now.second());
+  
+  lcd.setCursor(0, 1);
+  lcd.print(""Alarm: "");
+  if (alarmEnabled) {
+    printDigits(alarmHour);
+    lcd.print("":"");
+    printDigits(alarmMinute);
+    lcd.print("" [ON] "");
+  } else {
+    printDigits(alarmHour);
+    lcd.print("":"");
+    printDigits(alarmMinute);
+    lcd.print("" [OFF]"");
+  }
+}
+
+void printDigits(int digits) {
+  if (digits < 10) {
+    lcd.print('0');
+  }
+  lcd.print(digits);
+}
+
+void checkAlarm(DateTime now) {
+  if (millis() - lastAlarmCheckTime > 1000) {
+    lastAlarmCheckTime = millis();
+    
+    if (alarmEnabled && now.hour() == alarmHour && now.minute() == alarmMinute && now.second() < 30) {
+      if (!alarmTriggered) {
+        alarmTriggered = true;
+        Serial.println(""ALARM!"");
+      }
+      
+      if (millis() % 1000 > 500) {
+        digitalWrite(ALARM_LED, HIGH);
+        tone(BUZZER, 2000);
+      } else {
+        digitalWrite(ALARM_LED, LOW);
+        noTone(BUZZER);
+      }
+    } else {
+      alarmTriggered = false;
+      digitalWrite(ALARM_LED, alarmEnabled ? HIGH : LOW);
+      noTone(BUZZER);
+    }
+  }
+}
+
+void handleSetMode(DateTime now) {
+  unsigned long currentMillis = millis();
+  
+  if (currentMillis - lastBlinkTime > 500) {
+    lastBlinkTime = currentMillis;
+    blinkState = !blinkState;
+  }
+  
+  lcd.setCursor(0, 0);
+  lcd.print(""Set "");
+  
+  switch (currentMode) {
+    case SET_HOUR:
+      lcd.print(""Hour      "");
+      lcd.setCursor(0, 1);
+      
+      if (blinkState) {
+        lcd.print(""    "");
+      } else {
+        printDigits(now.hour());
+      }
+      
+      lcd.print("":"");
+      printDigits(now.minute());
+      break;
+      
+    case SET_MINUTE:
+      lcd.print(""Minute    "");
+      lcd.setCursor(0, 1);
+      
+      printDigits(now.hour());
+      lcd.print("":"");
+      
+      if (blinkState) {
+        lcd.print(""  "");
+      } else {
+        printDigits(now.minute());
+      }
+      break;
+      
+    case SET_ALARM_HOUR:
+      lcd.print(""Alarm Hour"");
+      lcd.setCursor(0, 1);
+      
+      if (blinkState) {
+        lcd.print(""    "");
+      } else {
+        printDigits(alarmHour);
+      }
+      
+      lcd.print("":"");
+      printDigits(alarmMinute);
+      break;
+      
+    case SET_ALARM_MINUTE:
+      lcd.print(""Alarm Min "");
+      lcd.setCursor(0, 1);
+      
+      printDigits(alarmHour);
+      lcd.print("":"");
+      
+      if (blinkState) {
+        lcd.print(""  "");
+      } else {
+        printDigits(alarmMinute);
+      }
+      break;
+  }
+  
+  lcd.print(""       "");
+}
+
+void handleButtonPresses() {
+  if (millis() - lastButtonTime < 200) {
+    return;
+  }
+  
+  if (digitalRead(UP_BUTTON) == LOW) {
+    lastButtonTime = millis();
+    
+    switch (currentMode) {
+      case SET_HOUR:
+        {
+          DateTime now = rtc.now();
+          uint8_t hour = (now.hour() + 1) % 24;
+          rtc.adjust(DateTime(now.year(), now.month(), now.day(), hour, now.minute(), now.second()));
+        }
+        break;
+        
+      case SET_MINUTE:
+        {
+          DateTime now = rtc.now();
+          uint8_t minute = (now.minute() + 1) % 60;
+          rtc.adjust(DateTime(now.year(), now.month(), now.day(), now.hour(), minute, 0));
+        }
+        break;
+        
+      case SET_ALARM_HOUR:
+        alarmHour = (alarmHour + 1) % 24;
+        saveAlarmSettings();
+        break;
+        
+      case SET_ALARM_MINUTE:
+        alarmMinute = (alarmMinute + 1) % 60;
+        saveAlarmSettings();
+        break;
+    }
+  }
+  
+  if (digitalRead(DOWN_BUTTON) == LOW) {
+    lastButtonTime = millis();
+    
+    switch (currentMode) {
+      case SET_HOUR:
+        {
+          DateTime now = rtc.now();
+          uint8_t hour = (now.hour() + 23) % 24;
+          rtc.adjust(DateTime(now.year(), now.month(), now.day(), hour, now.minute(), now.second()));
+        }
+        break;
+        
+      case SET_MINUTE:
+        {
+          DateTime now = rtc.now();
+          uint8_t minute = (now.minute() + 59) % 60;
+          rtc.adjust(DateTime(now.year(), now.month(), now.day(), now.hour(), minute, 0));
+        }
+        break;
+        
+      case SET_ALARM_HOUR:
+        alarmHour = (alarmHour + 23) % 24;
+        saveAlarmSettings();
+        break;
+        
+      case SET_ALARM_MINUTE:
+        alarmMinute = (alarmMinute + 59) % 60;
+        saveAlarmSettings();
+        break;
+    }
+  }
+}
+
+void alarmButtonISR() {
+  if (millis() - lastButtonTime > 200) {
+    lastButtonTime = millis();
+    
+    if (currentMode == DISPLAY_TIME) {
+      alarmEnabled = !alarmEnabled;
+      saveAlarmSettings();
+    } else if (alarmTriggered) {
+      alarmTriggered = false;
+    }
+  }
+}
+
+void setButtonISR() {
+  if (millis() - lastButtonTime > 200) {
+    lastButtonTime = millis();
+    
+    currentMode = (ClockMode)((currentMode + 1) % 5);
+    if (currentMode == DISPLAY_TIME) {
+      saveAlarmSettings();
+    }
+  }
+}
+
+void saveAlarmSettings() {
+  EEPROM.write(0, alarmHour);
+  EEPROM.write(1, alarmMinute);
+  EEPROM.write(2, alarmEnabled ? 1 : 0);
+}
+
+void loadAlarmSettings() {
+  alarmHour = EEPROM.read(0);
+  alarmMinute = EEPROM.read(1);
+  alarmEnabled = EEPROM.read(2) == 1;
+  
+  if (alarmHour > 23) alarmHour = 7;
+  if (alarmMinute > 59) alarmMinute = 0;
+}"
+Auto-adjusting plant watering system,"#define MOISTURE_SENSOR A0
+#define WATER_PUMP_PIN 9
+#define LED_INDICATOR 13
+#define BUTTON_PIN 2
+
+#define EEPROM_THRESHOLD_ADDR 0
+#define EEPROM_INTERVAL_ADDR 2
+#define EEPROM_WATERING_DURATION_ADDR 4
+
+#define DEFAULT_THRESHOLD 500
+#define DEFAULT_INTERVAL 3600000UL
+#define DEFAULT_WATERING_DURATION 3000
+
+#include <EEPROM.h>
+
+enum SystemMode {
+  AUTO,
+  SET_THRESHOLD,
+  SET_INTERVAL,
+  SET_DURATION,
+  MANUAL_WATER
+};
+
+SystemMode currentMode = AUTO;
+int moistureThreshold;
+unsigned long checkInterval;
+unsigned long wateringDuration;
+unsigned long lastWateringTime = 0;
+unsigned long lastModeChangeTime = 0;
+unsigned long buttonPressStartTime = 0;
+bool buttonPressed = false;
+
+void setup() {
+  pinMode(MOISTURE_SENSOR, INPUT);
+  pinMode(WATER_PUMP_PIN, OUTPUT);
+  pinMode(LED_INDICATOR, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  
+  Serial.begin(9600);
+  
+  loadSettings();
+  
+  digitalWrite(WATER_PUMP_PIN, LOW);
+  digitalWrite(LED_INDICATOR, LOW);
+  
+  Serial.println(""Plant Watering System Started"");
+  printCurrentSettings();
+}
+
+void loop() {
+  handleButtonInput();
+  
+  int moistureLevel = analogRead(MOISTURE_SENSOR);
+  
+  switch (currentMode) {
+    case AUTO:
+      runAutoMode(moistureLevel);
+      break;
+      
+    case SET_THRESHOLD:
+      adjustThreshold(moistureLevel);
+      break;
+      
+    case SET_INTERVAL:
+      adjustInterval();
+      break;
+      
+    case SET_DURATION:
+      adjustDuration();
+      break;
+      
+    case MANUAL_WATER:
+      activateWaterPump();
+      currentMode = AUTO;
+      break;
+  }
+}
+
+void runAutoMode(int moistureLevel) {
+  Serial.print(""Moisture: "");
+  Serial.print(moistureLevel);
+  Serial.print("" / Threshold: "");
+  Serial.println(moistureThreshold);
+  
+  unsigned long currentTime = millis();
+  
+  if (moistureLevel > moistureThreshold && 
+      (currentTime - lastWateringTime > checkInterval)) {
+    Serial.println(""Soil is dry - Watering now"");
+    
+    digitalWrite(LED_INDICATOR, HIGH);
+    digitalWrite(WATER_PUMP_PIN, HIGH);
+    delay(wateringDuration);
+    digitalWrite(WATER_PUMP_PIN, LOW);
+    digitalWrite(LED_INDICATOR, LOW);
+    
+    lastWateringTime = currentTime;
+    
+    Serial.println(""Watering complete"");
+  }
+  
+  delay(1000);
+}
+
+void handleButtonInput() {
+  bool buttonState = digitalRead(BUTTON_PIN);
+  
+  if (buttonState == LOW && !buttonPressed) {
+    buttonPressed = true;
+    buttonPressStartTime = millis();
+  }
+  else if (buttonState == HIGH && buttonPressed) {
+    unsigned long pressDuration = millis() - buttonPressStartTime;
+    buttonPressed = false;
+    
+    if (pressDuration > 2000) {
+      cycleMode();
+    } else if (currentMode == AUTO) {
+      currentMode = MANUAL_WATER;
+    } else {
+      saveSettings();
+      currentMode = AUTO;
+    }
+  }
+}
+
+void cycleMode() {
+  currentMode = (SystemMode)((currentMode + 1) % 5);
+  if (currentMode == MANUAL_WATER) {
+    currentMode = AUTO;
+  }
+  
+  Serial.print(""Mode changed to: "");
+  printMode();
+  
+  switch (currentMode) {
+    case SET_THRESHOLD:
+      Serial.print(""Current threshold: "");
+      Serial.println(moistureThreshold);
+      break;
+      
+    case SET_INTERVAL:
+      Serial.print(""Current interval: "");
+      Serial.print(checkInterval / 60000);
+      Serial.println("" minutes"");
+      break;
+      
+    case SET_DURATION:
+      Serial.print(""Current duration: "");
+      Serial.print(wateringDuration / 1000);
+      Serial.println("" seconds"");
+      break;
+  }
+}
+
+void adjustThreshold(int currentMoisture) {
+  static unsigned long lastAdjustTime = 0;
+  
+  if (millis() - lastAdjustTime > 500) {
+    lastAdjustTime = millis();
+    
+    moistureThreshold = currentMoisture;
+    
+    Serial.print(""New threshold set to: "");
+    Serial.println(moistureThreshold);
+    
+    blinkLED(1);
+  }
+}
+
+void adjustInterval() {
+  static unsigned long lastAdjustTime = 0;
+  
+  if (millis() - lastAdjustTime > 1000) {
+    lastAdjustTime = millis();
+    
+    checkInterval += 60000;  // Add 1 minute
+    if (checkInterval > 86400000UL) {  // Cap at 24 hours
+      checkInterval = 60000;  // Minimum 1 minute
+    }
+    
+    Serial.print(""New interval set to: "");
+    Serial.print(checkInterval / 60000);
+    Serial.println("" minutes"");
+    
+    blinkLED(2);
+  }
+}
+
+void adjustDuration() {
+  static unsigned long lastAdjustTime = 0;
+  
+  if (millis() - lastAdjustTime > 1000) {
+    lastAdjustTime = millis();
+    
+    wateringDuration += 1000;  // Add 1 second
+    if (wateringDuration > 30000) {  // Cap at 30 seconds
+      wateringDuration = 1000;  // Minimum 1 second
+    }
+    
+    Serial.print(""New duration set to: "");
+    Serial.print(wateringDuration / 1000);
+    Serial.println("" seconds"");
+    
+    blinkLED(3);
+  }
+}
+
+void activateWaterPump() {
+  Serial.println(""Manual watering activated"");
+  
+  digitalWrite(LED_INDICATOR, HIGH);
+  digitalWrite(WATER_PUMP_PIN, HIGH);
+  delay(wateringDuration);
+  digitalWrite(WATER_PUMP_PIN, LOW);
+  digitalWrite(LED_INDICATOR, LOW);
+  
+  Serial.println(""Manual watering complete"");
+}
+
+void loadSettings() {
+  int thresholdValue;
+  EEPROM.get(EEPROM_THRESHOLD_ADDR, thresholdValue);
+  
+  unsigned long intervalValue;
+  EEPROM.get(EEPROM_INTERVAL_ADDR, intervalValue);
+  
+  unsigned long durationValue;
+  EEPROM.get(EEPROM_WATERING_DURATION_ADDR, durationValue);
+  
+  moistureThreshold = (thresholdValue >= 0 && thresholdValue <= 1023) ? thresholdValue : DEFAULT_THRESHOLD;
+  checkInterval = (intervalValue > 0 && intervalValue <= 86400000UL) ? intervalValue : DEFAULT_INTERVAL;
+  wateringDuration = (durationValue > 0 && durationValue <= 30000) ? durationValue : DEFAULT_WATERING_DURATION;
+}
+
+void saveSettings() {
+  EEPROM.put(EEPROM_THRESHOLD_ADDR, moistureThreshold);
+  EEPROM.put(EEPROM_INTERVAL_ADDR, checkInterval);
+  EEPROM.put(EEPROM_WATERING_DURATION_ADDR, wateringDuration);
+  
+  Serial.println(""Settings saved to EEPROM"");
+  printCurrentSettings();
+}
+
+void printCurrentSettings() {
+  Serial.println(""Current Settings:"");
+  Serial.print(""Moisture Threshold: "");
+  Serial.println(moistureThreshold);
+  
+  Serial.print(""Check Interval: "");
+  Serial.print(checkInterval / 60000);
+  Serial.println("" minutes"");
+  
+  Serial.print(""Watering Duration: "");
+  Serial.print(wateringDuration / 1000);
+  Serial.println("" seconds"");
+}
+
+void printMode() {
+  switch (currentMode) {
+    case AUTO:
+      Serial.println(""AUTO"");
+      break;
+    case SET_THRESHOLD:
+      Serial.println(""SET_THRESHOLD"");
+      break;
+    case SET_INTERVAL:
+      Serial.println(""SET_INTERVAL"");
+      break;
+    case SET_DURATION:
+      Serial.println(""SET_DURATION"");
+      break;
+    case MANUAL_WATER:
+      Serial.println(""MANUAL_WATER"");
+      break;
+  }
+}
+
+void blinkLED(int times) {
+  for (int i = 0; i < times; i++) {
+    digitalWrite(LED_INDICATOR, HIGH);
+    delay(200);
+    digitalWrite(LED_INDICATOR, LOW);
+    delay(200);
+  }
+}"
+RFID-based security system with access control,"#include <SPI.h>
+#include <MFRC522.h>
+#include <LiquidCrystal_I2C.h>
+#include <EEPROM.h>
+
+#define RST_PIN 9
+#define SS_PIN 10
+#define GREEN_LED 7
+#define RED_LED 6
+#define RELAY_PIN 5
+#define BUZZER 4
+#define PROGRAM_BUTTON 3
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+#define MAX_CARDS 10
+byte storedUIDs[MAX_CARDS][4];
+byte cardCount = 0;
+
+enum SystemState {
+  WAITING,
+  ACCESS_GRANTED,
+  ACCESS_DENIED,
+  PROGRAMMING
+};
+
+SystemState currentState = WAITING;
+unsigned long lastStateChange = 0;
+bool programmingMode = false;
+
+void setup() {
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  pinMode(PROGRAM_BUTTON, INPUT_PULLUP);
+  
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, HIGH);
+  digitalWrite(RELAY_PIN, LOW);
+  
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+  
+  lcd.init();
+  lcd.backlight();
+  lcd.print(""Access Control"");
+  lcd.setCursor(0, 1);
+  lcd.print(""System Ready"");
+  
+  loadCards();
+  
+  attachInterrupt(digitalPinToInterrupt(PROGRAM_BUTTON), toggleProgramMode, FALLING);
+}
+
+void loop() {
+  if (currentState != WAITING && millis() - lastStateChange > 3000) {
+    resetToWaiting();
+  }
+  
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) {
+    return;
+  }
+  
+  if (programmingMode) {
+    programNewCard();
+  } else {
+    checkCardAccess();
+  }
+  
+  rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+}
+
+void resetToWaiting() {
+  currentState = WAITING;
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, HIGH);
+  digitalWrite(RELAY_PIN, LOW);
+  noTone(BUZZER);
+  
+  lcd.clear();
+  lcd.print(""Access Control"");
+  lcd.setCursor(0, 1);
+  lcd.print(programmingMode ? ""PROGRAMMING MODE"" : ""Scan Card"");
+}
+
+void checkCardAccess() {
+  bool authorized = false;
+  
+  for (byte i = 0; i < cardCount && i < MAX_CARDS; i++) {
+    if (compareUIDs(rfid.uid.uidByte, storedUIDs[i])) {
+      authorized = true;
+      break;
+    }
+  }
+  
+  if (authorized) {
+    grantAccess();
+  } else {
+    denyAccess();
+  }
+}
+
+void grantAccess() {
+  currentState = ACCESS_GRANTED;
+  lastStateChange = millis();
+  
+  digitalWrite(GREEN_LED, HIGH);
+  digitalWrite(RED_LED, LOW);
+  digitalWrite(RELAY_PIN, HIGH);
+  
+  tone(BUZZER, 2000, 100);
+  
+  lcd.clear();
+  lcd.print(""Access Granted"");
+  lcd.setCursor(0, 1);
+  lcd.print(""Welcome!"");
+  
+  Serial.println(""Access granted"");
+}
+
+void denyAccess() {
+  currentState = ACCESS_DENIED;
+  lastStateChange = millis();
+  
+  digitalWrite(RED_LED, HIGH);
+  
+  for (int i = 0; i < 3; i++) {
+    tone(BUZZER, 400, 200);
+    delay(300);
+  }
+  
+  lcd.clear();
+  lcd.print(""Access Denied!"");
+  lcd.setCursor(0, 1);
+  lcd.print(""Unauthorized"");
+  
+  Serial.println(""Access denied"");
+}
+
+void programNewCard() {
+  if (cardCount >= MAX_CARDS) {
+    lcd.clear();
+    lcd.print(""Memory Full!"");
+    lcd.setCursor(0, 1);
+    lcd.print(""Delete cards first"");
+    tone(BUZZER, 300, 1000);
+    delay(2000);
+    resetToWaiting();
+    return;
+  }
+  
+  bool alreadyExists = false;
+  for (byte i = 0; i < cardCount; i++) {
+    if (compareUIDs(rfid.uid.uidByte, storedUIDs[i])) {
+      alreadyExists = true;
+      break;
+    }
+  }
+  
+  if (alreadyExists) {
+    lcd.clear();
+    lcd.print(""Card already"");
+    lcd.setCursor(0, 1);
+    lcd.print(""registered!"");
+    tone(BUZZER, 300, 500);
+  } else {
+    for (byte i = 0; i < 4; i++) {
+      storedUIDs[cardCount][i] = rfid.uid.uidByte[i];
+    }
+    
+    cardCount++;
+    saveCards();
+    
+    lcd.clear();
+    lcd.print(""Card registered!"");
+    lcd.setCursor(0, 1);
+    lcd.print(""Cards: "");
+    lcd.print(cardCount);
+    tone(BUZZER, 2000, 200);
+    delay(100);
+    tone(BUZZER, 2500, 200);
+  }
+  
+  delay(1500);
+  resetToWaiting();
+}
+
+bool compareUIDs(byte* uid1, byte* uid2) {
+  for (byte i = 0; i < 4; i++) {
+    if (uid1[i] != uid2[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void toggleProgramMode() {
+  static unsigned long lastDebounceTime = 0;
+  unsigned long currentTime = millis();
+  
+  if (currentTime - lastDebounceTime > 300) {
+    programmingMode = !programmingMode;
+    
+    lcd.clear();
+    lcd.print(programmingMode ? ""Programming Mode"" : ""Normal Mode"");
+    lcd.setCursor(0, 1);
+    lcd.print(programmingMode ? ""Add new card"" : ""Scan for access"");
+    
+    tone(BUZZER, programmingMode ? 2000 : 1000, 500);
+    
+    Serial.print(""Programming mode "");
+    Serial.println(programmingMode ? ""enabled"" : ""disabled"");
+    
+    delay(1000);
+    resetToWaiting();
+    
+    lastDebounceTime = currentTime;
+  }
+}
+
+void saveCards() {
+  EEPROM.write(0, cardCount);
+  
+  for (byte i = 0; i < cardCount; i++) {
+    for (byte j = 0; j < 4; j++) {
+      EEPROM.write(1 + (i * 4) + j, storedUIDs[i][j]);
+    }
+  }
+  
+  Serial.print(""Saved "");
+  Serial.print(cardCount);
+  Serial.println("" cards to EEPROM"");
+}
+
+void loadCards() {
+  cardCount = EEPROM.read(0);
+  
+  if (cardCount > MAX_CARDS) {
+    cardCount = 0;
+    return;
+  }
+  
+  for (byte i = 0; i < cardCount; i++) {
+    for (byte j = 0; j < 4; j++) {
+      storedUIDs[i][j] = EEPROM.read(1 + (i * 4) + j);
+    }
+  }
+  
+  Serial.print(""Loaded "");
+  Serial.print(cardCount);
+  Serial.println("" cards from EEPROM"");
+}"
+GPS tracking system with data logging,"#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+#include <SPI.h>
+#include <SD.h>
+#include <Wire.h>
+#include <RTClib.h>
+
+#define GPS_RX 4
+#define GPS_TX 3
+#define SD_CS 10
+#define STATUS_LED 8
+#define ERROR_LED 7
+#define BUTTON_PIN 2
+
+#define LOG_INTERVAL 5000
+
+TinyGPSPlus gps;
+SoftwareSerial gpsSerial(GPS_RX, GPS_TX);
+RTC_DS3231 rtc;
+File logFile;
+
+unsigned long lastLogTime = 0;
+unsigned long gpsTimeout = 0;
+bool logging = false;
+String currentFileName;
+int fileCounter = 0;
+
+void setup() {
+  pinMode(STATUS_LED, OUTPUT);
+  pinMode(ERROR_LED, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  
+  Serial.begin(9600);
+  gpsSerial.begin(9600);
+  
+  if (!SD.begin(SD_CS)) {
+    Serial.println(""SD card initialization failed!"");
+    errorBlink(3);
+  }
+  
+  if (!rtc.begin()) {
+    Serial.println(""RTC initialization failed!"");
+    errorBlink(2);
+  }
+  
+  if (rtc.lostPower()) {
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  }
+  
+  generateFileName();
+  Serial.println(""GPS Logger initialized"");
+  Serial.print(""Logging to: "");
+  Serial.println(currentFileName);
+  
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), toggleLogging, FALLING);
+  
+  digitalWrite(STATUS_LED, HIGH);
+  delay(500);
+  digitalWrite(STATUS_LED, LOW);
+}
+
+void loop() {
+  while (gpsSerial.available() > 0) {
+    if (gps.encode(gpsSerial.read())) {
+      gpsTimeout = millis();
+    }
+  }
+  
+  if (millis() - gpsTimeout > 5000) {
+    digitalWrite(ERROR_LED, HIGH);
+  } else {
+    digitalWrite(ERROR_LED, LOW);
+  }
+  
+  if (logging && gps.location.isValid() && millis() - lastLogTime >= LOG_INTERVAL) {
+    logGPSData();
+    lastLogTime = millis();
+    
+    digitalWrite(STATUS_LED, HIGH);
+    delay(50);
+    digitalWrite(STATUS_LED, LOW);
+  }
+}
+
+void logGPSData() {
+  DateTime now = rtc.now();
+  
+  logFile = SD.open(currentFileName, FILE_WRITE);
+  
+  if (logFile) {
+    logFile.print(now.timestamp());
+    logFile.print("","");
+    
+    logFile.print(gps.location.lat(), 6);
+    logFile.print("","");
+    logFile.print(gps.location.lng(), 6);
+    logFile.print("","");
+    
+    logFile.print(gps.altitude.meters(), 2);
+    logFile.print("","");
+    
+    logFile.print(gps.speed.kmph(), 2);
+    logFile.print("","");
+    
+    logFile.print(gps.course.deg(), 2);
+    logFile.print("","");
+    
+    logFile.print(gps.satellites.value());
+    logFile.print("","");
+    
+    logFile.print(gps.hdop.hdop(), 2);
+    logFile.println();
+    
+    logFile.close();
+    
+    Serial.print(""Logged position: "");
+    Serial.print(gps.location.lat(), 6);
+    Serial.print("", "");
+    Serial.println(gps.location.lng(), 6);
+  } else {
+    Serial.println(""Error opening log file!"");
+    errorBlink(1);
+  }
+}
+
+void generateFileName() {
+  DateTime now = rtc.now();
+  
+  String baseFileName = ""/GPS_"";
+  baseFileName += String(now.year());
+  baseFileName += String(now.month() < 10 ? ""0"" : """") + String(now.month());
+  baseFileName += String(now.day() < 10 ? ""0"" : """") + String(now.day());
+  baseFileName += ""_"";
+  
+  String fullFileName;
+  bool fileExists;
+  
+  do {
+    fullFileName = baseFileName + String(fileCounter++) + "".csv"";
+    fileExists = SD.exists(fullFileName);
+  } while (fileExists);
+  
+  currentFileName = fullFileName;
+  
+  logFile = SD.open(currentFileName, FILE_WRITE);
+  if (logFile) {
+    logFile.println(""Timestamp,Latitude,Longitude,Altitude,Speed,Course,Satellites,HDOP"");
+    logFile.close();
+  }
+}
+
+void toggleLogging() {
+  static unsigned long lastButtonTime = 0;
+  
+  if (millis() - lastButtonTime > 500) {
+    logging = !logging;
+    
+    if (logging) {
+      Serial.println(""Logging started"");
+      generateFileName();
+      Serial.print(""New log file: "");
+      Serial.println(currentFileName);
+    } else {
+      Serial.println(""Logging stopped"");
+    }
+    
+    for (int i = 0; i < (logging ? 2 : 3); i++) {
+      digitalWrite(STATUS_LED, HIGH);
+      delay(200);
+      digitalWrite(STATUS_LED, LOW);
+      delay(200);
+    }
+    
+    lastButtonTime = millis();
+  }
+}
+
+void errorBlink(int code) {
+  while (true) {
+    for (int i = 0; i < code; i++) {
+      digitalWrite(ERROR_LED, HIGH);
+      delay(200);
+      digitalWrite(ERROR_LED, LOW);
+      delay(200);
+    }
+    delay(1000);
+  }
+}"
+Wireless environmental monitoring system,"#include <RH_ASK.h>
+#include <SPI.h>
+#include <DHT.h>
+#include <BH1750.h>
+#include <Wire.h>
+
+#define DHT_PIN 5
+#define DHT_TYPE DHT22
+#define SOIL_MOISTURE_PIN A0
+#define RADIO_TX_PIN 12
+#define BATTERY_PIN A1
+#define TX_INTERVAL 60000
+#define TRANSMITTER_ID 3
+
+RH_ASK driver(2000, PIN_UNUSED, RADIO_TX_PIN);
+DHT dht(DHT_PIN, DHT_TYPE);
+BH1750 lightMeter;
+
+struct SensorData {
+  int transmitterId;
+  float temperature;
+  float humidity;
+  int soilMoisture;
+  float lightLevel;
+  float batteryVoltage;
+  unsigned long messageCount;
+};
+
+SensorData data;
+unsigned long messageCounter = 0;
+unsigned long lastTransmitTime = 0;
+
+void setup() {
+  pinMode(SOIL_MOISTURE_PIN, INPUT);
+  pinMode(BATTERY_PIN, INPUT);
+  
+  Serial.begin(9600);
+  
+  if (!driver.init()) {
+    Serial.println(""Radio init failed"");
+  }
+  
+  dht.begin();
+  Wire.begin();
+  lightMeter.begin();
+  
+  data.transmitterId = TRANSMITTER_ID;
+  data.messageCount = 0;
+  
+  Serial.println(""Environmental sensor node initialized"");
+  
+  delay(2000);
+}
+
+void loop() {
+  if (millis() - lastTransmitTime >= TX_INTERVAL) {
+    readSensors();
+    transmitData();
+    lastTransmitTime = millis();
+    
+    enterLowPowerMode();
+  }
+}
+
+void readSensors() {
+  data.temperature = dht.readTemperature();
+  data.humidity = dht.readHumidity();
+  
+  int soilRaw = analogRead(SOIL_MOISTURE_PIN);
+  data.soilMoisture = map(soilRaw, 0, 1023, 0, 100);
+  
+  data.lightLevel = lightMeter.readLightLevel();
+  
+  int batteryRaw = analogRead(BATTERY_PIN);
+  data.batteryVoltage = batteryRaw * (5.0 / 1023.0) * 2;
+  
+  data.messageCount = ++messageCounter;
+  
+  Serial.println(""Sensor readings:"");
+  Serial.print(""Temperature: "");
+  Serial.print(data.temperature);
+  Serial.println("" *C"");
+  
+  Serial.print(""Humidity: "");
+  Serial.print(data.humidity);
+  Serial.println("" %"");
+  
+  Serial.print(""Soil Moisture: "");
+  Serial.print(data.soilMoisture);
+  Serial.println("" %"");
+  
+  Serial.print(""Light: "");
+  Serial.print(data.lightLevel);
+  Serial.println("" lx"");
+  
+  Serial.print(""Battery: "");
+  Serial.print(data.batteryVoltage);
+  Serial.println("" V"");
+}
+
+void transmitData() {
+  uint8_t buf[sizeof(SensorData)];
+  memcpy(buf, &data, sizeof(SensorData));
+  
+  driver.send(buf, sizeof(SensorData));
+  driver.waitPacketSent();
+  
+  Serial.print(""Data packet #"");
+  Serial.print(data.messageCount);
+  Serial.println("" transmitted"");
+}
+
+void enterLowPowerMode() {
+  Serial.println(""Entering low power mode..."");
+  Serial.println();
+  delay(100);
+  
+  // Here you would implement deep sleep mode
+  // using watchdog timer or sleep library
+  // for the specific Arduino platform
+}"
+Autonomous line following robot with PID control,"#define LEFT_MOTOR_PWM 5
+#define LEFT_MOTOR_DIR 4
+#define RIGHT_MOTOR_PWM 6
+#define RIGHT_MOTOR_DIR 7
+
+#define NUM_SENSORS 5
+const int SENSOR_PINS[NUM_SENSORS] = {A0, A1, A2, A3, A4};
+int sensorValues[NUM_SENSORS];
+int sensorThresholds[NUM_SENSORS] = {500, 500, 500, 500, 500};
+
+#define CALIBRATION_BUTTON 2
+#define STATUS_LED 13
+
+#define BASE_SPEED 150
+#define MAX_SPEED 255
+
+float Kp = 25;
+float Ki = 0;
+float Kd = 15;
+
+float lastError = 0;
+float integral = 0;
+bool running = false;
+bool calibrated = false;
+
+void setup() {
+  pinMode(LEFT_MOTOR_PWM, OUTPUT);
+  pinMode(LEFT_MOTOR_DIR, OUTPUT);
+  pinMode(RIGHT_MOTOR_PWM, OUTPUT);
+  pinMode(RIGHT_MOTOR_DIR, OUTPUT);
+  
+  pinMode(CALIBRATION_BUTTON, INPUT_PULLUP);
+  pinMode(STATUS_LED, OUTPUT);
+  
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    pinMode(SENSOR_PINS[i], INPUT);
+  }
+  
+  Serial.begin(9600);
+  Serial.println(""Line follower initialized"");
+  
+  digitalWrite(LEFT_MOTOR_DIR, HIGH);
+  digitalWrite(RIGHT_MOTOR_DIR, HIGH);
+  
+  stopMotors();
+  
+  attachInterrupt(digitalPinToInterrupt(CALIBRATION_BUTTON), buttonISR, FALLING);
+}
+
+void loop() {
+  readSensors();
+  
+  if (running && calibrated) {
+    followLine();
+  }
+}
+
+void readSensors() {
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    sensorValues[i] = analogRead(SENSOR_PINS[i]);
+  }
+}
+
+float calculatePosition() {
+  float weightedSum = 0;
+  int sum = 0;
+  
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    bool isLineDetected = (sensorValues[i] > sensorThresholds[i]);
+    
+    if (isLineDetected) {
+      weightedSum += i * 1000;
+      sum += 1;
+    }
+  }
+  
+  if (sum == 0) {
+    return lastError > 0 ? 4000 : -4000;
+  }
+  
+  return (weightedSum / sum) - ((NUM_SENSORS - 1) * 500);
+}
+
+void followLine() {
+  float position = calculatePosition();
+  float error = 0 - position;
+  
+  integral += error;
+  integral = constrain(integral, -1000, 1000);
+  
+  float derivative = error - lastError;
+  lastError = error;
+  
+  float correction = (Kp * error + Ki * integral + Kd * derivative) / 100;
+  
+  int leftSpeed = constrain(BASE_SPEED + correction, 0, MAX_SPEED);
+  int rightSpeed = constrain(BASE_SPEED - correction, 0, MAX_SPEED);
+  
+  setMotorSpeed(LEFT_MOTOR_PWM, leftSpeed);
+  setMotorSpeed(RIGHT_MOTOR_PWM, rightSpeed);
+  
+  Serial.print(""Position: "");
+  Serial.print(position);
+  Serial.print("" | Correction: "");
+  Serial.print(correction);
+  Serial.print("" | Motors: L="");
+  Serial.print(leftSpeed);
+  Serial.print("" R="");
+  Serial.println(rightSpeed);
+}
+
+void calibrateSensors() {
+  Serial.println(""Calibration started"");
+  digitalWrite(STATUS_LED, HIGH);
+  
+  int minValues[NUM_SENSORS];
+  int maxValues[NUM_SENSORS];
+  
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    minValues[i] = 1023;
+    maxValues[i] = 0;
+  }
+  
+  unsigned long calibrationStartTime = millis();
+  
+  while (millis() - calibrationStartTime < 5000) {
+    for (int i = 0; i < NUM_SENSORS; i++) {
+      int value = analogRead(SENSOR_PINS[i]);
+      
+      if (value > maxValues[i]) {
+        maxValues[i] = value;
+      }
+      if (value < minValues[i]) {
+        minValues[i] = value;
+      }
+    }
+    
+    delay(10);
+  }
+  
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    sensorThresholds[i] = (minValues[i] + maxValues[i]) / 2;
+    
+    Serial.print(""Sensor "");
+    Serial.print(i);
+    Serial.print("" threshold: "");
+    Serial.println(sensorThresholds[i]);
+  }
+  
+  Serial.println(""Calibration complete"");
+  digitalWrite(STATUS_LED, LOW);
+  
+  calibrated = true;
+}
+
+void buttonISR() {
+  static unsigned long lastButtonTime = 0;
+  unsigned long now = millis();
+  
+  if (now - lastButtonTime > 300) {
+    if (!calibrated) {
+      calibrateSensors();
+    } else {
+      running = !running;
+      
+      if (running) {
+        Serial.println(""Robot started"");
+      } else {
+        Serial.println(""Robot stopped"");
+        stopMotors();
+      }
+    }
+    
+    lastButtonTime = now;
+  }
+}
+
+void setMotorSpeed(int motorPin, int speed) {
+  analogWrite(motorPin, speed);
+}
+
+void stopMotors() {
+  analogWrite(LEFT_MOTOR_PWM, 0);
+  analogWrite(RIGHT_MOTOR_PWM, 0);
+}"
+Temperature controller with autotune PID,"#include <PID_AutoTune_v0.h>
+#include <PID_v1.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+#define ONE_WIRE_BUS 2
+#define RELAY_PIN 4
+#define UP_BUTTON 5
+#define DOWN_BUTTON 6
+#define MODE_BUTTON 7
+#define STATUS_LED 13
+#define AUTOTUNE_INPUT_PIN A0
+
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+double setpoint = 50.0;
+double input, output;
+
+double Kp = 2.0;
+double Ki = 0.5;
+double Kd = 2.0;
+
+PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+PID_ATune aTune(&input, &output);
+
+enum ControllerMode {
+  RUN,
+  SET_TEMP,
+  TUNE_PID,
+  PARAMETERS
+};
+
+ControllerMode currentMode = RUN;
+unsigned long lastDisplayUpdate = 0;
+unsigned long lastTempRead = 0;
+boolean tuning = false;
+
+void setup() {
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(UP_BUTTON, INPUT_PULLUP);
+  pinMode(DOWN_BUTTON, INPUT_PULLUP);
+  pinMode(MODE_BUTTON, INPUT_PULLUP);
+  pinMode(STATUS_LED, OUTPUT);
+  
+  digitalWrite(RELAY_PIN, LOW);
+  
+  Serial.begin(9600);
+  sensors.begin();
+  
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print(""Temp Controller"");
+  
+  myPID.SetMode(AUTOMATIC);
+  myPID.SetSampleTime(1000);
+  myPID.SetOutputLimits(0, 100);
+  
+  delay(2000);
+}
+
+void loop() {
+  handleButtons();
+  
+  if (millis() - lastTempRead >= 1000) {
+    readTemperature();
+    lastTempRead = millis();
+  }
+  
+  if (tuning) {
+    runAutotune();
+  } else {
+    runPID();
+  }
+  
+  if (millis() - lastDisplayUpdate >= 500) {
+    updateDisplay();
+    lastDisplayUpdate = millis();
+  }
+}
+
+void readTemperature() {
+  sensors.requestTemperatures();
+  input = sensors.getTempCByIndex(0);
+  
+  if (input == DEVICE_DISCONNECTED_C) {
+    Serial.println(""Error: Temperature sensor disconnected!"");
+    input = 0;
+  }
+}
+
+void runPID() {
+  myPID.Compute();
+  
+  if (output > 50) {
+    digitalWrite(RELAY_PIN, HIGH);
+    digitalWrite(STATUS_LED, HIGH);
+  } else {
+    digitalWrite(RELAY_PIN, LOW);
+    digitalWrite(STATUS_LED, LOW);
+  }
+}
+
+void updateDisplay() {
+  lcd.clear();
+  
+  switch (currentMode) {
+    case RUN:
+      lcd.setCursor(0, 0);
+      lcd.print(""Temp: "");
+      lcd.print(input, 1);
+      lcd.print("" C"");
+      
+      lcd.setCursor(0, 1);
+      lcd.print(""Set: "");
+      lcd.print(setpoint, 1);
+      lcd.print("" C  "");
+      lcd.print(output > 50 ? ""ON"" : ""OFF"");
+      break;
+      
+    case SET_TEMP:
+      lcd.setCursor(0, 0);
+      lcd.print(""Set Temperature:"");
+      
+      lcd.setCursor(0, 1);
+      lcd.print(""> "");
+      lcd.print(setpoint, 1);
+      lcd.print("" C"");
+      break;
+      
+    case TUNE_PID:
+      lcd.setCursor(0, 0);
+      lcd.print(""PID Autotune"");
+      
+      lcd.setCursor(0, 1);
+      if (tuning) {
+        lcd.print(""Tuning..."");
+      } else {
+        lcd.print(""Press UP to start"");
+      }
+      break;
+      
+    case PARAMETERS:
+      lcd.setCursor(0, 0);
+      lcd.print(""Kp:"");
+      lcd.print(Kp, 1);
+      lcd.print("" Ki:"");
+      lcd.print(Ki, 1);
+      
+      lcd.setCursor(0, 1);
+      lcd.print(""Kd:"");
+      lcd.print(Kd, 1);
+      break;
+  }
+}
+
+void handleButtons() {
+  static unsigned long lastButtonTime = 0;
+  if (millis() - lastButtonTime < 200) return;
+  
+  if (digitalRead(MODE_BUTTON) == LOW) {
+    currentMode = (ControllerMode)(((int)currentMode + 1) % 4);
+    lastButtonTime = millis();
+  }
+  
+  if (digitalRead(UP_BUTTON) == LOW) {
+    switch (currentMode) {
+      case SET_TEMP:
+        setpoint += 0.5;
+        if (setpoint > 100) setpoint = 100;
+        break;
+        
+      case TUNE_PID:
+        if (!tuning) {
+          startAutotune();
+        }
+        break;
+    }
+    lastButtonTime = millis();
+  }
+  
+  if (digitalRead(DOWN_BUTTON) == LOW) {
+    switch (currentMode) {
+      case SET_TEMP:
+        setpoint -= 0.5;
+        if (setpoint < 0) setpoint = 0;
+        break;
+        
+      case TUNE_PID:
+        if (tuning) {
+          cancelAutotune();
+        }
+        break;
+    }
+    lastButtonTime = millis();
+  }
+}
+
+void startAutotune() {
+  tuning = true;
+  aTune.SetNoiseBand(1.0);
+  aTune.SetOutputStep(50);
+  aTune.SetLookbackSec(30);
+  aTune.SetControlType(1);
+  Serial.println(""Autotune started"");
+}
+
+void cancelAutotune() {
+  tuning = false;
+  Serial.println(""Autotune cancelled"");
+}
+
+void runAutotune() {
+  if (aTune.Runtime()) {
+    tuning = false;
+    
+    Kp = aTune.GetKp();
+    Ki = aTune.GetKi();
+    Kd = aTune.GetKd();
+    
+    myPID.SetTunings(Kp, Ki, Kd);
+    
+    Serial.println(""Autotune complete"");
+    Serial.print(""Kp: ""); Serial.println(Kp);
+    Serial.print(""Ki: ""); Serial.println(Ki);
+    Serial.print(""Kd: ""); Serial.println(Kd);
+    
+    currentMode = PARAMETERS;
+  }
+}"
+Blink the built-in LED every second.,"void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(1000);
+}"
+Read analog value from A0 and print it.,"void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int sensorValue = analogRead(A0);
+  Serial.println(sensorValue);
+  delay(500);
+}"
+Turn on an LED when a button is pressed.,"void setup() {
+  pinMode(13, OUTPUT);
+  pinMode(2, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(2) == LOW) {
+    digitalWrite(13, HIGH);
+  } else {
+    digitalWrite(13, LOW);
+  }
+}"
+Fade an LED using PWM on pin 9.,"void setup() {
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i <= 255; i++) {
+    analogWrite(9, i);
+    delay(10);
+  }
+  for (int i = 255; i >= 0; i--) {
+    analogWrite(9, i);
+    delay(10);
+  }
+}"
+Buzzer beeps every half second.,"void setup() {
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(8, HIGH);
+  delay(500);
+  digitalWrite(8, LOW);
+  delay(500);
+}"
+"Display ""Hello"" on Serial Monitor once.","void setup() {
+  Serial.begin(9600);
+  Serial.println(""Hello"");
+}
+
+void loop() {
+  // Do nothing
+}"
+Count numbers and print to Serial.,"int count = 0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.println(count++);
+  delay(1000);
+}"
+Use potentiometer to control LED brightness.,"void setup() {
+  pinMode(6, OUTPUT);
+}
+
+void loop() {
+  int pot = analogRead(A0);
+  int brightness = map(pot, 0, 1023, 0, 255);
+  analogWrite(6, brightness);
+}"
+Toggle LED state every time button is pressed.,"bool ledState = false;
+bool lastButtonState = HIGH;
+
+void setup() {
+  pinMode(12, OUTPUT);
+  pinMode(4, INPUT_PULLUP);
+}
+
+void loop() {
+  bool currentButtonState = digitalRead(4);
+  if (lastButtonState == HIGH && currentButtonState == LOW) {
+    ledState = !ledState;
+    digitalWrite(12, ledState);
+    delay(200);
+  }
+  lastButtonState = currentButtonState;
+}"
+Blink two LEDs alternately.,"void setup() {
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(10, HIGH);
+  digitalWrite(11, LOW);
+  delay(500);
+  digitalWrite(10, LOW);
+  digitalWrite(11, HIGH);
+  delay(500);
+}"
+Toggle a GPIO pin every 250ms using Sduino.,"void setup() {
+  pinMode(3, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(3, HIGH);
+  delay(250);
+  digitalWrite(3, LOW);
+  delay(250);
+}"
+Read digital input on pin 5 and reflect it on pin 6.,"void setup() {
+  pinMode(5, INPUT);
+  pinMode(6, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(6, digitalRead(5));
+}"
+Pulse an LED for 100ms every second.,"void setup() {
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(9, HIGH);
+  delay(100);
+  digitalWrite(9, LOW);
+  delay(900);
+}"
+"Print ""arduino is cool!"" every second.","void setup() {
+  Serial_begin(9600);
+}
+
+void loop() {
+  Serial_println(""arduino is cool!"");
+  delay(1000);
+}"
+Dim LED using analog output based on delay.,"void setup() {
+  pinMode(10, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 255; i++) {
+    analogWrite(10, i);
+    delay(5);
+  }
+  for (int i = 255; i > 0; i--) {
+    analogWrite(10, i);
+    delay(5);
+  }
+}"
+Blink LED only when digital pin 7 is HIGH.,"void setup() {
+  pinMode(7, INPUT);
+  pinMode(2, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(7)) {
+    digitalWrite(2, HIGH);
+    delay(500);
+    digitalWrite(2, LOW);
+    delay(500);
+  }
+}"
+Serial echo input characters.,"void setup() {
+  Serial_begin(9600);
+}
+
+void loop() {
+  if (Serial_available()) {
+    char c = Serial_read();
+    Serial_write(c);
+  }
+}"
+"Blink Morse code for ""S"".","void setup() {
+  pinMode(4, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(4, HIGH);
+    delay(200);
+    digitalWrite(4, LOW);
+    delay(200);
+  }
+  delay(1000);
+}"
+Toggle state of pin 8 with a button press on pin 1.,"bool state = false;
+bool prev = HIGH;
+
+void setup() {
+  pinMode(1, INPUT_PULLUP);
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  bool curr = digitalRead(1);
+  if (prev == HIGH && curr == LOW) {
+    state = !state;
+    digitalWrite(8, state);
+    delay(200);
+  }
+  prev = curr;
+}"
+Map analog value from A1 to PWM on pin 5.,"void setup() {
+  pinMode(5, OUTPUT);
+}
+
+void loop() {
+  int val = analogRead(A1);
+  val = map(val, 0, 1023, 0, 255);
+  analogWrite(5, val);
+}"
+Flash LED three times on startup.,"void setup() {
+  pinMode(13, OUTPUT);
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(13, HIGH);
+    delay(200);
+    digitalWrite(13, LOW);
+    delay(200);
+  }
+}
+
+void loop() {
+}"
+Flash LED three times on startup.,"void setup() {
+  pinMode(13, OUTPUT);
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(13, HIGH);
+    delay(200);
+    digitalWrite(13, LOW);
+    delay(200);
+  }
+}
+
+void loop() {
+}"
+Sweep a servo motor from 0 to 180 degrees.,"#include <Servo.h>
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  for (int pos = 0; pos <= 180; pos++) {
+    myServo.write(pos);
+    delay(15);
+  }
+  for (int pos = 180; pos >= 0; pos--) {
+    myServo.write(pos);
+    delay(15);
+  }
+}"
+Light up an LED brighter based on analog input.,"void setup() {
+  pinMode(6, OUTPUT);
+}
+
+void loop() {
+  int sensorValue = analogRead(A0);
+  int outputValue = map(sensorValue, 0, 1023, 0, 255);
+  analogWrite(6, outputValue);
+}"
+Play a tone on a piezo buzzer.,"void setup() {
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  tone(8, 1000); // 1kHz tone
+  delay(500);
+  noTone(8);
+  delay(500);
+}"
+"Print ""Ready!"" when button is pressed.","void setup() {
+  pinMode(2, INPUT_PULLUP);
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (digitalRead(2) == LOW) {
+    Serial.println(""Ready!"");
+    delay(300);
+  }
+}"
+Cycle three LEDs one after another.,"void setup() {
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(3, HIGH);
+  delay(300);
+  digitalWrite(3, LOW);
+  digitalWrite(4, HIGH);
+  delay(300);
+  digitalWrite(4, LOW);
+  digitalWrite(5, HIGH);
+  delay(300);
+  digitalWrite(5, LOW);
+}"
+Print analog value only if it changes.,"int lastValue = 0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int val = analogRead(A0);
+  if (val != lastValue) {
+    Serial.println(val);
+    lastValue = val;
+  }
+  delay(100);
+}"
+Use millis() to blink LED without delay().,"unsigned long prevMillis = 0;
+const long interval = 1000;
+bool ledState = false;
+
+void setup() {
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  unsigned long currentMillis = millis();
+  if (currentMillis - prevMillis >= interval) {
+    prevMillis = currentMillis;
+    ledState = !ledState;
+    digitalWrite(13, ledState);
+  }
+}"
+Read temperature from LM35 and display in Celsius.,"void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int reading = analogRead(A0);
+  float voltage = reading * 5.0 / 1023.0;
+  float temperatureC = voltage * 100;
+  Serial.println(temperatureC);
+  delay(1000);
+}"
+"Display ""Hello World"" on an LCD.","#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  lcd.begin(16, 2);
+  lcd.print(""Hello World"");
+}
+
+void loop() {
+}"
+Measure distance using ultrasonic sensor (HC-SR04).,"const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;
+
+  Serial.println(distance);
+  delay(500);
+}"
+Display a counter on 7-segment display using shift register.,"int latchPin = 8;
+int clockPin = 12;
+int dataPin  = 11;
+
+byte digits[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66,
+                 0x6D, 0x7D, 0x07, 0x7F, 0x6F};
+
+void setup() {
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, MSBFIRST, digits[i]);
+    digitalWrite(latchPin, HIGH);
+    delay(1000);
+  }
+}"
+Detect light level using LDR and turn on LED if dark.,"void setup() {
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  int lightLevel = analogRead(A0);
+  if (lightLevel < 300) {
+    digitalWrite(8, HIGH);
+  } else {
+    digitalWrite(8, LOW);
+  }
+}"
+Log temperature to Serial every 5 seconds using millis().,"unsigned long prevTime = 0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (millis() - prevTime >= 5000) {
+    int reading = analogRead(A1);
+    float temp = (reading * 5.0 / 1023.0) * 100;
+    Serial.println(temp);
+    prevTime = millis();
+  }
+}"
+Control LED brightness with 2 buttons (up/down).,"int brightness = 128;
+
+void setup() {
+  pinMode(2, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(2) == LOW && brightness < 255) {
+    brightness += 5;
+    delay(200);
+  }
+  if (digitalRead(3) == LOW && brightness > 0) {
+    brightness -= 5;
+    delay(200);
+  }
+  analogWrite(9, brightness);
+}"
+Simulate traffic light system with LEDs.,"void setup() {
+  pinMode(6, OUTPUT); // Red
+  pinMode(5, OUTPUT); // Yellow
+  pinMode(4, OUTPUT); // Green
+}
+
+void loop() {
+  digitalWrite(6, HIGH); // Red
+  delay(3000);
+  digitalWrite(6, LOW);
+  digitalWrite(5, HIGH); // Yellow
+  delay(1000);
+  digitalWrite(5, LOW);
+  digitalWrite(4, HIGH); // Green
+  delay(3000);
+  digitalWrite(4, LOW);
+}"
+Light chase effect with 6 LEDs.,"int leds[] = {2, 3, 4, 5, 6, 7};
+
+void setup() {
+  for (int i = 0; i < 6; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+}
+
+void loop() {
+  for (int i = 0; i < 6; i++) {
+    digitalWrite(leds[i], HIGH);
+    delay(100);
+    digitalWrite(leds[i], LOW);
+  }
+}"
+Control LED brightness using serial input (0–255).,"void setup() {
+  Serial.begin(9600);
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  if (Serial.available()) {
+    int val = Serial.parseInt();
+    val = constrain(val, 0, 255);
+    analogWrite(9, val);
+  }
+}"
+Buzzer alarm on motion detection with PIR sensor.,"void setup() {
+  pinMode(2, INPUT);
+  pinMode(8, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(2) == HIGH) {
+    tone(8, 1000);
+    delay(1000);
+    noTone(8);
+  }
+}"
+Countdown timer from 10 seconds on Serial.,"void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  for (int i = 10; i >= 0; i--) {
+    Serial.println(i);
+    delay(1000);
+  }
+  Serial.println(""Time's up!"");
+  while (1);
+}"
+Read temperature and humidity using DHT11 sensor.,"#include <DHT.h>
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  Serial.print(""Temp: "");
+  Serial.print(t);
+  Serial.print(""°C  Humidity: "");
+  Serial.print(h);
+  Serial.println(""%"");
+  delay(2000);
+}"
+Display scrolling text on OLED screen using SSD1306.,"#include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+void setup() {
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+}
+
+void loop() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 30);
+  display.print(""Hello Arduino!"");
+  display.display();
+  delay(1000);
+}"
+Control servo motor angle with potentiometer.,"#include <Servo.h>
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  int val = analogRead(A0);
+  int angle = map(val, 0, 1023, 0, 180);
+  myServo.write(angle);
+  delay(15);
+}"
+Store and read value from EEPROM.,"#include <EEPROM.h>
+
+void setup() {
+  Serial.begin(9600);
+  EEPROM.write(0, 123);
+  delay(1000);
+  int value = EEPROM.read(0);
+  Serial.print(""EEPROM Value: "");
+  Serial.println(value);
+}
+
+void loop() {
+}"
+Measure light intensity with LDR and display on LCD.,"#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  lcd.begin(16, 2);
+}
+
+void loop() {
+  int lightVal = analogRead(A0);
+  lcd.setCursor(0, 0);
+  lcd.print(""Light: "");
+  lcd.print(lightVal);
+  delay(1000);
+}"
+Control a DC motor with L298N and pushbutton.,"int in1 = 6;
+int in2 = 7;
+int button = 2;
+
+void setup() {
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(button, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(button) == LOW) {
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+  } else {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+  }
+}"
+Display analog sensor data as bar graph on LED strip (Neopixel).,"#include <Adafruit_NeoPixel.h>
+
+#define PIN 6
+#define NUMPIXELS 10
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show();
+}
+
+void loop() {
+  int val = analogRead(A0);
+  int num = map(val, 0, 1023, 0, NUMPIXELS);
+  for (int i = 0; i < NUMPIXELS; i++) {
+    if (i < num) strip.setPixelColor(i, strip.Color(0, 150, 0));
+    else strip.setPixelColor(i, 0);
+  }
+  strip.show();
+  delay(100);
+}"
+Detect tilt using accelerometer (MPU6050).,"#include <Wire.h>
+#include <MPU6050.h>
+
+MPU6050 mpu;
+
+void setup() {
+  Serial.begin(9600);
+  Wire.begin();
+  mpu.initialize();
+}
+
+void loop() {
+  int16_t ax, ay, az;
+  mpu.getAcceleration(&ax, &ay, &az);
+  Serial.print(""X: ""); Serial.print(ax);
+  Serial.print("" Y: ""); Serial.print(ay);
+  Serial.print("" Z: ""); Serial.println(az);
+  delay(500);
+}"
+Scan I2C bus for connected devices.,"#include <Wire.h>
+
+void setup() {
+  Wire.begin();
+  Serial.begin(9600);
+  Serial.println(""Scanning..."");
+  for (byte addr = 1; addr < 127; addr++) {
+    Wire.beginTransmission(addr);
+    if (Wire.endTransmission() == 0) {
+      Serial.print(""Found device at 0x"");
+      Serial.println(addr, HEX);
+    }
+  }
+  Serial.println(""Done."");
+}
+
+void loop() {
+}"
+Control relay module to turn on lamp for 10 seconds.,"int relayPin = 7;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, LOW);
+}
+
+void loop() {
+  digitalWrite(relayPin, HIGH);
+  delay(10000);
+  digitalWrite(relayPin, LOW);
+  delay(5000);
+}"
+Control relay module to turn on lamp for 10 seconds.,"int relayPin = 7;
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, LOW);
+}
+void loop() {
+  digitalWrite(relayPin, HIGH);
+  delay(10000);
+  digitalWrite(relayPin, LOW);
+  delay(5000);
+}"
+Read temperature from DHT11 sensor and display on serial monitor.,"#include <DHT.h>
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+void loop() {
+  float t = dht.readTemperature();
+  if (!isnan(t)) {
+    Serial.print(""Temperature: "");
+    Serial.print(t);
+    Serial.println("" °C"");
+  }
+  delay(2000);
+}"
+Motion-activated LED using PIR sensor.,"int pirPin = 3;
+int ledPin = 13;
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+void loop() {
+  if (digitalRead(pirPin) == HIGH) {
+    digitalWrite(ledPin, HIGH);
+    Serial.println(""Motion detected!"");
+    delay(3000);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+  delay(100);
+}"
+Ultrasonic sensor distance measurement.,"#define TRIG_PIN 9
+#define ECHO_PIN 10
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+}
+void loop() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  int distance = duration * 0.034 / 2;
+  
+  Serial.print(""Distance: "");
+  Serial.print(distance);
+  Serial.println("" cm"");
+  delay(500);
+}"
+Soil moisture sensor for plant watering system.,"int moisturePin = A0;
+int pumpPin = 8;
+int threshold = 500;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pumpPin, OUTPUT);
+  digitalWrite(pumpPin, LOW);
+}
+void loop() {
+  int moisture = analogRead(moisturePin);
+  Serial.print(""Moisture: "");
+  Serial.println(moisture);
+  
+  if (moisture < threshold) {
+    digitalWrite(pumpPin, HIGH);
+    delay(2000);
+    digitalWrite(pumpPin, LOW);
+  }
+  delay(5000);
+}"
+RGB LED color cycle.,"int redPin = 9;
+int greenPin = 10;
+int bluePin = 11;
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+void loop() {
+  // Red
+  setColor(255, 0, 0);
+  delay(1000);
+  // Green
+  setColor(0, 255, 0);
+  delay(1000);
+  // Blue
+  setColor(0, 0, 255);
+  delay(1000);
+  // Yellow
+  setColor(255, 255, 0);
+  delay(1000);
+}
+void setColor(int red, int green, int blue) {
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+}"
+Light-dependent resistor to control LED brightness.,"int ldrPin = A0;
+int ledPin = 9;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+}
+void loop() {
+  int lightLevel = analogRead(ldrPin);
+  int brightness = map(lightLevel, 0, 1023, 255, 0);
+  analogWrite(ledPin, brightness);
+  
+  Serial.print(""Light: "");
+  Serial.print(lightLevel);
+  Serial.print("" | Brightness: "");
+  Serial.println(brightness);
+  delay(100);
+}"
+Button-controlled servo motor position.,"#include <Servo.h>
+int buttonPin = 2;
+int servoPin = 9;
+Servo myServo;
+int angle = 0;
+
+void setup() {
+  myServo.attach(servoPin);
+  pinMode(buttonPin, INPUT_PULLUP);
+  myServo.write(angle);
+}
+void loop() {
+  if (digitalRead(buttonPin) == LOW) {
+    angle += 45;
+    if (angle > 180) {
+      angle = 0;
+    }
+    myServo.write(angle);
+    delay(500);
+  }
+}"
+Sound sensor to detect claps and toggle LED.,"int soundPin = A0;
+int ledPin = 13;
+boolean ledState = false;
+int threshold = 500;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+}
+void loop() {
+  int soundValue = analogRead(soundPin);
+  Serial.println(soundValue);
+  
+  if (soundValue > threshold) {
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+    delay(300);
+  }
+  delay(10);
+}"
+Temperature-controlled cooling fan.,"#include <DHT.h>
+#define DHTPIN 4
+#define DHTTYPE DHT22
+#define FANPIN 8
+#define TEMP_THRESHOLD 27.0
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  pinMode(FANPIN, OUTPUT);
+  digitalWrite(FANPIN, LOW);
+}
+void loop() {
+  float temp = dht.readTemperature();
+  
+  if (!isnan(temp)) {
+    Serial.print(""Temperature: "");
+    Serial.print(temp);
+    Serial.println("" °C"");
+    
+    if (temp >= TEMP_THRESHOLD) {
+      digitalWrite(FANPIN, HIGH);
+      Serial.println(""Fan ON"");
+    } else {
+      digitalWrite(FANPIN, LOW);
+      Serial.println(""Fan OFF"");
+    }
+  }
+  delay(2000);
+}"
+WiFi weather fetch using ESP8266 and display on Serial.,"#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+
+const char* ssid = ""YOUR_SSID"";
+const char* password = ""YOUR_PASS"";
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(""."");
+  }
+  Serial.println(""\nConnected!"");
+}
+
+void loop() {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin(""http://api.weatherapi.com/v1/current.json?key=YOUR_KEY&q=London"");
+    int httpCode = http.GET();
+    if (httpCode == 200) {
+      String payload = http.getString();
+      Serial.println(payload);
+    } else {
+      Serial.println(""Failed to fetch data"");
+    }
+    http.end();
+  }
+  delay(60000);
+}"
+RFID door lock using MFRC522 module.,"#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+MFRC522 rfid(SS_PIN, RST_PIN);
+byte masterCard[] = {0xDE, 0xAD, 0xBE, 0xEF};
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+  pinMode(8, OUTPUT); // Lock control
+}
+
+void loop() {
+  if (!rfid.PICC_IsNewCardPresent()) return;
+  if (!rfid.PICC_ReadCardSerial()) return;
+
+  bool match = true;
+  for (byte i = 0; i < 4; i++) {
+    if (rfid.uid.uidByte[i] != masterCard[i]) {
+      match = false;
+      break;
+    }
+  }
+
+  if (match) {
+    digitalWrite(8, HIGH);
+    delay(5000);
+    digitalWrite(8, LOW);
+  } else {
+    Serial.println(""Access Denied"");
+  }
+  rfid.PICC_HaltA();
+}"
+Data logger using SD card and temperature sensor.,"#include <SD.h>
+#include <SPI.h>
+
+File logFile;
+
+void setup() {
+  Serial.begin(9600);
+  if (!SD.begin(4)) {
+    Serial.println(""SD fail"");
+    return;
+  }
+}
+
+void loop() {
+  int temp = analogRead(A0);
+  float c = temp * 5.0 / 1023.0 * 100;
+
+  logFile = SD.open(""log.txt"", FILE_WRITE);
+  if (logFile) {
+    logFile.println(c);
+    logFile.close();
+  }
+  delay(10000);
+}"
+Stepper motor control with A4988 and potentiometer.,"const int dirPin = 2;
+const int stepPin = 3;
+
+void setup() {
+  pinMode(stepPin, OUTPUT);
+  pinMode(dirPin, OUTPUT);
+}
+
+void loop() {
+  int speedVal = analogRead(A0);
+  int delayTime = map(speedVal, 0, 1023, 1000, 10);
+  digitalWrite(dirPin, HIGH);
+  digitalWrite(stepPin, HIGH);
+  delayMicroseconds(delayTime);
+  digitalWrite(stepPin, LOW);
+  delayMicroseconds(delayTime);
+}"
+Capacitive touch sensor to toggle LED.,"int touchPin = 2;
+int ledPin = 13;
+bool ledState = false;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(touchPin) == HIGH) {
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+    delay(500);
+  }
+}"
+Control NeoPixel colors with 3 potentiometers (RGB).,"#include <Adafruit_NeoPixel.h>
+#define PIN 6
+
+Adafruit_NeoPixel strip(1, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show();
+}
+
+void loop() {
+  int r = analogRead(A0) / 4;
+  int g = analogRead(A1) / 4;
+  int b = analogRead(A2) / 4;
+  strip.setPixelColor(0, strip.Color(r, g, b));
+  strip.show();
+  delay(50);
+}"
+Ultrasonic parking sensor with buzzer warning.,"#define trigPin 9
+#define echoPin 10
+#define buzzer 8
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW); delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  int distance = duration * 0.034 / 2;
+
+  if (distance < 20) {
+    tone(buzzer, 1000);
+  } else {
+    noTone(buzzer);
+  }
+  delay(100);
+}"
+Touchless hand sanitizer trigger with IR sensor and relay.,"int irSensor = 2;
+int relay = 7;
+
+void setup() {
+  pinMode(irSensor, INPUT);
+  pinMode(relay, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(irSensor) == LOW) {
+    digitalWrite(relay, HIGH);
+    delay(1000);
+    digitalWrite(relay, LOW);
+  }
+}"
+Display system time using DS3231 RTC module.,"#include <Wire.h>
+#include <RTClib.h>
+
+RTC_DS3231 rtc;
+
+void setup () {
+  Serial.begin(9600);
+  rtc.begin();
+}
+
+void loop () {
+  DateTime now = rtc.now();
+  Serial.print(now.hour());
+  Serial.print(':');
+  Serial.print(now.minute());
+  Serial.print(':');
+  Serial.println(now.second());
+  delay(1000);
+}"
+DIY digital lock with keypad and servo.,"#include <Keypad.h>
+#include <Servo.h>
+
+const byte ROWS = 4, COLS = 4;
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'}, {'4','5','6','B'},
+  {'7','8','9','C'}, {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {9,8,7,6};
+byte colPins[COLS] = {5,4,3,2};
+
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+Servo lockServo;
+
+String password = ""1234"";
+String input = """";
+
+void setup() {
+  lockServo.attach(10);
+  lockServo.write(0);
+}
+
+void loop() {
+  char key = keypad.getKey();
+  if (key) {
+    if (key == '#') {
+      if (input == password) {
+        lockServo.write(90);
+        delay(3000);
+        lockServo.write(0);
+      }
+      input = """";
+    } else {
+      input += key;
+    }
+  }
+}"
+Use a joystick to control two servo motors.,"#include <Servo.h>
+
+Servo servoX, servoY;
+
+void setup() {
+  servoX.attach(9);
+  servoY.attach(10);
+}
+
+void loop() {
+  int xVal = analogRead(A0);
+  int yVal = analogRead(A1);
+
+  int angleX = map(xVal, 0, 1023, 0, 180);
+  int angleY = map(yVal, 0, 1023, 0, 180);
+
+  servoX.write(angleX);
+  servoY.write(angleY);
+
+  delay(20);
+}"
+Create a simple reaction timer game using a button and LED.,"int ledPin = 8;
+int buttonPin = 2;
+unsigned long startTime;
+bool waiting = false;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+  randomSeed(analogRead(0));
+}
+
+void loop() {
+  if (!waiting) {
+    delay(random(2000, 5000));
+    digitalWrite(ledPin, HIGH);
+    startTime = millis();
+    waiting = true;
+  }
+
+  if (waiting && digitalRead(buttonPin) == LOW) {
+    unsigned long reactionTime = millis() - startTime;
+    digitalWrite(ledPin, LOW);
+    Serial.print(""Reaction Time: "");
+    Serial.print(reactionTime);
+    Serial.println("" ms"");
+    waiting = false;
+    delay(1000);
+  }
+}"
+Temperature-controlled fan using LM35 and transistor.,"int tempPin = A0;
+int fanPin = 9;
+
+void setup() {
+  pinMode(fanPin, OUTPUT);
+}
+
+void loop() {
+  int reading = analogRead(tempPin);
+  float voltage = reading * 5.0 / 1023.0;
+  float tempC = voltage * 100;
+
+  if (tempC > 30) {
+    digitalWrite(fanPin, HIGH);
+  } else {
+    digitalWrite(fanPin, LOW);
+  }
+
+  delay(500);
+}"
+Auto night lamp using LDR and relay.,"int ldrPin = A0;
+int relayPin = 7;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+}
+
+void loop() {
+  int ldrValue = analogRead(ldrPin);
+  if (ldrValue < 300) {
+    digitalWrite(relayPin, HIGH);
+  } else {
+    digitalWrite(relayPin, LOW);
+  }
+  delay(200);
+}"
+Digital thermometer with LM35 and 16x2 LCD.,"#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+int tempPin = A0;
+
+void setup() {
+  lcd.begin(16, 2);
+}
+
+void loop() {
+  int reading = analogRead(tempPin);
+  float voltage = reading * 5.0 / 1023.0;
+  float tempC = voltage * 100;
+
+  lcd.setCursor(0, 0);
+  lcd.print(""Temp: "");
+  lcd.print(tempC);
+  lcd.print("" C"");
+
+  delay(1000);
+}"
+Clap switch to toggle LED using sound sensor.,"int soundPin = A0;
+int ledPin = 7;
+bool ledState = false;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int soundVal = analogRead(soundPin);
+  if (soundVal > 500) {
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+    delay(500);
+  }
+}"
+Automatic plant watering system using soil moisture sensor and relay.,"int soilPin = A0;
+int relayPin = 8;
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+}
+
+void loop() {
+  int moisture = analogRead(soilPin);
+  if (moisture < 400) {
+    digitalWrite(relayPin, HIGH);
+    delay(5000);
+    digitalWrite(relayPin, LOW);
+  }
+  delay(1000);
+}"
+7-segment display counter with button input.,"int segPins[] = {2,3,4,5,6,7,8};
+int buttonPin = 9;
+int count = 0;
+bool lastState = HIGH;
+
+byte digits[10][7] = {
+  {1,1,1,1,1,1,0}, // 0
+  {0,1,1,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1}, // 2
+  {1,1,1,1,0,0,1}, // 3
+  {0,1,1,0,0,1,1}, // 4
+  {1,0,1,1,0,1,1}, // 5
+  {1,0,1,1,1,1,1}, // 6
+  {1,1,1,0,0,0,0}, // 7
+  {1,1,1,1,1,1,1}, // 8
+  {1,1,1,0,0,1,1}  // 9
+};
+
+void setup() {
+  for (int i = 0; i < 7; i++) pinMode(segPins[i], OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+}
+
+void loop() {
+  bool currentState = digitalRead(buttonPin);
+  if (lastState == HIGH && currentState == LOW) {
+    count = (count + 1) % 10;
+    for (int i = 0; i < 7; i++) {
+      digitalWrite(segPins[i], digits[count][i]);
+    }
+    delay(200);
+  }
+  lastState = currentState;
+}"
+Infrared remote control to toggle LED.,"#include <IRremote.h>
+
+const int recvPin = 11;
+IRrecv irrecv(recvPin);
+decode_results results;
+int ledPin = 13;
+bool ledState = false;
+
+void setup() {
+  Serial.begin(9600);
+  irrecv.enableIRIn();
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (irrecv.decode(&results)) {
+    Serial.println(results.value, HEX);
+    if (results.value == 0xFF30CF) {
+      ledState = !ledState;
+      digitalWrite(ledPin, ledState);
+    }
+    irrecv.resume();
+  }
+}"
+Pulse sensor BPM display on serial monitor.,"const int pulsePin = A0;
+int signal;
+int threshold = 512;
+unsigned long lastBeat = 0;
+int bpm = 0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  signal = analogRead(pulsePin);
+  if (signal > threshold && millis() - lastBeat > 300) {
+    unsigned long beatInterval = millis() - lastBeat;
+    bpm = 60000 / beatInterval;
+    Serial.print(""BPM: "");
+    Serial.println(bpm);
+    lastBeat = millis();
+  }
+  delay(20);
+}"
+Display distance from ultrasonic sensor on 16x2 LCD.,"#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+#define trigPin 9
+#define echoPin 10
+
+void setup() {
+  lcd.begin(16, 2);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW); delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  int distance = duration * 0.034 / 2;
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(""Distance: "");
+  lcd.print(distance);
+  lcd.print("" cm"");
+
+  delay(500);
+}"
+DHT11 temperature and humidity display on serial monitor.,"#include <DHT.h>
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  Serial.print(""Temp: "");
+  Serial.print(t);
+  Serial.print("" *C  Humidity: "");
+  Serial.print(h);
+  Serial.println("" %"");
+
+  delay(2000);
+}"
+RGB LED color cycle using delay and analogWrite.,"int red = 9, green = 10, blue = 11;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 256; i++) {
+    analogWrite(red, i);
+    analogWrite(green, 255 - i);
+    analogWrite(blue, i / 2);
+    delay(10);
+  }
+}"
+Tilt sensor to turn on buzzer when tilted.,"int tiltPin = 2;
+int buzzerPin = 8;
+
+void setup() {
+  pinMode(tiltPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(tiltPin) == HIGH) {
+    digitalWrite(buzzerPin, HIGH);
+  } else {
+    digitalWrite(buzzerPin, LOW);
+  }
+}"
+Use button to cycle between three LED colors.,"int red = 5, green = 6, blue = 7, button = 2;
+int state = 0;
+bool lastButton = HIGH;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+  pinMode(button, INPUT_PULLUP);
+}
+
+void loop() {
+  bool current = digitalRead(button);
+  if (lastButton == HIGH && current == LOW) {
+    state = (state + 1) % 3;
+    switch (state) {
+      case 0: digitalWrite(red, HIGH); digitalWrite(green, LOW); digitalWrite(blue, LOW); break;
+      case 1: digitalWrite(red, LOW); digitalWrite(green, HIGH); digitalWrite(blue, LOW); break;
+      case 2: digitalWrite(red, LOW); digitalWrite(green, LOW); digitalWrite(blue, HIGH); break;
+    }
+    delay(300);
+  }
+  lastButton = current;
+}"
+Flame sensor to trigger buzzer and LED alarm.,"int flamePin = A0;
+int ledPin = 7;
+int buzzerPin = 8;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  int flameVal = analogRead(flamePin);
+  if (flameVal < 300) {
+    digitalWrite(ledPin, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+  }
+  delay(100);
+}"
+Control servo motor angle using a potentiometer.,"#include <Servo.h>
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  int potVal = analogRead(A0);
+  int angle = map(potVal, 0, 1023, 0, 180);
+  myServo.write(angle);
+  delay(15);
+}"
+Buzzer plays melody using tone() function.,"int buzzer = 8;
+int melody[] = {262, 294, 330, 349, 392, 440, 494, 523};
+
+void setup() {}
+
+void loop() {
+  for (int i = 0; i < 8; i++) {
+    tone(buzzer, melody[i]);
+    delay(300);
+    noTone(buzzer);
+    delay(100);
+  }
+  delay(1000);
+}"
+Light chaser effect on 8 LEDs using shift register 74HC595.,"int latchPin = 8;
+int clockPin = 12;
+int dataPin = 11;
+
+void setup() {
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, MSBFIRST, 1 << i);
+    digitalWrite(latchPin, HIGH);
+    delay(100);
+  }
+}"
+Count people entering with two IR sensors (entry-exit logic).,"int sensorIn = 2;
+int sensorOut = 3;
+int count = 0;
+
+void setup() {
+  pinMode(sensorIn, INPUT);
+  pinMode(sensorOut, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (digitalRead(sensorIn) == LOW) {
+    count++;
+    Serial.print(""People In: "");
+    Serial.println(count);
+    delay(1000);
+  }
+  if (digitalRead(sensorOut) == LOW && count > 0) {
+    count--;
+    Serial.print(""People Out: "");
+    Serial.println(count);
+    delay(1000);
+  }
+}"
+Keypad password entry system with lock/unlock status on serial monitor.,"#include <Keypad.h>
+
+const byte ROWS = 4;
+const byte COLS = 4;
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {9, 8, 7, 6};
+byte colPins[COLS] = {5, 4, 3, 2};
+
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+String password = ""1234"";
+String input = """";
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  char key = keypad.getKey();
+  if (key) {
+    if (key == '#') {
+      if (input == password) {
+        Serial.println(""Unlocked"");
+      } else {
+        Serial.println(""Wrong Password"");
+      }
+      input = """";
+    } else {
+      input += key;
+    }
+  }
+}"
+Ultrasonic parking assistant with LED and buzzer based on distance.,"#define trigPin 9
+#define echoPin 10
+#define buzzer 6
+#define led 7
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(led, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW); delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  long duration = pulseIn(echoPin, HIGH);
+  int distance = duration * 0.034 / 2;
+
+  if (distance < 20) {
+    digitalWrite(buzzer, HIGH);
+    digitalWrite(led, HIGH);
+  } else {
+    digitalWrite(buzzer, LOW);
+    digitalWrite(led, LOW);
+  }
+
+  delay(100);
+}"
+Line follower robot using two IR sensors and two motors.,"#define leftSensor A0
+#define rightSensor A1
+#define leftMotor1 2
+#define leftMotor2 3
+#define rightMotor1 4
+#define rightMotor2 5
+
+void setup() {
+  pinMode(leftSensor, INPUT);
+  pinMode(rightSensor, INPUT);
+  pinMode(leftMotor1, OUTPUT);
+  pinMode(leftMotor2, OUTPUT);
+  pinMode(rightMotor1, OUTPUT);
+  pinMode(rightMotor2, OUTPUT);
+}
+
+void loop() {
+  int left = analogRead(leftSensor);
+  int right = analogRead(rightSensor);
+
+  if (left < 500 && right < 500) {
+    forward();
+  } else if (left < 500) {
+    turnLeft();
+  } else if (right < 500) {
+    turnRight();
+  } else {
+    stopMotors();
+  }
+}
+
+void forward() {
+  digitalWrite(leftMotor1, HIGH); digitalWrite(leftMotor2, LOW);
+  digitalWrite(rightMotor1, HIGH); digitalWrite(rightMotor2, LOW);
+}
+
+void turnLeft() {
+  digitalWrite(leftMotor1, LOW); digitalWrite(leftMotor2, HIGH);
+  digitalWrite(rightMotor1, HIGH); digitalWrite(rightMotor2, LOW);
+}
+
+void turnRight() {
+  digitalWrite(leftMotor1, HIGH); digitalWrite(leftMotor2, LOW);
+  digitalWrite(rightMotor1, LOW); digitalWrite(rightMotor2, HIGH);
+}
+
+void stopMotors() {
+  digitalWrite(leftMotor1, LOW); digitalWrite(leftMotor2, LOW);
+  digitalWrite(rightMotor1, LOW); digitalWrite(rightMotor2, LOW);
+}"
+Real-time clock (RTC) module displaying time on serial monitor.,"#include <Wire.h>
+#include ""RTClib.h""
+
+RTC_DS1307 rtc;
+
+void setup() {
+  Serial.begin(9600);
+  rtc.begin();
+  if (!rtc.isrunning()) {
+    rtc.adjust(DateTime(__DATE__, __TIME__));
+  }
+}
+
+void loop() {
+  DateTime now = rtc.now();
+  Serial.print(now.hour());
+  Serial.print(':');
+  Serial.print(now.minute());
+  Serial.print(':');
+  Serial.println(now.second());
+  delay(1000);
+}"
+Motion-activated light using PIR sensor and relay.,"int pirPin = 2;
+int relayPin = 8;
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(relayPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(pirPin) == HIGH) {
+    digitalWrite(relayPin, HIGH);
+  } else {
+    digitalWrite(relayPin, LOW);
+  }
+}"
+Capacitive touch sensor to toggle LED.,"int touchPin = 2;
+int ledPin = 13;
+bool ledState = false;
+bool lastState = LOW;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  bool currentState = digitalRead(touchPin);
+  if (currentState == HIGH && lastState == LOW) {
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+    delay(300);
+  }
+  lastState = currentState;
+}"
+Traffic light controller with pedestrian button.,"int red = 2, yellow = 3, green = 4, button = 5;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(yellow, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(button, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(button) == LOW) {
+    digitalWrite(green, LOW);
+    digitalWrite(yellow, HIGH);
+    delay(2000);
+    digitalWrite(yellow, LOW);
+    digitalWrite(red, HIGH);
+    delay(5000);
+    digitalWrite(red, LOW);
+    digitalWrite(green, HIGH);
+  }
+}"
+Sound-activated LED pattern using sound sensor.,"int soundPin = A0;
+int ledPins[] = {3, 4, 5, 6, 7};
+
+void setup() {
+  for (int i = 0; i < 5; i++) pinMode(ledPins[i], OUTPUT);
+}
+
+void loop() {
+  int soundLevel = analogRead(soundPin);
+  int ledsToLight = map(soundLevel, 0, 1023, 0, 5);
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(ledPins[i], i < ledsToLight ? HIGH : LOW);
+  }
+  delay(50);
+}"
+Data logger storing temperature to SD card.,"#include <SPI.h>
+#include <SD.h>
+
+const int chipSelect = 10;
+int tempPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+  SD.begin(chipSelect);
+}
+
+void loop() {
+  File dataFile = SD.open(""temp.txt"", FILE_WRITE);
+  float temp = analogRead(tempPin) * 5.0 * 100.0 / 1023.0;
+  if (dataFile) {
+    dataFile.println(temp);
+    dataFile.close();
+  }
+  delay(2000);
+}"
+Heartbeat sensor with BPM calculation and LED blink.,"int pulsePin = A0;
+int threshold = 512;
+unsigned long lastBeat = 0;
+int bpm;
+
+void setup() {
+  pinMode(13, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int signal = analogRead(pulsePin);
+  if (signal > threshold && millis() - lastBeat > 300) {
+    unsigned long beatTime = millis() - lastBeat;
+    bpm = 60000 / beatTime;
+    Serial.print(""BPM: "");
+    Serial.println(bpm);
+    digitalWrite(13, HIGH);
+    delay(50);
+    digitalWrite(13, LOW);
+    lastBeat = millis();
+  }
+}"
+Bluetooth-controlled LED via HC-05 module.,"char incomingChar;
+
+void setup() {
+  Serial.begin(9600); // HC-05 default baud rate
+  pinMode(13, OUTPUT);
+}
+
+void loop() {
+  if (Serial.available()) {
+    incomingChar = Serial.read();
+    if (incomingChar == '1') {
+      digitalWrite(13, HIGH);
+    } else if (incomingChar == '0') {
+      digitalWrite(13, LOW);
+    }
+  }
+}"
+Infrared remote-controlled fan speed using IR receiver and PWM.,"#include <IRremote.h>
+const int recv_pin = 11;
+const int fan = 9;
+IRrecv irrecv(recv_pin);
+decode_results results;
+
+void setup() {
+  irrecv.enableIRIn();
+  pinMode(fan, OUTPUT);
+}
+
+void loop() {
+  if (irrecv.decode(&results)) {
+    long code = results.value;
+    if (code == 0xFFA25D) analogWrite(fan, 85);   // Low
+    else if (code == 0xFF629D) analogWrite(fan, 170); // Medium
+    else if (code == 0xFFE21D) analogWrite(fan, 255); // High
+    else if (code == 0xFF22DD) analogWrite(fan, 0);   // Off
+    irrecv.resume();
+  }
+}"
+OLED display clock using DS3231 RTC module.,"#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <RTClib.h>
+
+RTC_DS3231 rtc;
+Adafruit_SSD1306 display(128, 64, &Wire, -1);
+
+void setup() {
+  rtc.begin();
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+}
+
+void loop() {
+  DateTime now = rtc.now();
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 20);
+  display.print(now.hour());
+  display.print("":"");
+  display.print(now.minute());
+  display.print("":"");
+  display.print(now.second());
+  display.display();
+  delay(1000);
+}"
+Measure soil moisture and trigger pump if dry.,"int soilPin = A0;
+int pumpPin = 8;
+
+void setup() {
+  pinMode(pumpPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int moisture = analogRead(soilPin);
+  Serial.print(""Soil: "");
+  Serial.println(moisture);
+  if (moisture < 400) {
+    digitalWrite(pumpPin, HIGH);
+  } else {
+    digitalWrite(pumpPin, LOW);
+  }
+  delay(1000);
+}"
+RFID door lock system using MFRC522 module.,"#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+MFRC522 rfid(SS_PIN, RST_PIN);
+byte allowedUID[] = {0xDE, 0xAD, 0xBE, 0xEF};
+int relay = 8;
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+  pinMode(relay, OUTPUT);
+  digitalWrite(relay, LOW);
+}
+
+void loop() {
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) return;
+
+  bool match = true;
+  for (byte i = 0; i < 4; i++) {
+    if (rfid.uid.uidByte[i] != allowedUID[i]) match = false;
+  }
+
+  if (match) {
+    digitalWrite(relay, HIGH);
+    delay(3000);
+    digitalWrite(relay, LOW);
+  }
+
+  rfid.PICC_HaltA();
+}"
+Touchless water dispenser using ultrasonic sensor and relay.,"#define trigPin 9
+#define echoPin 10
+#define relayPin 8
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(relayPin, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW); delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  int distance = duration * 0.034 / 2;
+
+  if (distance < 10) {
+    digitalWrite(relayPin, HIGH);
+  } else {
+    digitalWrite(relayPin, LOW);
+  }
+  delay(100);
+}"
+OLED weather station displaying DHT11 data.,"#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <DHT.h>
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+Adafruit_SSD1306 display(128, 64, &Wire, -1);
+
+void setup() {
+  dht.begin();
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+}
+
+void loop() {
+  float temp = dht.readTemperature();
+  float hum = dht.readHumidity();
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 10);
+  display.print(""Temp: "");
+  display.print(temp);
+  display.print("" C"");
+  display.setCursor(0, 30);
+  display.print(""Humidity: "");
+  display.print(hum);
+  display.print("" %"");
+  display.display();
+  delay(2000);
+}"
+Gas leak detector using MQ-2 sensor and alarm system.,"int mqPin = A0;
+int buzzer = 9;
+int led = 8;
+
+void setup() {
+  pinMode(buzzer, OUTPUT);
+  pinMode(led, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int gas = analogRead(mqPin);
+  Serial.println(gas);
+  if (gas > 400) {
+    digitalWrite(buzzer, HIGH);
+    digitalWrite(led, HIGH);
+  } else {
+    digitalWrite(buzzer, LOW);
+    digitalWrite(led, LOW);
+  }
+  delay(500);
+}"
+EEPROM-based counter that saves value across resets.,"#include <EEPROM.h>
+
+int buttonPin = 2;
+int counter = 0;
+bool lastState = HIGH;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  Serial.begin(9600);
+  counter = EEPROM.read(0);
+}
+
+void loop() {
+  bool currentState = digitalRead(buttonPin);
+  if (lastState == HIGH && currentState == LOW) {
+    counter++;
+    EEPROM.write(0, counter);
+    Serial.print(""Counter: "");
+    Serial.println(counter);
+    delay(200);
+  }
+  lastState = currentState;
+}"
+Light intensity-based motor speed control using LDR.,"int ldrPin = A0;
+int motorPin = 9;
+
+void setup() {
+  pinMode(motorPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int light = analogRead(ldrPin);
+  int speed = map(light, 0, 1023, 0, 255);
+  analogWrite(motorPin, speed);
+  Serial.println(speed);
+  delay(100);
+}"
+Blink the built-in LED every second.,"void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(1000);
+}"
+Blink the LED rapidly (100ms intervals).,"void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(100);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(100);
+}"
+Blink LED only while button is pressed.,"void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(2, INPUT_PULLUP);
+}
+
+void loop() {
+  if (!digitalRead(2)) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(200);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(200);
+  }
+}"
+Blink LED with speed controlled by potentiometer.,"void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  int delayTime = analogRead(A0) / 10;
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(delayTime);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(delayTime);
+}"
+Flash SOS in Morse code with LED.,"void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  // S
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(150);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(150);
+  }
+  delay(300);
+  
+  // O
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(450);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(150);
+  }
+  
+  // S
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(150);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(150);
+  }
+  delay(2000);
+}"
+Blink LED without using delay().,"unsigned long previousMillis = 0;
+const long interval = 1000;
+bool ledState = LOW;
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    ledState = !ledState;
+    digitalWrite(LED_BUILTIN, ledState);
+  }
+}"
+Fade LED brightness up and down.,"int brightness = 0;
+int fadeAmount = 5;
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  analogWrite(LED_BUILTIN, brightness);
+  brightness += fadeAmount;
+  if (brightness <= 0 || brightness >= 255) {
+    fadeAmount = -fadeAmount;
+  }
+  delay(30);
+}"
+Blink LED if temperature exceeds threshold.,"void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  float temp = analogRead(A0) * 0.48828125;
+  if (temp > 30.0) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(100);
+  } else {
+    digitalWrite(LED_BUILTIN, LOW);
+  }
+}"
+Play LED light patterns from an array.,"byte patterns[4] = {0b10101010, 0b11001100, 0b11100011, 0b10001000};
+int patternIndex = 0;
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(LED_BUILTIN, bitRead(patterns[patternIndex], i));
+    delay(200);
+  }
+  patternIndex = (patternIndex + 1) % 4;
+}"
+Control LED blink rate via serial input.,"int blinkRate = 1000;
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (Serial.available()) {
+    blinkRate = Serial.parseInt();
+  }
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(blinkRate);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(blinkRate);
+}"
+Cycle through colors on an RGB LED.,"int redPin = 9;
+int greenPin = 10;
+int bluePin = 11;
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  // Red
+  analogWrite(redPin, 255);
+  analogWrite(greenPin, 0);
+  analogWrite(bluePin, 0);
+  delay(1000);
+  
+  // Green
+  analogWrite(redPin, 0);
+  analogWrite(greenPin, 255);
+  analogWrite(bluePin, 0);
+  delay(1000);
+  
+  // Blue
+  analogWrite(redPin, 0);
+  analogWrite(greenPin, 0);
+  analogWrite(bluePin, 255);
+  delay(1000);
+}"
+Measure distance with HC-SR04 and display via serial.,"#define trigPin 12
+#define echoPin 13
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  long duration, distance;
+  
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+  
+  Serial.print(""Distance: "");
+  Serial.print(distance);
+  Serial.println("" cm"");
+  delay(500);
+}"
+Sweep a servo motor back and forth.,"#include <Servo.h>
+Servo myservo;
+
+void setup() {
+  myservo.attach(9);
+}
+
+void loop() {
+  for (int pos = 0; pos <= 180; pos += 1) {
+    myservo.write(pos);
+    delay(15);
+  }
+  for (int pos = 180; pos >= 0; pos -= 1) {
+    myservo.write(pos);
+    delay(15);
+  }
+}"
+Display temperature and humidity on 16x2 LCD.,"#include <LiquidCrystal.h>
+#include <DHT.h>
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  lcd.begin(16, 2);
+  dht.begin();
+}
+
+void loop() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  
+  lcd.setCursor(0, 0);
+  lcd.print(""Temp: "");
+  lcd.print(t);
+  lcd.print(""C"");
+  
+  lcd.setCursor(0, 1);
+  lcd.print(""Humidity: "");
+  lcd.print(h);
+  lcd.print(""%"");
+  
+  delay(2000);
+}"
+Control LED with IR remote.,"#include <IRremote.h>
+
+int RECV_PIN = 11;
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  irrecv.enableIRIn();
+}
+
+void loop() {
+  if (irrecv.decode(&results)) {
+    if (results.value == 0xFFA25D) {  // Power button code
+      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    }
+    irrecv.resume();
+  }
+}"
+Rotate stepper motor with buttons.,"#include <Stepper.h>
+
+const int stepsPerRevolution = 2048;
+Stepper myStepper(stepsPerRevolution, 8, 10, 9, 11);
+
+void setup() {
+  pinMode(2, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
+  myStepper.setSpeed(10);
+}
+
+void loop() {
+  if (!digitalRead(2)) {
+    myStepper.step(stepsPerRevolution / 10);
+  }
+  if (!digitalRead(3)) {
+    myStepper.step(-stepsPerRevolution / 10);
+  }
+}"
+Read RFID tags and display via serial.,"#include <SPI.h>
+#include <MFRC522.h>
+
+#define RST_PIN 9
+#define SS_PIN 10
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  mfrc522.PCD_Init();
+}
+
+void loop() {
+  if (!mfrc522.PICC_IsNewCardPresent()) return;
+  if (!mfrc522.PICC_ReadCardSerial()) return;
+  
+  Serial.print(""UID:"");
+  for (byte i = 0; i < mfrc522.uid.size; i++) {
+    Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? "" 0"" : "" "");
+    Serial.print(mfrc522.uid.uidByte[i], HEX);
+  }
+  Serial.println();
+  delay(1000);
+}"
+Control LED brightness via Bluetooth.,"#include <SoftwareSerial.h>
+
+SoftwareSerial BT(10, 11); // RX, TX
+int brightness = 0;
+
+void setup() {
+  pinMode(9, OUTPUT);
+  BT.begin(9600);
+}
+
+void loop() {
+  if (BT.available()) {
+    brightness = BT.parseInt();
+    analogWrite(9, brightness);
+  }
+}"
+Fetch weather data from API and display.,"#include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
+
+const char* ssid = ""yourSSID"";
+const char* password = ""yourPASSWORD"";
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(""."");
+  }
+}
+
+void loop() {
+  if (WiFi.status() == WL_CONNECTED) {
+    WiFiClient client;
+    if (client.connect(""api.openweathermap.org"", 80)) {
+      client.println(""GET /data/2.5/weather?q=London&appid=YOUR_API_KEY"");
+      delay(1000);
+      
+      while (client.available()) {
+        String line = client.readStringUntil('\r');
+        Serial.print(line);
+      }
+    }
+  }
+  delay(60000);
+}"
+Log sensor data to SD card and upload to cloud.,"#include <SD.h>
+#include <SPI.h>
+#include <Ethernet.h>
+
+File myFile;
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+
+void setup() {
+  Serial.begin(9600);
+  SD.begin(4);
+  
+  if (Ethernet.begin(mac) == 0) {
+    Serial.println(""Failed Ethernet"");
+  }
+}
+
+void loop() {
+  int sensorValue = analogRead(A0);
+  
+  // Save to SD
+  myFile = SD.open(""datalog.txt"", FILE_WRITE);
+  if (myFile) {
+    myFile.println(sensorValue);
+    myFile.close();
+  }
+  
+  // Upload to cloud
+  EthernetClient client;
+  if (client.connect(""api.thingspeak.com"", 80)) {
+    client.print(""GET /update?api_key=YOUR_KEY&field1="");
+    client.print(sensorValue);
+    client.println("" HTTP/1.1"");
+    client.println(""Host: api.thingspeak.com"");
+    client.println(""Connection: close"");
+    client.println();
+  }
+  
+  delay(60000);
+}"
+"Create a weather station with BME280, displaying data on OLED with touch interface.","#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_BME280.h>
+#include <Adafruit_STMPE610.h>
+
+Adafruit_BME280 bme;
+Adafruit_SSD1306 display(128, 64, &Wire, -1);
+Adafruit_STMPE610 touch = Adafruit_STMPE610(8);
+
+void setup() {
+  Serial.begin(9600);
+  if(!bme.begin(0x76)) Serial.println(""BME280 error"");
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) Serial.println(""OLED error"");
+  if(!touch.begin(0x41)) Serial.println(""Touch error"");
+  
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+}
+
+void loop() {
+  TS_Point p = touch.getPoint();
+  if (p.z > 10) cycleDisplay();
+  
+  display.clearDisplay();
+  display.setCursor(0,0);
+  display.print(""Temp: ""); display.print(bme.readTemperature()); display.println("" C"");
+  display.print(""Hum: ""); display.print(bme.readHumidity()); display.println("" %"");
+  display.print(""Press: ""); display.print(bme.readPressure()/100); display.println("" hPa"");
+  display.display();
+  delay(100);
+}
+
+void cycleDisplay() {
+  // Advanced: Add display modes cycling here
+}"
+Implement PID control for DC motor with encoder feedback.,"#include <PID_v1.h>
+#include <Encoder.h>
+
+Encoder myEnc(2, 3);
+double Setpoint, Input, Output;
+PID myPID(&Input, &Output, &Setpoint, 2, 5, 1, DIRECT);
+
+void setup() {
+  pinMode(9, OUTPUT);
+  Setpoint = 1000; // Target RPM
+  myPID.SetMode(AUTOMATIC);
+  myPID.SetSampleTime(1);
+  myPID.SetOutputLimits(0, 255);
+}
+
+void loop() {
+  static long oldPos = 0;
+  long newPos = myEnc.read();
+  Input = (newPos - oldPos) * 60 / 1024; // Convert to RPM
+  oldPos = newPos;
+  
+  myPID.Compute();
+  analogWrite(9, Output);
+  
+  if(millis() % 1000 == 0) {
+    Serial.print(""RPM:""); Serial.print(Input);
+    Serial.print("" PWM:""); Serial.println(Output);
+  }
+}"
+Read OBD-II data via CAN bus and log to SD card.,"#include <SD.h>
+#include <mcp_can.h>
+#include <SPI.h>
+
+MCP_CAN CAN(10); // CS pin
+File dataFile;
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  
+  if(CAN.begin(MCP_ANY, CAN_500KBPS, MCP_16MHZ) != CAN_OK) {
+    Serial.println(""CAN init fail"");
+    while(1);
+  }
+  CAN.setMode(MCP_NORMAL);
+  
+  if(!SD.begin(4)) {
+    Serial.println(""SD init fail"");
+    while(1);
+  }
+}
+
+void loop() {
+  long unsigned int rxId;
+  unsigned char len = 0;
+  unsigned char rxBuf[8];
+  
+  if(CAN_MSGAVAIL == CAN.checkReceive()) {
+    CAN.readMsgBuf(&rxId, &len, rxBuf);
+    
+    dataFile = SD.open(""obd.log"", FILE_WRITE);
+    if(dataFile) {
+      dataFile.print(""ID: 0x""); dataFile.print(rxId, HEX);
+      dataFile.print("" Data: "");
+      for(byte i=0; i<len; i++) {
+        dataFile.print(rxBuf[i], HEX); dataFile.print("" "");
+      }
+      dataFile.println();
+      dataFile.close();
+    }
+  }
+}"
+Create audio spectrum analyzer using FFT and LED matrix.,"#include <arduinoFFT.h>
+#include <MD_MAX72xx.h>
+#include <SPI.h>
+
+#define SAMPLES 128
+#define MIC_PIN A0
+
+arduinoFFT FFT = arduinoFFT();
+MD_MAX72XX mx = MD_MAX72XX(MD_MAX72XX::FC16_HW, 10, 4);
+
+double vReal[SAMPLES];
+double vImag[SAMPLES];
+
+void setup() {
+  Serial.begin(115200);
+  mx.begin();
+  ADCSRA = 0b11100101; // Set ADC to free running mode
+  ADMUX = 0b01000000;  // Use A0
+}
+
+void loop() {
+  for(int i=0; i<SAMPLES; i++) {
+    while(!(ADCSRA & 0x10)); // Wait for conversion
+    ADCSRA = 0b11110101;     // Restart conversion
+    vReal[i] = ADC - 512;
+    vImag[i] = 0;
+  }
+  
+  FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+  FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
+  FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
+  
+  for(int i=0; i<8; i++) {
+    int band = constrain(map(vReal[i*4], 0, 1024, 0, 8), 0, 8);
+    for(int j=0; j<band; j++) {
+      mx.setColumn(i, 0b11111111 >> (8-j));
+    }
+  }
+}"
+Implement gesture recognition using IMU and TinyML.,"#include <Arduino_LSM9DS1.h>
+#include <TensorFlowLite.h>
+#include <tensorflow/lite/micro/all_ops_resolver.h>
+#include <tensorflow/lite/micro/micro_interpreter.h>
+#include <tensorflow/lite/schema/schema_generated.h>
+#include ""model.h"" // Your trained model
+
+const tflite::Model* model = nullptr;
+tflite::MicroInterpreter* interpreter = nullptr;
+TfLiteTensor* input = nullptr;
+TfLiteTensor* output = nullptr;
+constexpr int kTensorArenaSize = 8 * 1024;
+uint8_t tensor_arena[kTensorArenaSize];
+
+void setup() {
+  Serial.begin(9600);
+  while(!Serial);
+  
+  if(!IMU.begin()) {
+    Serial.println(""IMU init failed"");
+    while(1);
+  }
+  
+  model = tflite::GetModel(gesture_model);
+  static tflite::AllOpsResolver resolver;
+  static tflite::MicroInterpreter static_interpreter(
+    model, resolver, tensor_arena, kTensorArenaSize);
+  interpreter = &static_interpreter;
+  
+  if(interpreter->AllocateTensors() != kTfLiteOk) {
+    Serial.println(""Tensor allocation failed"");
+    while(1);
+  }
+  
+  input = interpreter->input(0);
+  output = interpreter->output(0);
+}
+
+void loop() {
+  static float buffer[3][64] = {0};
+  static int index = 0;
+  
+  if(IMU.accelerationAvailable()) {
+    IMU.readAcceleration(buffer[0][index], buffer[1][index], buffer[2][index]);
+    index = (index + 1) % 64;
+    
+    if(index == 0) {
+      memcpy(input->data.f, buffer, 3*64*sizeof(float));
+      if(interpreter->Invoke() != kTfLiteOk) {
+        Serial.println(""Inference failed"");
+        return;
+      }
+      
+      Serial.print(""Gesture: "");
+      switch(TfLiteTensorGetElementCount(output)) {
+        case 0: Serial.println(""Circle""); break;
+        case 1: Serial.println(""Square""); break;
+        case 2: Serial.println(""Triangle""); break;
+      }
+    }
+  }
+}"
+Create a multi-task system using FreeRTOS.,"#include <Arduino_FreeRTOS.h>
+#include <semphr.h>
+
+SemaphoreHandle_t xSerialSemaphore;
+
+void TaskSensorRead(void *pvParameters) {
+  for(;;) {
+    if(xSemaphoreTake(xSerialSemaphore, portMAX_DELAY) == pdTRUE) {
+      Serial.print(""Sensor: ""); Serial.println(analogRead(A0));
+      xSemaphoreGive(xSerialSemaphore);
+    }
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+  }
+}
+
+void TaskMotorControl(void *pvParameters) {
+  for(;;) {
+    if(xSemaphoreTake(xSerialSemaphore, portMAX_DELAY) == pdTRUE) {
+      Serial.println(""Adjusting motor speed"");
+      xSemaphoreGive(xSerialSemaphore);
+    }
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  xSerialSemaphore = xSemaphoreCreateMutex();
+  
+  xTaskCreate(TaskSensorRead, ""Sensor"", 128, NULL, 1, NULL);
+  xTaskCreate(TaskMotorControl, ""Motor"", 128, NULL, 2, NULL);
+}
+
+void loop() {
+  // Empty - RTOS scheduler handles tasks
+}"
+Create a LoRa mesh network node with message routing.,"#include <SPI.h>
+#include <LoRa.h>
+#include <ArduinoJson.h>
+
+#define NODE_ID 1
+#define GATEWAY_ID 0
+
+void setup() {
+  Serial.begin(9600);
+  while(!Serial);
+  
+  if(!LoRa.begin(915E6)) {
+    Serial.println(""LoRa init failed"");
+    while(1);
+  }
+  
+  LoRa.setSyncWord(0xF3);
+  LoRa.enableCrc();
+}
+
+void loop() {
+  int packetSize = LoRa.parsePacket();
+  if(packetSize) {
+    String incoming = """";
+    while(LoRa.available()) {
+      incoming += (char)LoRa.read();
+    }
+    
+    DynamicJsonDocument doc(256);
+    deserializeJson(doc, incoming);
+    
+    int dest = doc[""dest""];
+    int sender = doc[""sender""];
+    String msg = doc[""msg""];
+    
+    if(dest == NODE_ID || dest == 255) {
+      Serial.print(""From ""); Serial.print(sender);
+      Serial.print("": ""); Serial.println(msg);
+      
+      if(dest == 255) { // Broadcast
+        doc[""hops""] = doc[""hops""] + 1;
+        if(doc[""hops""] < 5) {
+          forwardMessage(doc);
+        }
+      }
+    } else if(sender != NODE_ID) {
+      forwardMessage(doc);
+    }
+  }
+}
+
+void forwardMessage(DynamicJsonDocument &doc) {
+  LoRa.beginPacket();
+  serializeJson(doc, LoRa);
+  LoRa.endPacket();
+}"
+Capture and process images from OV7670 camera.,"#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define CAM_WIDTH 160
+#define CAM_HEIGHT 120
+
+Adafruit_SSD1306 display(128, 64, &Wire, -1);
+
+void setup() {
+  Serial.begin(115200);
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  initCamera();
+}
+
+void loop() {
+  uint8_t image[CAM_WIDTH * CAM_HEIGHT];
+  captureImage(image);
+  
+  // Edge detection
+  for(int y=1; y<CAM_HEIGHT-1; y++) {
+    for(int x=1; x<CAM_WIDTH-1; x++) {
+      int gx = -image[(y-1)*CAM_WIDTH+(x-1)] - 2*image[y*CAM_WIDTH+(x-1)] - image[(y+1)*CAM_WIDTH+(x-1)]
+               + image[(y-1)*CAM_WIDTH+(x+1)] + 2*image[y*CAM_WIDTH+(x+1)] + image[(y+1)*CAM_WIDTH+(x+1)];
+      int gy = -image[(y-1)*CAM_WIDTH+(x-1)] - 2*image[(y-1)*CAM_WIDTH+x] - image[(y-1)*CAM_WIDTH+(x+1)]
+               + image[(y+1)*CAM_WIDTH+(x-1)] + 2*image[(y+1)*CAM_WIDTH+x] + image[(y+1)*CAM_WIDTH+(x+1)];
+      int val = constrain(sqrt(gx*gx + gy*gy) / 4, 0, 255);
+      display.drawPixel(x/2, y/2, val > 50 ? SSD1306_WHITE : SSD1306_BLACK);
+    }
+  }
+  display.display();
+}
+
+void initCamera() {
+  // Camera initialization code here
+}
+
+void captureImage(uint8_t *buffer) {
+  // Image capture code here
+}"
+Create a PLC-like controller with Modbus RTU.,"#include <ModbusRtu.h>
+#include <EEPROM.h>
+
+#define ID 1
+#define RS485_ENABLE_PIN 2
+
+Modbus slave(ID, RS485_ENABLE_PIN);
+uint16_t holdingRegs[10];
+uint8_t coilRegs = 0;
+
+void setup() {
+  slave.begin(19200);
+  EEPROM.get(0, holdingRegs);
+}
+
+void loop() {
+  slave.poll(holdingRegs, 10);
+  
+  // Process inputs
+  holdingRegs[0] = analogRead(A0);
+  holdingRegs[1] = digitalRead(3) ? 1 : 0;
+  
+  // Process outputs
+  digitalWrite(4, (coilRegs & 0x01));
+  analogWrite(5, holdingRegs[2]);
+  
+  // Save persistent data
+  static uint32_t lastSave = 0;
+  if(millis() - lastSave > 10000) {
+    EEPROM.put(0, holdingRegs);
+    lastSave = millis();
+  }
+}"
+Implement secure MQTT communication with TLS.,"#include <WiFiNINA.h>
+#include <ArduinoMqttClient.h>
+#include <ArduinoBearSSL.h>
+
+WiFiSSLClient wifiClient;
+MqttClient mqttClient(wifiClient);
+
+const char* ssid = ""yourSSID"";
+const char* pass = ""yourPASSWORD"";
+const char* broker = ""your-broker.com"";
+const char* topic = ""secure/device01"";
+
+void setup() {
+  Serial.begin(9600);
+  while(!Serial);
+  
+  connectWiFi();
+  BearSSLClient::setEccSlot(0, CERTIFICATE, sizeof(CERTIFICATE));
+  mqttClient.setId(""secureDevice01"");
+  mqttClient.setUsernamePassword(""user"", ""pass"");
+  
+  if(!mqttClient.connect(broker, 8883)) {
+    Serial.print(""MQTT connection failed: "");
+    Serial.println(mqttClient.connectError());
+  }
+  
+  mqttClient.subscribe(topic);
+}
+
+void loop() {
+  if(!mqttClient.connected()) {
+    reconnect();
+  }
+  mqttClient.poll();
+  
+  static unsigned long lastPublish = 0;
+  if(millis() - lastPublish > 60000) {
+    mqttClient.beginMessage(topic);
+    mqttClient.print(""Secure data: "");
+    mqttClient.print(random(100));
+    mqttClient.endMessage();
+    lastPublish = millis();
+  }
+}
+
+void connectWiFi() {
+  while(WiFi.begin(ssid, pass) != WL_CONNECTED) {
+    Serial.println(""Retrying WiFi..."");
+    delay(5000);
+  }
+}
+
+void reconnect() {
+  while(!mqttClient.connect(broker, 8883)) {
+    Serial.println(""Retrying MQTT..."");
+    delay(5000);
+  }
+  mqttClient.subscribe(topic);
+}"

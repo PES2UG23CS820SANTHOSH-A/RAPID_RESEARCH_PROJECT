@@ -1,0 +1,2066 @@
+Prompt,Motions,IO,KRL_Code
+"Weld two car doors at welding station using arc welding","PTP + LIN","$OUT[10]=TRUE, WAIT SEC 3, $OUT[10]=FALSE","DEF Weld_Doors()
+   PTP WELD_START
+   LIN DOOR1
+   $OUT[10] = TRUE
+   WAIT SEC 3
+   $OUT[10] = FALSE
+   LIN DOOR2
+END"
+"Move box from conveyor belt to pallet in warehouse","PTP + LIN","$OUT[1]=TRUE, $OUT[1]=FALSE","DEF Move_Box_To_Pallet()
+   PTP CONVEYOR_POS
+   LIN PALLET_POS
+   $OUT[1] = TRUE
+   $OUT[1] = FALSE
+END"
+"Assist in medical test by placing sample tube in slot","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE","DEF Place_Medical_Tube()
+   PTP START_POS
+   LIN SLOT_POS
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+END"
+"Place electronic chip on PCB and solder the contact points","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2, $OUT[6]=FALSE","DEF Solder_Chip()
+   PTP PICK_CHIP
+   LIN PLACE_ON_PCB
+   $OUT[6] = TRUE
+   WAIT SEC 2
+   $OUT[6] = FALSE
+END"
+"3D print concrete layer along linear path","LIN","$OUT[2]=TRUE, WAIT SEC 5","DEF Print_Concrete_Layer()
+   LIN PATH_START
+   $OUT[2] = TRUE
+   WAIT SEC 5
+END"
+"Pack chocolate boxes into cartons and seal the flap","LIN + PTP","$OUT[7]=TRUE, $OUT[8]=TRUE","DEF Pack_Chocolates()
+   LIN PICK_BOX
+   PTP CARTON_POS
+   $OUT[7] = TRUE
+   $OUT[8] = TRUE
+END"
+"Carve a wooden block following a pre-set toolpath","CIRC","$OUT[9]=TRUE","DEF Carve_Wood()
+   CIRC TOOLPATH_START, TOOLPATH_END
+   $OUT[9] = TRUE
+END"
+"Drill holes in aircraft panel at positions P1 to P5","PTP + LIN","$OUT[11]=TRUE, WAIT SEC 1","DEF Drill_Aircraft_Panel()
+   PTP PANEL_START
+   LIN P1
+   LIN P2
+   LIN P3
+   LIN P4
+   LIN P5
+   $OUT[11] = TRUE
+   WAIT SEC 1
+END"
+"Pick a food item and place into a packaging tray","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 1, $OUT[3]=FALSE","DEF Pick_And_Pack_Food()
+   PTP FOOD_POS
+   LIN TRAY_POS
+   $OUT[3] = TRUE
+   WAIT SEC 1
+   $OUT[3] = FALSE
+END"
+"Paint a metal frame using spray nozzle from top to bottom","LIN","$OUT[4]=TRUE, WAIT SEC 4, $OUT[4]=FALSE","DEF Paint_Frame()
+   LIN TOP_FRAME
+   LIN BOTTOM_FRAME
+   $OUT[4] = TRUE
+   WAIT SEC 4
+   $OUT[4] = FALSE
+END"
+"Move to charging station and connect power supply","PTP","$OUT[2]=TRUE","DEF Move_To_Charge()
+   PTP CHARGE_POS
+   $OUT[2] = TRUE
+END"
+"Check for object using sensor before picking","PTP","IF $IN[4]==TRUE","DEF Sensor_Check_Then_Pick()
+   IF $IN[4] == TRUE THEN
+      PTP PICK_POINT
+   ENDIF
+END"
+"Pick solar panel, tilt to 30 degrees, and place on rack","PTP + LIN","$OUT[7]=TRUE","DEF Place_Solar_Panel()
+   PTP PICK_PANEL
+   LIN TILT_30
+   LIN PLACE_RACK
+   $OUT[7] = TRUE
+END"
+"Wait for signal then rotate arm to welding angle","PTP","WAIT FOR $IN[5], $OUT[10]=TRUE","DEF Weld_Angle_Signal()
+   WAIT FOR $IN[5]
+   PTP WELD_ANGLE
+   $OUT[10] = TRUE
+END"
+"Sort items by moving from input to bin based on size","LIN + LIN","$OUT[3]=TRUE, WAIT SEC 2","DEF Sort_By_Size()
+   LIN INFEED
+   LIN SIZE_BIN
+   $OUT[3] = TRUE
+   WAIT SEC 2
+END"
+"Inspect product with camera and flash light briefly","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Inspect_With_Camera()
+   PTP CAMERA_POS
+   LIN INSPECT
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Follow curved path around obstacle to reach endpoint","CIRC","$OUT[1]=TRUE","DEF Curve_Path_Navigate()
+   CIRC CURVE_START, CURVE_END
+   $OUT[1] = TRUE
+END"
+"Place tool in holder and turn off motor","PTP","$OUT[9]=FALSE","DEF Place_Tool_Off()
+   PTP TOOL_HOLDER
+   $OUT[9] = FALSE
+END"
+"Approach assembly part, screw bolt, and return","LIN + PTP","$OUT[11]=TRUE","DEF Screw_Bolt()
+   LIN APPROACH_PART
+   $OUT[11] = TRUE
+   PTP RETURN_POS
+END"
+"Pick glass sheet with vacuum and gently place in frame","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 3, $OUT[5]=FALSE","DEF Handle_Glass()
+   PTP GLASS_PICK
+   LIN FRAME_PLACE
+   $OUT[5] = TRUE
+   WAIT SEC 3
+   $OUT[5] = FALSE
+END"
+Align and weld metal pipe sections in fabrication shop,PTP + LIN,"$OUT[12]=TRUE, WAIT SEC 3, $OUT[12]=FALSE","DEF Weld_Pipes()
+   PTP PIPE_START
+   LIN PIPE_JOINT
+   $OUT[12] = TRUE
+   WAIT SEC 3
+   $OUT[12] = FALSE
+END"
+Scan barcode on box and move to scanner station,PTP + LIN,"$OUT[2]=TRUE, WAIT SEC 1","DEF Scan_Box()
+   PTP BOX_POS
+   LIN SCANNER_POS
+   $OUT[2] = TRUE
+   WAIT SEC 1
+END"
+Adjust robotic camera angle for visual inspection,PTP,$OUT[6]=TRUE,"DEF Adjust_Camera()
+   PTP CAMERA_POS
+   $OUT[6] = TRUE
+END"
+Apply adhesive to panel edges in vehicle assembly,LIN + LIN,"$OUT[7]=TRUE, WAIT SEC 2","DEF Apply_Adhesive()
+   LIN PANEL_EDGE_1
+   LIN PANEL_EDGE_2
+   $OUT[7] = TRUE
+   WAIT SEC 2
+END"
+Clean solar panel surface using wiper attachment,LIN,"$OUT[9]=TRUE, WAIT SEC 5, $OUT[9]=FALSE","DEF Clean_Solar_Panel()
+   LIN PANEL_START
+   $OUT[9] = TRUE
+   WAIT SEC 5
+   $OUT[9] = FALSE
+END"
+Pick and orient gear before placing into gearbox,PTP + LIN + LIN,"$OUT[1]=TRUE, WAIT SEC 1","DEF Orient_Gear()
+   PTP GEAR_PICK
+   LIN ORIENT_POS
+   LIN PLACE_GEARBOX
+   $OUT[1] = TRUE
+   WAIT SEC 1
+END"
+Drill bolt holes in engine block at fixed positions,PTP + LIN,$OUT[4]=TRUE,"DEF Drill_Engine_Block()
+   PTP ENGINE_POS
+   LIN BOLT_HOLE_POS
+   $OUT[4] = TRUE
+END"
+Test touchscreen with contact probe at three points,PTP + LIN + LIN,"$OUT[10]=TRUE, WAIT SEC 1, $OUT[10]=FALSE","DEF Test_Touchscreen()
+   PTP SCREEN_START
+   LIN POINT1
+   LIN POINT2
+   LIN POINT3
+   $OUT[10] = TRUE
+   WAIT SEC 1
+   $OUT[10] = FALSE
+END"
+Cut plastic sheet into shape using hot wire tool,LIN,$OUT[5]=TRUE,"DEF Cut_Plastic()
+   LIN CUT_PATH_START
+   $OUT[5] = TRUE
+END"
+Transport fragile component using soft gripper,PTP + LIN,"$OUT[8]=TRUE, WAIT SEC 3, $OUT[8]=FALSE","DEF Transport_Fragile()
+   PTP PICK_FRAGILE
+   LIN PLACE_FRAGILE
+   $OUT[8] = TRUE
+   WAIT SEC 3
+   $OUT[8] = FALSE
+END"
+Spray disinfectant on medical tools in cleaning bay,PTP + LIN,"$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Disinfect_Tools()
+   PTP CLEANING_START
+   LIN TOOLS_POS
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+Position tire under car chassis for assembly,PTP + LIN,$OUT[1]=TRUE,"DEF Position_Tire()
+   PTP TIRE_POS
+   LIN UNDER_CAR
+   $OUT[1] = TRUE
+END"
+Laser engrave ID on metallic component surface,LIN,"$OUT[6]=TRUE, WAIT SEC 4, $OUT[6]=FALSE","DEF Laser_Engrave()
+   LIN ENGRAVE_PATH
+   $OUT[6] = TRUE
+   WAIT SEC 4
+   $OUT[6] = FALSE
+END"
+Move parts from storage to machine loading area,PTP + LIN,"$OUT[2]=TRUE, WAIT SEC 1","DEF Move_To_Machine()
+   PTP STORAGE_POS
+   LIN MACHINE_LOAD
+   $OUT[2] = TRUE
+   WAIT SEC 1
+END"
+Perform arc welding on vehicle frame at joints,LIN + LIN,$OUT[12]=TRUE,"DEF Arc_Weld_Frame()
+   LIN FRAME_POS1
+   LIN FRAME_POS2
+   $OUT[12] = TRUE
+END"
+Insert battery into casing and press into place,PTP + LIN,"$OUT[5]=TRUE, WAIT SEC 2, $OUT[5]=FALSE","DEF Insert_Battery()
+   PTP BATTERY_PICK
+   LIN CASING_POS
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   $OUT[5] = FALSE
+END"
+Dip metal rod into cooling tank after heating,PTP + LIN,"$OUT[9]=TRUE, WAIT SEC 3","DEF Cool_Metal_Rod()
+   PTP HEAT_END
+   LIN COOL_TANK
+   $OUT[9] = TRUE
+   WAIT SEC 3
+END"
+Sort parcels based on barcode scan results,PTP + LIN + LIN,"$OUT[4]=TRUE, WAIT SEC 2","DEF Sort_Parcels()
+   PTP SCAN_AREA
+   LIN SORT_PATH1
+   LIN SORT_PATH2
+   $OUT[4] = TRUE
+   WAIT SEC 2
+END"
+Load sheet metal onto bending machine,PTP + LIN,$OUT[7]=TRUE,"DEF Load_Sheet_Metal()
+   PTP SHEET_STORAGE
+   LIN BEND_MACHINE
+   $OUT[7] = TRUE
+END"
+Tighten screws on control panel using tool head,LIN + PTP,"$OUT[11]=TRUE, WAIT SEC 1","DEF Tighten_Screws()
+   LIN PANEL_START
+   PTP SCREW_POS
+   $OUT[11] = TRUE
+   WAIT SEC 1
+END"
+Attach windshield to car frame,PTP + LIN,"$OUT[1]=TRUE, WAIT SEC 2, $OUT[1]=FALSE","DEF Attach_Windshield()
+   PTP GLASS_PICK
+   LIN CAR_FRAME_POS
+   $OUT[1] = TRUE
+   WAIT SEC 2
+   $OUT[1] = FALSE
+END"
+Measure temperature using infrared sensor,PTP,"$OUT[6]=TRUE, WAIT SEC 1","DEF Measure_Temperature()
+   PTP SENSOR_POS
+   $OUT[6] = TRUE
+   WAIT SEC 1
+END"
+Place tray on conveyor after heat treatment,LIN + PTP,"$OUT[4]=TRUE","DEF Place_Tray()
+   LIN HEAT_END
+   PTP CONVEYOR_LOAD
+   $OUT[4] = TRUE
+END"
+Weld bicycle frame at three connection points,LIN + LIN,"$OUT[7]=TRUE","DEF Weld_Bike_Frame()
+   LIN POINT1
+   LIN POINT2
+   LIN POINT3
+   $OUT[7] = TRUE
+END"
+Open valve and insert probe into pipe,PTP + LIN,"$OUT[8]=TRUE, WAIT SEC 3","DEF Insert_Probe()
+   PTP VALVE_POS
+   LIN PIPE_ENTRY
+   $OUT[8] = TRUE
+   WAIT SEC 3
+END"
+Transfer parts from bin A to bin B,LIN + LIN,"$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Transfer_Bins()
+   LIN BIN_A
+   LIN BIN_B
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+Spray paint bumper with even coating,LIN,"$OUT[9]=TRUE, WAIT SEC 5, $OUT[9]=FALSE","DEF Spray_Bumper()
+   LIN START_SPRAY
+   LIN END_SPRAY
+   $OUT[9] = TRUE
+   WAIT SEC 5
+   $OUT[9] = FALSE
+END"
+Perform visual check using camera module,PTP,"$OUT[3]=TRUE","DEF Visual_Check()
+   PTP CAMERA_POS
+   $OUT[3] = TRUE
+END"
+Turn on laser for cutting along path,LIN,"$OUT[10]=TRUE","DEF Laser_Cut()
+   LIN CUT_PATH_START
+   $OUT[10] = TRUE
+END"
+Remove defective item from conveyor,LIN + PTP,"$OUT[5]=TRUE, WAIT SEC 1","DEF Remove_Defective()
+   LIN DEFECT_POS
+   PTP DISCARD_BIN
+   $OUT[5] = TRUE
+   WAIT SEC 1
+END"
+"Operate hydraulic press for stamping metal parts","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 3, $OUT[2]=FALSE","DEF Operate_Hydraulic_Press()
+   PTP PRESS_START
+   LIN STAMP_POS
+   $OUT[2] = TRUE
+   WAIT SEC 3
+   $OUT[2] = FALSE
+END"
+"Pick and place circuit board into soldering tray","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Place_Circuit_Board()
+   PTP BOARD_PICK
+   LIN SOLDER_TRAY
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Scan QR code and route item to output belt","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Scan_And_Route()
+   PTP SCAN_POS
+   LIN OUTPUT_BELT
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Clean robotic arm nozzle using air blast","PTP","$OUT[7]=TRUE, WAIT SEC 2, $OUT[7]=FALSE","DEF Clean_Nozzle()
+   PTP NOZZLE_POS
+   $OUT[7] = TRUE
+   WAIT SEC 2
+   $OUT[7] = FALSE
+END"
+"Pick automotive mirror and align to body panel","PTP + LIN","$OUT[3]=TRUE","DEF Align_Mirror()
+   PTP MIRROR_POS
+   LIN BODY_PANEL
+   $OUT[3] = TRUE
+END"
+"Apply glue bead along edge of display unit","LIN","$OUT[8]=TRUE, WAIT SEC 4, $OUT[8]=FALSE","DEF Apply_Glue()
+   LIN EDGE_PATH_START
+   LIN EDGE_PATH_END
+   $OUT[8] = TRUE
+   WAIT SEC 4
+   $OUT[8] = FALSE
+END"
+"Drill mounting holes in control cabinet panel","PTP + LIN","$OUT[9]=TRUE, WAIT SEC 2","DEF Drill_Control_Panel()
+   PTP PANEL_POS
+   LIN DRILL_POS
+   $OUT[9] = TRUE
+   WAIT SEC 2
+END"
+"Sort defective batteries using vision sensor","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1","DEF Sort_Batteries()
+   PTP VISION_SCAN
+   LIN SORT_BIN
+   $OUT[5] = TRUE
+   WAIT SEC 1
+END"
+"Place finished PCB into storage rack","PTP + LIN","$OUT[1]=TRUE","DEF Store_PCB()
+   PTP PCB_OUTPUT
+   LIN RACK_POS
+   $OUT[1] = TRUE
+END"
+"Cool welded part by holding under fan for 5 sec","LIN","$OUT[10]=TRUE, WAIT SEC 5, $OUT[10]=FALSE","DEF Cool_Welded_Part()
+   LIN FAN_POSITION
+   $OUT[10] = TRUE
+   WAIT SEC 5
+   $OUT[10] = FALSE
+END"
+"Insert fuse into control unit securely","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE","DEF Insert_Fuse()
+   PTP FUSE_PICK
+   LIN CONTROL_UNIT
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+END"
+"Pick syringe and place into sterile rack","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Place_Syringe()
+   PTP SYRINGE_POS
+   LIN STERILE_RACK
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Rotate robotic wrist to calibrate encoder","PTP","$OUT[6]=TRUE, WAIT SEC 1","DEF Calibrate_Wrist()
+   PTP CALIBRATE_POS
+   $OUT[6] = TRUE
+   WAIT SEC 1
+END"
+"Place bread loaf on conveyor for slicing","PTP + LIN","$OUT[4]=TRUE","DEF Place_Bread()
+   PTP BREAD_POS
+   LIN SLICER_CONVEYOR
+   $OUT[4] = TRUE
+END"
+"Lift package, weigh it, and place on scale belt","PTP + LIN + LIN","$OUT[7]=TRUE, WAIT SEC 2, $OUT[7]=FALSE","DEF Weigh_Package()
+   PTP PACKAGE_START
+   LIN WEIGH_STATION
+   LIN SCALE_BELT
+   $OUT[7] = TRUE
+   WAIT SEC 2
+   $OUT[7] = FALSE
+END"
+"Align metal sheet under press before stamping","PTP + LIN","$OUT[2]=TRUE","DEF Align_Sheet()
+   PTP SHEET_LOAD
+   LIN PRESS_POS
+   $OUT[2] = TRUE
+END"
+"Insert pipe into connector and wait for seal","PTP + LIN","$OUT[8]=TRUE, WAIT SEC 3","DEF Seal_Pipe()
+   PTP PIPE_POS
+   LIN CONNECTOR_POS
+   $OUT[8] = TRUE
+   WAIT SEC 3
+END"
+"Scan RFID tag before placing item in bin","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1","DEF Scan_And_Place()
+   PTP RFID_SCAN
+   LIN STORAGE_BIN
+   $OUT[6] = TRUE
+   WAIT SEC 1
+END"
+"Apply thermal paste on processor evenly","LIN","$OUT[10]=TRUE, WAIT SEC 2, $OUT[10]=FALSE","DEF Apply_Thermal_Paste()
+   LIN PASTE_START
+   LIN PASTE_END
+   $OUT[10] = TRUE
+   WAIT SEC 2
+   $OUT[10] = FALSE
+END"
+"Move empty tray to loading station","PTP + LIN","$OUT[1]=TRUE","DEF Move_Tray()
+   PTP TRAY_RACK
+   LIN LOADING_STATION
+   $OUT[1] = TRUE
+END"
+"Inspect solar panel for dust using camera","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2","DEF Inspect_Solar_Panel()
+   PTP CAMERA_BASE
+   LIN PANEL_SURFACE
+   $OUT[3] = TRUE
+   WAIT SEC 2
+END"
+"Pick blood sample and place in analyzer slot","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Handle_Blood_Sample()
+   PTP SAMPLE_RACK
+   LIN ANALYZER_SLOT
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Seal packaged item using heated press","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 3, $OUT[2]=FALSE","DEF Seal_Package()
+   PTP PACKAGE_READY
+   LIN PRESS_PAD
+   $OUT[2] = TRUE
+   WAIT SEC 3
+   $OUT[2] = FALSE
+END"
+"Mount camera module onto robotic frame","PTP + LIN","$OUT[5]=TRUE","DEF Mount_Camera()
+   PTP CAMERA_PICK
+   LIN FRAME_MOUNT
+   $OUT[5] = TRUE
+END"
+"Insert plastic plug into test socket","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1","DEF Plug_Test_Socket()
+   PTP PLUG_PICK
+   LIN SOCKET_POS
+   $OUT[4] = TRUE
+   WAIT SEC 1
+END"
+"Apply label to finished box","PTP + LIN","$OUT[9]=TRUE, WAIT SEC 1, $OUT[9]=FALSE","DEF Label_Box()
+   PTP LABEL_STATION
+   LIN BOX_POS
+   $OUT[9] = TRUE
+   WAIT SEC 1
+   $OUT[9] = FALSE
+END"
+"Rotate inspection mirror around gear housing","LIN","$OUT[7]=TRUE","DEF Inspect_Gear_Housing()
+   LIN MIRROR_PATH_START
+   LIN MIRROR_PATH_END
+   $OUT[7] = TRUE
+END"
+"Cool down heated metal bracket","LIN","$OUT[10]=TRUE, WAIT SEC 4, $OUT[10]=FALSE","DEF Cool_Metal_Bracket()
+   LIN COOL_ZONE
+   $OUT[10] = TRUE
+   WAIT SEC 4
+   $OUT[10] = FALSE
+END"
+"Pick glass plate and lower into washer","PTP + LIN","$OUT[8]=TRUE, WAIT SEC 2, $OUT[8]=FALSE","DEF Wash_Glass()
+   PTP GLASS_RACK
+   LIN WASHER_SLOT
+   $OUT[8] = TRUE
+   WAIT SEC 2
+   $OUT[8] = FALSE
+END"
+"Lift engine cover and hold in service position","PTP + LIN","$OUT[1]=TRUE","DEF Hold_Engine_Cover()
+   PTP COVER_PICK
+   LIN SERVICE_POS
+   $OUT[1] = TRUE
+END"
+"Insert coolant tube into engine bay port","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2, $OUT[2]=FALSE","DEF Insert_Coolant_Tube()
+   PTP TUBE_PICK
+   LIN ENGINE_PORT
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   $OUT[2] = FALSE
+END"
+"Clean conveyor belt with air jet","PTP","$OUT[6]=TRUE, WAIT SEC 3, $OUT[6]=FALSE","DEF Clean_Conveyor()
+   PTP NOZZLE_POS
+   $OUT[6] = TRUE
+   WAIT SEC 3
+   $OUT[6] = FALSE
+END"
+"Pick sensor and screw onto assembly board","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 1","DEF Attach_Sensor()
+   PTP SENSOR_PICK
+   LIN BOARD_POS
+   $OUT[7] = TRUE
+   WAIT SEC 1
+END"
+"Position battery and lock with mechanical latch","PTP + LIN","$OUT[4]=TRUE","DEF Lock_Battery()
+   PTP BATTERY_SLOT
+   LIN LATCH_POS
+   $OUT[4] = TRUE
+END"
+"Insert LED light into socket and test","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Insert_LED()
+   PTP LED_PICK
+   LIN SOCKET_POS
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Turn handle to open furnace chamber","PTP","$OUT[8]=TRUE","DEF Open_Furnace()
+   PTP HANDLE_POS
+   $OUT[8] = TRUE
+END"
+"Place circuit tester on terminal strip","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE","DEF Test_Circuit()
+   PTP TESTER_PICK
+   LIN TERMINAL_STRIP
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+END"
+"Transport container from filling to sealing station","PTP + LIN","$OUT[9]=TRUE","DEF Move_Container()
+   PTP FILL_POS
+   LIN SEAL_POS
+   $OUT[9] = TRUE
+END"
+"Align camera for QR code reading","PTP + LIN","$OUT[1]=TRUE","DEF Align_QR_Camera()
+   PTP BASE_POS
+   LIN QR_SCAN_POS
+   $OUT[1] = TRUE
+END"
+"Drop waste item into bin after rejection","LIN + PTP","$OUT[10]=TRUE, WAIT SEC 1, $OUT[10]=FALSE","DEF Reject_Item()
+   LIN REJECT_POINT
+   PTP BIN_POS
+   $OUT[10] = TRUE
+   WAIT SEC 1
+   $OUT[10] = FALSE
+END"
+"Insert RFID card into access slot for verification","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Insert_RFID_Card()
+   PTP CARD_PICK
+   LIN ACCESS_SLOT
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+"Pick up vial and shake for mixing","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Shake_Vial()
+   PTP VIAL_POS
+   LIN SHAKE_POS
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Place packing foam into shipping box","PTP + LIN","$OUT[1]=TRUE","DEF Place_Foam()
+   PTP FOAM_PICK
+   LIN BOX_POS
+   $OUT[1] = TRUE
+END"
+"Scan barcode on product before dispatch","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1","DEF Scan_Barcode()
+   PTP SCANNER_POS
+   LIN PRODUCT_POS
+   $OUT[6] = TRUE
+   WAIT SEC 1
+END"
+"Fill test tube with reagent and move to tray","PTP + LIN + LIN","$OUT[5]=TRUE, WAIT SEC 3, $OUT[5]=FALSE","DEF Fill_Test_Tube()
+   PTP TUBE_PICK
+   LIN DISPENSE_POS
+   LIN TRAY_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 3
+   $OUT[5] = FALSE
+END"
+"Close oven door after item placement","PTP + LIN","$OUT[8]=TRUE","DEF Close_Oven_Door()
+   PTP DOOR_HANDLE
+   LIN LOCK_POS
+   $OUT[8] = TRUE
+END"
+"Apply UV light for sterilization","PTP","$OUT[3]=TRUE, WAIT SEC 4, $OUT[3]=FALSE","DEF Sterilize_With_UV()
+   PTP UV_POS
+   $OUT[3] = TRUE
+   WAIT SEC 4
+   $OUT[3] = FALSE
+END"
+"Push test button and wait for signal feedback","PTP","$OUT[7]=TRUE, WAIT FOR $IN[2]","DEF Push_And_Wait()
+   PTP BUTTON_POS
+   $OUT[7] = TRUE
+   WAIT FOR $IN[2]
+END"
+"Insert syringe into robotic injector mount","PTP + LIN","$OUT[9]=TRUE","DEF Mount_Syringe()
+   PTP SYRINGE_PICK
+   LIN INJECTOR_SLOT
+   $OUT[9] = TRUE
+END"
+"Lift battery panel and hold during maintenance","LIN + PTP","$OUT[10]=TRUE","DEF Hold_Battery_Panel()
+   LIN PANEL_LIFT
+   PTP MAINTENANCE_HOLD
+   $OUT[10] = TRUE
+END"
+"Scan QR code on medical sample tube before storage","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Scan_Sample_Tube()
+   PTP TUBE_POS
+   LIN QR_SCANNER
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Attach warning label onto chemical barrel","PTP + LIN","$OUT[4]=TRUE","DEF Label_Chemical_Barrel()
+   PTP LABEL_PICK
+   LIN BARREL_SURFACE
+   $OUT[4] = TRUE
+END"
+"Place tray into sterilization chamber and close door","PTP + LIN + PTP","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Load_Sterilizer()
+   PTP TRAY_PICK
+   LIN CHAMBER_SLOT
+   PTP DOOR_HANDLE
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Align mechanical pin into socket with precision","PTP + LIN","$OUT[1]=TRUE","DEF Align_Pin()
+   PTP PIN_PICK
+   LIN SOCKET_POS
+   $OUT[1] = TRUE
+END"
+"Clean solar panel using rotating brush","LIN","$OUT[2]=TRUE, WAIT SEC 5, $OUT[2]=FALSE","DEF Clean_Solar_Panel()
+   LIN BRUSH_START
+   LIN BRUSH_END
+   $OUT[2] = TRUE
+   WAIT SEC 5
+   $OUT[2] = FALSE
+END"
+"Press circuit button and verify light response","PTP","$OUT[5]=TRUE, WAIT FOR $IN[3]","DEF Press_Button_Verify()
+   PTP BUTTON_POS
+   $OUT[5] = TRUE
+   WAIT FOR $IN[3]
+END"
+"Load 3D print plate onto printer bed","PTP + LIN","$OUT[7]=TRUE","DEF Load_Print_Bed()
+   PTP PLATE_PICK
+   LIN PRINTER_BED
+   $OUT[7] = TRUE
+END"
+"Pick up packaging tape and apply to box","PTP + LIN","$OUT[9]=TRUE, WAIT SEC 2","DEF Tape_Box()
+   PTP TAPE_PICK
+   LIN BOX_TOP
+   $OUT[9] = TRUE
+   WAIT SEC 2
+END"
+"Unlock safety hatch after emergency trigger","PTP","$OUT[8]=FALSE","DEF Unlock_Safety_Hatch()
+   PTP HATCH_LOCK
+   $OUT[8] = FALSE
+END"
+"Insert plug into charging port and hold","PTP + LIN","$OUT[10]=TRUE, WAIT SEC 3","DEF Insert_Charging_Plug()
+   PTP PLUG_PICK
+   LIN CHARGING_PORT
+   $OUT[10] = TRUE
+   WAIT SEC 3
+END"
+"Install protective cover over motor housing","PTP + LIN","$OUT[1]=TRUE, WAIT SEC 1, $OUT[1]=FALSE","DEF Install_Motor_Cover()
+   PTP COVER_PICK
+   LIN MOTOR_HOUSING
+   $OUT[1] = TRUE
+   WAIT SEC 1
+   $OUT[1] = FALSE
+END"
+"Push control panel button to initiate diagnostics","PTP","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Start_Diagnostics()
+   PTP PANEL_BUTTON
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Place thermal sensor onto circuit board pad","PTP + LIN","$OUT[5]=TRUE","DEF Mount_Thermal_Sensor()
+   PTP SENSOR_PICK
+   LIN PAD_POSITION
+   $OUT[5] = TRUE
+END"
+"Hold PCB vertically during coating process","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 5, $OUT[4]=FALSE","DEF Hold_PCB_For_Coating()
+   PTP PCB_PICK
+   LIN COATING_POS
+   $OUT[4] = TRUE
+   WAIT SEC 5
+   $OUT[4] = FALSE
+END"
+"Unload completed unit from conveyor to tray","LIN + PTP","$OUT[2]=TRUE","DEF Unload_To_Tray()
+   LIN CONVEYOR_END
+   PTP TRAY_POS
+   $OUT[2] = TRUE
+END"
+"Spray disinfectant on tool surface","LIN","$OUT[6]=TRUE, WAIT SEC 3, $OUT[6]=FALSE","DEF Disinfect_Tool()
+   LIN SPRAY_START
+   LIN SPRAY_END
+   $OUT[6] = TRUE
+   WAIT SEC 3
+   $OUT[6] = FALSE
+END"
+"Insert probe into analysis port and wait for signal","PTP + LIN","$OUT[7]=TRUE, WAIT FOR $IN[5]","DEF Insert_Probe_And_Wait()
+   PTP PROBE_PICK
+   LIN ANALYSIS_PORT
+   $OUT[7] = TRUE
+   WAIT FOR $IN[5]
+END"
+"Adjust mirror to reflect laser beam","PTP + LIN","$OUT[8]=TRUE","DEF Adjust_Mirror()
+   PTP MIRROR_PICK
+   LIN LASER_ALIGNMENT
+   $OUT[8] = TRUE
+END"
+"Seal package with dual-arm press and confirm","PTP + LIN","$OUT[9]=TRUE, WAIT SEC 2, $OUT[9]=FALSE","DEF Dual_Arm_Seal()
+   PTP PRESS_PICK
+   LIN PACKAGE_POS
+   $OUT[9] = TRUE
+   WAIT SEC 2
+   $OUT[9] = FALSE
+END"
+"Scan and sort incoming item based on tag","PTP + LIN","$OUT[10]=TRUE, WAIT FOR $IN[6]","DEF Smart_Sort_Item()
+   PTP ITEM_SCAN
+   LIN SORT_BIN
+   $OUT[10] = TRUE
+   WAIT FOR $IN[6]
+END"
+"Insert circuit breaker into panel slot and secure","PTP + LIN","$OUT[1]=TRUE, WAIT SEC 2, $OUT[1]=FALSE","DEF Insert_Circuit_Breaker()
+   PTP BREAKER_PICK
+   LIN PANEL_SLOT
+   $OUT[1] = TRUE
+   WAIT SEC 2
+   $OUT[1] = FALSE
+END"
+"Pick up fuel injector and fit into engine block","PTP + LIN","$OUT[3]=TRUE","DEF Fit_Fuel_Injector()
+   PTP INJECTOR_POS
+   LIN ENGINE_BLOCK
+   $OUT[3] = TRUE
+END"
+"Apply adhesive along panel edge for bonding","LIN","$OUT[6]=TRUE, WAIT SEC 3, $OUT[6]=FALSE","DEF Apply_Adhesive()
+   LIN EDGE_START
+   LIN EDGE_END
+   $OUT[6] = TRUE
+   WAIT SEC 3
+   $OUT[6] = FALSE
+END"
+"Place circuit board into testing bay and hold","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 4","DEF Hold_Board_For_Test()
+   PTP BOARD_PICK
+   LIN TEST_BAY
+   $OUT[4] = TRUE
+   WAIT SEC 4
+END"
+"Unload sterilized tool from chamber and place in tray","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 1","DEF Unload_Tool()
+   PTP CHAMBER_EXIT
+   LIN CLEAN_TRAY
+   $OUT[7] = TRUE
+   WAIT SEC 1
+END"
+"Pick up tire and align to axle hub","PTP + LIN","$OUT[9]=TRUE","DEF Align_Tire()
+   PTP TIRE_RACK
+   LIN AXLE_HUB
+   $OUT[9] = TRUE
+END"
+"Clean nozzle before printing with air burst","PTP","$OUT[5]=TRUE, WAIT SEC 2, $OUT[5]=FALSE","DEF Clean_Print_Nozzle()
+   PTP NOZZLE_CLEAN_POS
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   $OUT[5] = FALSE
+END"
+"Align lens in optical frame with precision","PTP + LIN","$OUT[2]=TRUE","DEF Align_Lens()
+   PTP LENS_PICK
+   LIN FRAME_SLOT
+   $OUT[2] = TRUE
+END"
+"Press valve button to start chemical flow","PTP","$OUT[8]=TRUE, WAIT SEC 3, $OUT[8]=FALSE","DEF Start_Chemical_Flow()
+   PTP VALVE_BUTTON
+   $OUT[8] = TRUE
+   WAIT SEC 3
+   $OUT[8] = FALSE
+END"
+"Move robotic arm to standby position after task","PTP","$OUT[10]=FALSE","DEF Move_To_Standby()
+   PTP STANDBY_POS
+   $OUT[10] = FALSE
+END"
+"Pick up packaging tray and place on conveyor belt","PTP + LIN","$OUT[2]=TRUE","DEF Load_Packaging_Tray()
+   PTP TRAY_PICK
+   LIN CONVEYOR_POS
+   $OUT[2] = TRUE
+END"
+"Insert sample into centrifuge and close lid","PTP + LIN + PTP","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Load_Centrifuge()
+   PTP SAMPLE_PICK
+   LIN CENTRIFUGE_SLOT
+   PTP LID_HANDLE
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Apply barcode sticker on medicine vial","PTP + LIN","$OUT[1]=TRUE, WAIT SEC 1, $OUT[1]=FALSE","DEF Barcode_Vial()
+   PTP STICKER_PICK
+   LIN VIAL_POS
+   $OUT[1] = TRUE
+   WAIT SEC 1
+   $OUT[1] = FALSE
+END"
+"Lift object with suction and place in container","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2, $OUT[5]=FALSE","DEF Suction_Pick_And_Place()
+   PTP OBJECT_POS
+   LIN CONTAINER_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   $OUT[5] = FALSE
+END"
+"Turn knob to activate cooling system","PTP","$OUT[6]=TRUE","DEF Activate_Cooling()
+   PTP KNOB_POS
+   $OUT[6] = TRUE
+END"
+"Lower fixture plate into welding position","PTP + LIN","$OUT[3]=TRUE","DEF Lower_Fixture()
+   PTP PLATE_PICK
+   LIN WELD_SLOT
+   $OUT[3] = TRUE
+END"
+"Spray paint evenly across panel surface","LIN","$OUT[8]=TRUE, WAIT SEC 4, $OUT[8]=FALSE","DEF Spray_Paint_Panel()
+   LIN PANEL_TOP
+   LIN PANEL_BOTTOM
+   $OUT[8] = TRUE
+   WAIT SEC 4
+   $OUT[8] = FALSE
+END"
+"Place empty bottles on filling line","PTP + LIN","$OUT[9]=TRUE","DEF Load_Bottles()
+   PTP BOTTLE_PICK
+   LIN FILL_LINE
+   $OUT[9] = TRUE
+END"
+"Scan RFID badge before opening secure gate","PTP","$OUT[7]=TRUE, WAIT FOR $IN[4]","DEF Scan_And_Open_Gate()
+   PTP SCAN_POINT
+   $OUT[7] = TRUE
+   WAIT FOR $IN[4]
+END"
+"Pick and rotate camera lens for calibration","PTP + LIN","$OUT[10]=TRUE, WAIT SEC 3, $OUT[10]=FALSE","DEF Calibrate_Lens()
+   PTP LENS_RACK
+   LIN CALIBRATION_POS
+   $OUT[10] = TRUE
+   WAIT SEC 3
+   $OUT[10] = FALSE
+END"
+"Lift metal plate and insert into bending machine","PTP + LIN","$OUT[3]=TRUE","DEF Load_Bending_Machine()
+   PTP PLATE_PICK
+   LIN MACHINE_SLOT
+   $OUT[3] = TRUE
+END"
+"Pick and dip component into chemical solution","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 5, $OUT[6]=FALSE","DEF Dip_In_Solution()
+   PTP COMPONENT_PICK
+   LIN CHEM_BATH
+   $OUT[6] = TRUE
+   WAIT SEC 5
+   $OUT[6] = FALSE
+END"
+"Insert connector into port and check light","PTP + LIN","$OUT[7]=TRUE, WAIT FOR $IN[2]","DEF Insert_Connector_Check()
+   PTP CONNECTOR_PICK
+   LIN PORT_POS
+   $OUT[7] = TRUE
+   WAIT FOR $IN[2]
+END"
+"Open container lid before placing sample","PTP + LIN + PTP","$OUT[2]=FALSE","DEF Open_Lid_And_Place_Sample()
+   PTP LID_POS
+   LIN SAMPLE_POS
+   PTP TRAY_POS
+   $OUT[2] = FALSE
+END"
+"Secure sensor module with mounting screws","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2","DEF Mount_Sensor_Module()
+   PTP MODULE_PICK
+   LIN MOUNT_POS
+   $OUT[5] = TRUE
+   WAIT SEC 2
+END"
+"Transfer hot part to cooling rack","PTP + LIN","$OUT[8]=TRUE","DEF Cool_Hot_Part()
+   PTP HOT_PICK
+   LIN COOLING_RACK
+   $OUT[8] = TRUE
+END"
+"Engage clamp to lock object for machining","PTP","$OUT[1]=TRUE","DEF Lock_For_Machining()
+   PTP CLAMP_POS
+   $OUT[1] = TRUE
+END"
+"Push start button to begin automated sequence","PTP","$OUT[9]=TRUE, WAIT SEC 1, $OUT[9]=FALSE","DEF Start_Auto_Sequence()
+   PTP BUTTON_POS
+   $OUT[9] = TRUE
+   WAIT SEC 1
+   $OUT[9] = FALSE
+END"
+"Place assembled unit into inspection tray","PTP + LIN","$OUT[10]=TRUE","DEF Place_Inspection_Tray()
+   PTP UNIT_PICK
+   LIN TRAY_SLOT
+   $OUT[10] = TRUE
+END"
+"Adjust robotic tool head to calibration position","PTP","$OUT[4]=TRUE","DEF Calibrate_Tool_Head()
+   PTP TOOL_HEAD_POS
+   $OUT[4] = TRUE
+END"
+"Scan barcode on product and move to dispatch bin","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2","DEF Scan_And_Dispatch()
+   PTP PRODUCT_POS
+   LIN BARCODE_SCANNER
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   LIN DISPATCH_BIN
+END"
+"Pick up fragile glassware and place into washer rack","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2, $OUT[2]=FALSE","DEF Load_Glassware()
+   PTP GLASS_PICK
+   LIN WASHER_RACK
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   $OUT[2] = FALSE
+END"
+"Insert metallic rod into forging press chamber","PTP + LIN","$OUT[4]=TRUE","DEF Load_Forging_Press()
+   PTP ROD_PICK
+   LIN PRESS_CHAMBER
+   $OUT[4] = TRUE
+END"
+"Align surgical instrument for sterilization","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 3, $OUT[6]=FALSE","DEF Align_Surgical_Tool()
+   PTP TOOL_PICK
+   LIN STERILIZE_SLOT
+   $OUT[6] = TRUE
+   WAIT SEC 3
+   $OUT[6] = FALSE
+END"
+"Unload painted car door and place on drying rack","PTP + LIN","$OUT[8]=TRUE","DEF Unload_Car_Door()
+   PTP DOOR_PICK
+   LIN DRYING_RACK
+   $OUT[8] = TRUE
+END"
+"Insert lithium battery cell into drone frame","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE","DEF Insert_Drone_Battery()
+   PTP BATTERY_PICK
+   LIN DRONE_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+END"
+"Attach label to pharmaceutical bottle during packaging","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 1, $OUT[3]=FALSE","DEF Label_Pharmacy_Bottle()
+   PTP LABEL_PICK
+   LIN BOTTLE_POS
+   $OUT[3] = TRUE
+   WAIT SEC 1
+   $OUT[3] = FALSE
+END"
+"Place charging plug into electric vehicle port","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2","DEF Plug_EV_Charging()
+   PTP PLUG_PICK
+   LIN EV_PORT
+   $OUT[6] = TRUE
+   WAIT SEC 2
+END"
+"Insert biopsy needle into alignment guide","PTP + LIN","$OUT[5]=TRUE","DEF Insert_Biopsy_Needle()
+   PTP NEEDLE_PICK
+   LIN GUIDE_SLOT
+   $OUT[5] = TRUE
+END"
+"Load meat tray onto conveyor for vacuum sealing","PTP + LIN","$OUT[1]=TRUE","DEF Load_Meat_Tray()
+   PTP TRAY_PICK
+   LIN CONVEYOR_IN
+   $OUT[1] = TRUE
+END"
+"Mount solar panel on frame using suction tool","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 3, $OUT[7]=FALSE","DEF Mount_Solar_Panel()
+   PTP PANEL_PICK
+   LIN FRAME_POS
+   $OUT[7] = TRUE
+   WAIT SEC 3
+   $OUT[7] = FALSE
+END"
+"Place bread loaves into oven conveyor for baking","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2, $OUT[2]=FALSE","DEF Load_Oven_Bread()
+   PTP BREAD_PICK
+   LIN OVEN_CONVEYOR
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   $OUT[2] = FALSE
+END"
+"Insert fuse module into electrical cabinet safely","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1","DEF Insert_Fuse_Module()
+   PTP MODULE_PICK
+   LIN CABINET_SLOT
+   $OUT[4] = TRUE
+   WAIT SEC 1
+END"
+"Align camera sensor into drone mount base","PTP + LIN","$OUT[7]=TRUE","DEF Mount_Camera_Sensor()
+   PTP SENSOR_PICK
+   LIN MOUNT_BASE
+   $OUT[7] = TRUE
+END"
+"Place medical syringe into sterilizer tray","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Load_Syringe_Tray()
+   PTP SYRINGE_PICK
+   LIN STERILIZER_TRAY
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Pick fresh fruit and load onto sorting belt","PTP + LIN","$OUT[1]=TRUE, WAIT SEC 1, $OUT[1]=FALSE","DEF Pick_And_Sort_Fruit()
+   PTP FRUIT_PICK
+   LIN SORTING_BELT
+   $OUT[1] = TRUE
+   WAIT SEC 1
+   $OUT[1] = FALSE
+END"
+"Load ceramic tile into cutting machine for precision slicing","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Load_Tile_For_Cutting()
+   PTP TILE_PICK
+   LIN CUTTER_POS
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Pick up package and scan barcode before shipping","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE","DEF Scan_Package_Barcode()
+   PTP PACKAGE_PICK
+   LIN SCAN_POS
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+END"
+"Place laboratory sample into refrigerated chamber","PTP + LIN","$OUT[6]=TRUE","DEF Store_Lab_Sample()
+   PTP SAMPLE_PICK
+   LIN FRIDGE_SLOT
+   $OUT[6] = TRUE
+END"
+"Feed metal sheet into laser cutting machine","PTP + LIN","$OUT[8]=TRUE, WAIT SEC 3, $OUT[8]=FALSE","DEF Feed_Laser_Cutter()
+   PTP SHEET_PICK
+   LIN LASER_ENTRY
+   $OUT[8] = TRUE
+   WAIT SEC 3
+   $OUT[8] = FALSE
+END"
+"Move plastic bottle to capper station and hold in place","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2, $OUT[2]=FALSE","DEF Cap_Bottle()
+   PTP BOTTLE_PICK
+   LIN CAPPER_POS
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   $OUT[2] = FALSE
+END"
+"Place circuit board into testing chamber for diagnostics","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2, $OUT[6]=FALSE","DEF Insert_Circuit_For_Test()
+   PTP BOARD_PICK
+   LIN TEST_CHAMBER
+   $OUT[6] = TRUE
+   WAIT SEC 2
+   $OUT[6] = FALSE
+END"
+"Transfer raw dough into oven tray for baking","PTP + LIN","$OUT[3]=TRUE","DEF Load_Dough_Into_Tray()
+   PTP DOUGH_PICK
+   LIN OVEN_TRAY
+   $OUT[3] = TRUE
+END"
+"Pick welding torch and position it near joint A","PTP + LIN","$OUT[10]=TRUE","DEF Position_Weld_Torch()
+   PTP TORCH_PICK
+   LIN JOINT_A
+   $OUT[10] = TRUE
+END"
+"Align turbine blade into assembly fixture","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 4, $OUT[7]=FALSE","DEF Align_Turbine_Blade()
+   PTP BLADE_PICK
+   LIN FIXTURE_SLOT
+   $OUT[7] = TRUE
+   WAIT SEC 4
+   $OUT[7] = FALSE
+END"
+"Drop used cartridge into recycling bin","PTP + LIN","$OUT[1]=TRUE, WAIT SEC 1, $OUT[1]=FALSE","DEF Dispose_Cartridge()
+   PTP CARTRIDGE_PICK
+   LIN RECYCLE_BIN
+   $OUT[1] = TRUE
+   WAIT SEC 1
+   $OUT[1] = FALSE
+END"
+"Pick vial from holder and insert into centrifuge slot","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2, $OUT[2]=FALSE","DEF Load_Vial_Centrifuge()
+   PTP VIAL_HOLDER
+   LIN CENTRIFUGE_SLOT
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   $OUT[2] = FALSE
+END"
+"Unload forged part from hydraulic press to tray","PTP + LIN","$OUT[4]=TRUE","DEF Unload_Forged_Part()
+   PTP PRESS_POS
+   LIN TRAY_POS
+   $OUT[4] = TRUE
+END"
+"Position mirror into telescope alignment mount","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Align_Telescope_Mirror()
+   PTP MIRROR_PICK
+   LIN ALIGNMENT_SLOT
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Insert wire harness into automotive dashboard socket","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2","DEF Insert_Wire_Harness()
+   PTP HARNESS_PICK
+   LIN SOCKET_POS
+   $OUT[5] = TRUE
+   WAIT SEC 2
+END"
+"Insert metal pin into hinge slot during door assembly","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Insert_Hinge_Pin()
+   PTP PIN_PICK
+   LIN HINGE_SLOT
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Pick blood test tube and place into analyzer rack","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Load_Blood_Tube()
+   PTP TUBE_PICK
+   LIN ANALYZER_RACK
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Move camera lens into calibration stand and hold","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 3","DEF Calibrate_Lens()
+   PTP LENS_PICK
+   LIN CALIBRATION_STAND
+   $OUT[3] = TRUE
+   WAIT SEC 3
+END"
+"Install propeller onto drone motor shaft","PTP + LIN","$OUT[5]=TRUE","DEF Install_Drone_Propeller()
+   PTP PROPELLER_PICK
+   LIN MOTOR_SHAFT
+   $OUT[5] = TRUE
+END"
+"Pick test weight and place on industrial scale","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Load_Test_Weight()
+   PTP WEIGHT_PICK
+   LIN SCALE_POS
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+"Mount lens cover onto surveillance camera module","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2, $OUT[5]=FALSE","DEF Mount_Lens_Cover()
+   PTP COVER_PICK
+   LIN CAMERA_MODULE
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   $OUT[5] = FALSE
+END"
+"Load fabric roll into textile cutter machine","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 3","DEF Load_Textile_Cutter()
+   PTP FABRIC_PICK
+   LIN CUTTER_SLOT
+   $OUT[3] = TRUE
+   WAIT SEC 3
+END"
+"Insert reagent cartridge into diagnostic machine","PTP + LIN","$OUT[6]=TRUE","DEF Insert_Reagent()
+   PTP REAGENT_PICK
+   LIN MACHINE_SLOT
+   $OUT[6] = TRUE
+END"
+"Pick plastic mold and stack on output tray","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Stack_Plastic_Mold()
+   PTP MOLD_PICK
+   LIN TRAY_POS
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+"Transfer ice pack into cold storage chamber","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2","DEF Store_Ice_Pack()
+   PTP PACK_PICK
+   LIN COLD_STORAGE
+   $OUT[4] = TRUE
+   WAIT SEC 2
+END"
+"Place ink cartridge into industrial printer slot","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2, $OUT[2]=FALSE","DEF Insert_Ink_Cartridge()
+   PTP CARTRIDGE_PICK
+   LIN PRINTER_SLOT
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   $OUT[2] = FALSE
+END"
+"Align and press-fit bearing into motor casing","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1","DEF Fit_Motor_Bearing()
+   PTP BEARING_PICK
+   LIN CASING_POS
+   $OUT[4] = TRUE
+   WAIT SEC 1
+END"
+"Pick thermal sensor and place on circuit board","PTP + LIN","$OUT[6]=TRUE","DEF Mount_Thermal_Sensor()
+   PTP SENSOR_PICK
+   LIN BOARD_POS
+   $OUT[6] = TRUE
+END"
+"Transfer sterilized syringe into sealed package","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2, $OUT[5]=FALSE","DEF Package_Syringe()
+   PTP SYRINGE_PICK
+   LIN PACKAGE_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   $OUT[5] = FALSE
+END"
+"Place frozen vaccine vial into shipping crate","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 1, $OUT[3]=FALSE","DEF Load_Vaccine_Vial()
+   PTP VIAL_PICK
+   LIN CRATE_POS
+   $OUT[3] = TRUE
+   WAIT SEC 1
+   $OUT[3] = FALSE
+END"
+"Install CPU onto motherboard socket in assembly line","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 1, $OUT[7]=FALSE","DEF Install_CPU()
+   PTP CPU_PICK
+   LIN MOTHERBOARD_SOCKET
+   $OUT[7] = TRUE
+   WAIT SEC 1
+   $OUT[7] = FALSE
+END"
+"Place canned food onto conveyor belt for labeling","PTP + LIN","$OUT[2]=TRUE","DEF Load_Canned_Food()
+   PTP CAN_PICK
+   LIN LABEL_CONVEYOR
+   $OUT[2] = TRUE
+END"
+"Mount wind turbine blade onto central hub","PTP + LIN","$OUT[9]=TRUE, WAIT SEC 3, $OUT[9]=FALSE","DEF Mount_Turbine_Blade()
+   PTP BLADE_PICK
+   LIN HUB_POS
+   $OUT[9] = TRUE
+   WAIT SEC 3
+   $OUT[9] = FALSE
+END"
+"Align X-ray plate into imaging machine slot","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2, $OUT[6]=FALSE","DEF Align_XRay_Plate()
+   PTP PLATE_PICK
+   LIN MACHINE_SLOT
+   $OUT[6] = TRUE
+   WAIT SEC 2
+   $OUT[6] = FALSE
+END"
+"Pick reagent bottle and place on mixing station","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1","DEF Load_Reagent_Mixer()
+   PTP REAGENT_PICK
+   LIN MIXER_SLOT
+   $OUT[4] = TRUE
+   WAIT SEC 1
+END"
+"Pick brake disc and load into inspection station","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Inspect_Brake_Disc()
+   PTP DISC_PICK
+   LIN INSPECTION_POS
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Insert lens into microscope adjustment holder","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1","DEF Insert_Microscope_Lens()
+   PTP LENS_PICK
+   LIN HOLDER_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 1
+END"
+"Place empty tray onto bakery conveyor line","PTP + LIN","$OUT[2]=TRUE","DEF Load_Bakery_Tray()
+   PTP TRAY_PICK
+   LIN CONVEYOR_ENTRY
+   $OUT[2] = TRUE
+END"
+"Position fuel cell module into power unit frame","PTP + LIN","$OUT[8]=TRUE, WAIT SEC 2","DEF Place_Fuel_Cell()
+   PTP CELL_PICK
+   LIN POWER_UNIT
+   $OUT[8] = TRUE
+   WAIT SEC 2
+END"
+"Mount antenna onto satellite testing platform","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 3, $OUT[6]=FALSE","DEF Mount_Satellite_Antenna()
+   PTP ANTENNA_PICK
+   LIN TEST_PLATFORM
+   $OUT[6] = TRUE
+   WAIT SEC 3
+   $OUT[6] = FALSE
+END"
+"Transfer vaccine tray to cold storage rack","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Store_Vaccine_Tray()
+   PTP TRAY_PICK
+   LIN COLD_RACK
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Install touchscreen panel onto control kiosk","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Mount_Touch_Panel()
+   PTP PANEL_PICK
+   LIN KIOSK_FRAME
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Insert medication blister pack into boxing tray","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Insert_Blister_Pack()
+   PTP BLISTER_PICK
+   LIN BOXING_TRAY
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+"Load fabric sample into robotic color scanner","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2","DEF Scan_Fabric_Color()
+   PTP SAMPLE_PICK
+   LIN SCANNER_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 2
+END"
+"Place sealed test tube into thermal cycler slot","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2, $OUT[2]=FALSE","DEF Load_Thermal_Cycler()
+   PTP TUBE_PICK
+   LIN CYCLER_SLOT
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   $OUT[2] = FALSE
+END"
+"Mount speaker onto device casing in electronics line","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1, $OUT[4]=FALSE","DEF Mount_Speaker()
+   PTP SPEAKER_PICK
+   LIN CASING_POS
+   $OUT[4] = TRUE
+   WAIT SEC 1
+   $OUT[4] = FALSE
+END"
+"Transfer bakery dough tray into oven input rack","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2","DEF Load_Oven_Tray()
+   PTP TRAY_PICK
+   LIN OVEN_INPUT
+   $OUT[6] = TRUE
+   WAIT SEC 2
+END"
+"Insert water filter cartridge into purifier chamber","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 1","DEF Insert_Water_Filter()
+   PTP FILTER_PICK
+   LIN CHAMBER_SLOT
+   $OUT[3] = TRUE
+   WAIT SEC 1
+END"
+"Align optical sensor onto drone navigation mount","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2, $OUT[5]=FALSE","DEF Align_Optical_Sensor()
+   PTP SENSOR_PICK
+   LIN NAV_MOUNT
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   $OUT[5] = FALSE
+END"
+"Install air filter into HVAC unit during assembly","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Install_Air_Filter()
+   PTP FILTER_PICK
+   LIN HVAC_SLOT
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Place frozen meat pack into blast freezer compartment","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE","DEF Load_Frozen_Meat()
+   PTP MEAT_PICK
+   LIN FREEZER_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+END"
+"Mount RFID tag onto logistics container panel","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2","DEF Attach_RFID_Tag()
+   PTP TAG_PICK
+   LIN CONTAINER_PANEL
+   $OUT[6] = TRUE
+   WAIT SEC 2
+END"
+"Load syringe into automated injection device","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1","DEF Load_Syringe_Device()
+   PTP SYRINGE_PICK
+   LIN DEVICE_SLOT
+   $OUT[4] = TRUE
+   WAIT SEC 1
+END"
+"Insert hard disk into server bay in data center","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 2, $OUT[7]=FALSE","DEF Insert_Hard_Disk()
+   PTP DISK_PICK
+   LIN SERVER_BAY
+   $OUT[7] = TRUE
+   WAIT SEC 2
+   $OUT[7] = FALSE
+END"
+"Place electronic fuse into circuit protection slot","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Insert_Electronic_Fuse()
+   PTP FUSE_PICK
+   LIN CIRCUIT_SLOT
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+"Mount inspection mirror onto robotic probe arm","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2","DEF Mount_Inspection_Mirror()
+   PTP MIRROR_PICK
+   LIN PROBE_ARM
+   $OUT[4] = TRUE
+   WAIT SEC 2
+END"
+"Insert SIM card into mobile testing tray","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1","DEF Insert_SIM_Card()
+   PTP SIM_PICK
+   LIN TEST_TRAY
+   $OUT[5] = TRUE
+   WAIT SEC 1
+END"
+"Transfer blood sample vial into centrifuge holder","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Load_Centrifuge()
+   PTP VIAL_PICK
+   LIN CENTRIFUGE_SLOT
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Install memory chip onto motherboard socket","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Install_Memory_Chip()
+   PTP CHIP_PICK
+   LIN SOCKET_POS
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Attach handle to kitchen appliance casing","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 1, $OUT[3]=FALSE","DEF Attach_Handle()
+   PTP HANDLE_PICK
+   LIN CASING_POS
+   $OUT[3] = TRUE
+   WAIT SEC 1
+   $OUT[3] = FALSE
+END"
+"Load chemical beaker onto mixing platform","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2","DEF Load_Chemical_Beaker()
+   PTP BEAKER_PICK
+   LIN MIXER_PLATFORM
+   $OUT[6] = TRUE
+   WAIT SEC 2
+END"
+"Insert LED panel into display frame","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1, $OUT[4]=FALSE","DEF Insert_LED_Panel()
+   PTP LED_PICK
+   LIN DISPLAY_FRAME
+   $OUT[4] = TRUE
+   WAIT SEC 1
+   $OUT[4] = FALSE
+END"
+"Place oxygen cylinder into ambulance mount slot","PTP + LIN","$OUT[7]=TRUE","DEF Load_Oxygen_Cylinder()
+   PTP CYLINDER_PICK
+   LIN MOUNT_SLOT
+   $OUT[7] = TRUE
+END"
+"Secure drone battery into power housing compartment","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2","DEF Insert_Drone_Battery()
+   PTP BATTERY_PICK
+   LIN POWER_HOUSING
+   $OUT[2] = TRUE
+   WAIT SEC 2
+END"
+"Insert biometric sensor module into smartphone shell","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 1, $OUT[3]=FALSE","DEF Insert_Biometric_Sensor()
+   PTP SENSOR_PICK
+   LIN SHELL_SLOT
+   $OUT[3] = TRUE
+   WAIT SEC 1
+   $OUT[3] = FALSE
+END"
+"Place sterile dental tool into UV disinfection tray","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Load_Dental_Tool()
+   PTP TOOL_PICK
+   LIN UV_TRAY
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Mount brake caliper onto automotive axle frame","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 3, $OUT[7]=FALSE","DEF Mount_Brake_Caliper()
+   PTP CALIPER_PICK
+   LIN AXLE_FRAME
+   $OUT[7] = TRUE
+   WAIT SEC 3
+   $OUT[7] = FALSE
+END"
+"Transfer glass vial into pharmaceutical filling station","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1","DEF Load_Filling_Station()
+   PTP VIAL_PICK
+   LIN FILLING_SLOT
+   $OUT[2] = TRUE
+   WAIT SEC 1
+END"
+"Insert circuit relay into industrial control board","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Install_Circuit_Relay()
+   PTP RELAY_PICK
+   LIN CONTROL_BOARD
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Install thermal pad onto processor unit in GPU assembly","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Install_Thermal_Pad()
+   PTP PAD_PICK
+   LIN PROCESSOR_UNIT
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Place coffee pod into vending machine dispenser slot","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1","DEF Load_Coffee_Pod()
+   PTP POD_PICK
+   LIN DISPENSER_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 1
+END"
+"Insert fuse unit into electric vehicle power module","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2","DEF Insert_Fuse_EV()
+   PTP FUSE_PICK
+   LIN POWER_MODULE
+   $OUT[6] = TRUE
+   WAIT SEC 2
+END"
+"Mount infrared sensor onto conveyor detection rail","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1, $OUT[4]=FALSE","DEF Mount_IR_Sensor()
+   PTP SENSOR_PICK
+   LIN DETECTION_RAIL
+   $OUT[4] = TRUE
+   WAIT SEC 1
+   $OUT[4] = FALSE
+END"
+"Load medication strip into hospital dispensing drawer","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 2, $OUT[7]=FALSE","DEF Load_Medication_Strip()
+   PTP STRIP_PICK
+   LIN DISPENSING_DRAWER
+   $OUT[7] = TRUE
+   WAIT SEC 2
+   $OUT[7] = FALSE
+END"
+"Install battery pack into electric scooter frame","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2, $OUT[5]=FALSE","DEF Install_Scooter_Battery()
+   PTP BATTERY_PICK
+   LIN SCOOTER_FRAME
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   $OUT[5] = FALSE
+END"
+"Place sealed lunch tray into school delivery crate","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1","DEF Load_Lunch_Tray()
+   PTP TRAY_PICK
+   LIN DELIVERY_CRATE
+   $OUT[4] = TRUE
+   WAIT SEC 1
+END"
+"Mount camera module onto agricultural drone body","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2, $OUT[6]=FALSE","DEF Mount_Drone_Camera()
+   PTP CAMERA_PICK
+   LIN DRONE_BODY
+   $OUT[6] = TRUE
+   WAIT SEC 2
+   $OUT[6] = FALSE
+END"
+"Insert ink cartridge into 3D printing head","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 1, $OUT[3]=FALSE","DEF Insert_Ink_Cartridge()
+   PTP CARTRIDGE_PICK
+   LIN PRINTER_HEAD
+   $OUT[3] = TRUE
+   WAIT SEC 1
+   $OUT[3] = FALSE
+END"
+"Place egg tray into automated washing unit","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 2, $OUT[2]=FALSE","DEF Load_Egg_Washer()
+   PTP EGG_TRAY_PICK
+   LIN WASH_UNIT
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   $OUT[2] = FALSE
+END"
+"Install windscreen wiper motor in car assembly line","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Install_Wiper_Motor()
+   PTP MOTOR_PICK
+   LIN WINDSHIELD_SLOT
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Place semiconductor wafer into etching chamber","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 3","DEF Load_Etching_Chamber()
+   PTP WAFER_PICK
+   LIN CHAMBER_PORT
+   $OUT[6] = TRUE
+   WAIT SEC 3
+END"
+"Attach propeller blade to drone rotor hub","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE","DEF Attach_Propeller()
+   PTP BLADE_PICK
+   LIN ROTOR_HUB
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+END"
+"Insert pharmaceutical blister pack into inspection tray","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 2","DEF Load_Blister_Tray()
+   PTP PACK_PICK
+   LIN INSPECTION_SLOT
+   $OUT[7] = TRUE
+   WAIT SEC 2
+END"
+"Mount solar tracker sensor on rotating base","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Mount_Solar_Sensor()
+   PTP SENSOR_PICK
+   LIN ROTATING_BASE
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Place packaging label onto boxed product","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Label_Packaged_Box()
+   PTP LABEL_PICK
+   LIN BOX_POSITION
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+"Install cooling fan into computer cabinet","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Install_Cooling_Fan()
+   PTP FAN_PICK
+   LIN CABINET_SLOT
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Load beverage can onto conveyor line for sealing","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1","DEF Load_Beverage_Can()
+   PTP CAN_PICK
+   LIN CONVEYOR_POS
+   $OUT[6] = TRUE
+   WAIT SEC 1
+END"
+"Insert fiber optic module into network rack","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2, $OUT[5]=FALSE","DEF Insert_Optic_Module()
+   PTP MODULE_PICK
+   LIN RACK_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   $OUT[5] = FALSE
+END"
+"Mount touchscreen panel on kiosk front panel","PTP + LIN","$OUT[7]=TRUE, WAIT SEC 2, $OUT[7]=FALSE","DEF Mount_Touch_Panel()
+   PTP SCREEN_PICK
+   LIN KIOSK_FRONT
+   $OUT[7] = TRUE
+   WAIT SEC 2
+   $OUT[7] = FALSE
+END"
+"Insert ignition coil into engine block during vehicle assembly","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2, $OUT[4]=FALSE","DEF Insert_Ignition_Coil()
+   PTP COIL_PICK
+   LIN ENGINE_SLOT
+   $OUT[4] = TRUE
+   WAIT SEC 2
+   $OUT[4] = FALSE
+END"
+"Place sterile instrument tray into autoclave chamber","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 3, $OUT[3]=FALSE","DEF Load_Autoclave_Tray()
+   PTP TRAY_PICK
+   LIN AUTOCLAVE_POS
+   $OUT[3] = TRUE
+   WAIT SEC 3
+   $OUT[3] = FALSE
+END"
+"Install antenna unit on top of telecommunication mast","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 2","DEF Install_Antenna()
+   PTP ANTENNA_PICK
+   LIN MAST_TOP
+   $OUT[5] = TRUE
+   WAIT SEC 2
+END"
+"Place finished PCB onto quality inspection scanner","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1","DEF Load_PCB_Scanner()
+   PTP PCB_PICK
+   LIN SCANNER_SLOT
+   $OUT[2] = TRUE
+   WAIT SEC 1
+END"
+"Insert book into library robotic sorter tray","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 1, $OUT[6]=FALSE","DEF Load_Book_Tray()
+   PTP BOOK_PICK
+   LIN SORTER_TRAY
+   $OUT[6] = TRUE
+   WAIT SEC 1
+   $OUT[6] = FALSE
+END"
+"Install CPU onto motherboard socket in PC assembly","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Install_CPU()
+   PTP CPU_PICK
+   LIN MOTHERBOARD_SOCKET
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Load bread loaf into industrial slicer slot","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE","DEF Load_Bread_Slicer()
+   PTP BREAD_PICK
+   LIN SLICER_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+END"
+"Mount circuit breaker onto control panel rail","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Mount_Breaker()
+   PTP BREAKER_PICK
+   LIN PANEL_RAIL
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+"Insert lens into camera housing during assembly","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2","DEF Insert_Camera_Lens()
+   PTP LENS_PICK
+   LIN HOUSING_SLOT
+   $OUT[6] = TRUE
+   WAIT SEC 2
+END"
+"Place packaged meal into airplane trolley slot","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 1","DEF Load_Airline_Meal()
+   PTP MEAL_PICK
+   LIN TROLLEY_SLOT
+   $OUT[4] = TRUE
+   WAIT SEC 1
+END"
+"Place smartphone screen into alignment frame for bonding","PTP + LIN","$OUT[3]=TRUE, WAIT SEC 2, $OUT[3]=FALSE","DEF Align_Screen_Bonding()
+   PTP SCREEN_PICK
+   LIN ALIGNMENT_FRAME
+   $OUT[3] = TRUE
+   WAIT SEC 2
+   $OUT[3] = FALSE
+END"
+"Insert syringe into medical packaging tray","PTP + LIN","$OUT[5]=TRUE, WAIT SEC 1","DEF Insert_Syringe()
+   PTP SYRINGE_PICK
+   LIN PACKAGING_TRAY
+   $OUT[5] = TRUE
+   WAIT SEC 1
+END"
+"Attach door hinge to smart home cabinet panel","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 2, $OUT[6]=FALSE","DEF Attach_Door_Hinge()
+   PTP HINGE_PICK
+   LIN CABINET_PANEL
+   $OUT[6] = TRUE
+   WAIT SEC 2
+   $OUT[6] = FALSE
+END"
+"Place protective foam insert into electronics box","PTP + LIN","$OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Insert_Foam_Insert()
+   PTP FOAM_PICK
+   LIN BOX_SLOT
+   $OUT[2] = TRUE
+   WAIT SEC 1
+   $OUT[2] = FALSE
+END"
+"Load paint cartridge into robotic spray system","PTP + LIN","$OUT[4]=TRUE, WAIT SEC 2","DEF Load_Paint_Cartridge()
+   PTP CARTRIDGE_PICK
+   LIN SPRAY_SYSTEM
+   $OUT[4] = TRUE
+   WAIT SEC 2
+END"
+"Perform multi-point welding on car chassis frame","PTP + LIN","$OUT[10]=TRUE, WAIT SEC 2, $OUT[10]=FALSE","DEF MultiPoint_Weld_Chassis()
+   PTP START_POS
+   LIN WELD_POINT1
+   $OUT[10] = TRUE
+   WAIT SEC 2
+   $OUT[10] = FALSE
+   LIN WELD_POINT2
+   $OUT[10] = TRUE
+   WAIT SEC 2
+   $OUT[10] = FALSE
+   LIN WELD_POINT3
+   $OUT[10] = TRUE
+   WAIT SEC 2
+   $OUT[10] = FALSE
+END"
+"Sort defective bottles from production line using vision input","PTP + IF","IF $IN[8]==TRUE, $OUT[2]=TRUE, WAIT SEC 1, $OUT[2]=FALSE","DEF Sort_Defective_Bottles()
+   PTP INSPECTION_POS
+   IF $IN[8] == TRUE THEN
+      PTP REJECT_BIN
+      $OUT[2] = TRUE
+      WAIT SEC 1
+      $OUT[2] = FALSE
+   ENDIF
+END"
+"Place gearbox into engine compartment with torque lock activation","PTP + LIN","$OUT[6]=TRUE, WAIT SEC 3, $OUT[6]=FALSE","DEF Place_Gearbox_Engine()
+   PTP GEARBOX_PICK
+   LIN ENGINE_SLOT
+   $OUT[6] = TRUE
+   WAIT SEC 3
+   $OUT[6] = FALSE
+END"
+"Conduct circuit test on PCB and classify based on result","PTP + IF + LIN","IF $IN[9]==TRUE, LIN PASS_BIN, ELSE LIN FAIL_BIN","DEF Test_And_Classify_PCB()
+   PTP TEST_POS
+   WAIT SEC 1
+   IF $IN[9] == TRUE THEN
+      LIN PASS_BIN
+   ELSE
+      LIN FAIL_BIN
+   ENDIF
+END"
+"Assist in assembling robotic arm by fixing joints and calibrating tool","PTP + LIN + WAIT","$OUT[4]=TRUE, WAIT SEC 3, $OUT[4]=FALSE","DEF Assemble_And_Calibrate_Arm()
+   PTP BASE_JOINT
+   $OUT[4] = TRUE
+   WAIT SEC 3
+   $OUT[4] = FALSE
+   LIN ELBOW_JOINT
+   $OUT[4] = TRUE
+   WAIT SEC 3
+   $OUT[4] = FALSE
+   LIN TOOL_CALIBRATION_POS
+   WAIT SEC 2
+END"
+"Automate battery pack installation, secure it with bolts, and verify sensor lock","PTP + LIN + IF","$OUT[6]=TRUE, WAIT SEC 2, IF $IN[2]==TRUE, $OUT[7]=TRUE","DEF Install_Battery_Pack()
+   PTP BATTERY_PICK
+   LIN INSTALL_SLOT
+   $OUT[6] = TRUE
+   WAIT SEC 2
+   IF $IN[2] == TRUE THEN
+      PTP BOLT_POS
+      $OUT[7] = TRUE
+   ENDIF
+END"
+"Pick up automotive windshield, align using vision feedback, place and seal","PTP + LIN + WAIT + IO","$OUT[5]=TRUE, WAIT SEC 1, $OUT[5]=FALSE, $OUT[6]=TRUE","DEF Install_Windshield_Aligned()
+   PTP GLASS_PICK
+   LIN ALIGNMENT_POS
+   WAIT SEC 1
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+   LIN SEALING_POS
+   $OUT[6] = TRUE
+   WAIT SEC 2
+END"
+"Execute quality inspection loop for 3 parts and log defects based on sensor","PTP + LIN + IF + LOOP","LOOP 3x, IF $IN[3]==FALSE THEN $OUT[8]=TRUE","DEF Inspect_Parts_Loop()
+   FOR INDEX = 1 TO 3
+      PTP SCAN_START
+      LIN PART_POS[INDEX]
+      WAIT SEC 1
+      IF $IN[3] == FALSE THEN
+         $OUT[8] = TRUE
+         PTP REJECT_BIN
+      ENDIF
+   ENDFOR
+END"
+"Automated tool exchange followed by bolt-tightening sequence and torque verification","PTP + WAIT + IO + IF","$OUT[9]=TRUE, WAIT SEC 2, IF $IN[5]==TRUE","DEF Tool_Change_And_Tighten()
+   PTP TOOL_RACK
+   $OUT[9] = TRUE
+   WAIT SEC 2
+   PTP BOLT_POS
+   $OUT[10] = TRUE
+   WAIT SEC 3
+   IF $IN[5] == TRUE THEN
+      $OUT[11] = TRUE
+   ENDIF
+END"
+"Place electronics board, scan barcode, and route to test or reject based on scan input","PTP + LIN + IF","WAIT SEC 1, IF $IN[7]==TRUE THEN LIN TEST_BIN ELSE LIN REJECT_BIN","DEF Route_Board_After_Scan()
+   PTP BOARD_PICK
+   LIN SCANNER_POS
+   WAIT SEC 1
+   IF $IN[7] == TRUE THEN
+      LIN TEST_BIN
+   ELSE
+      LIN REJECT_BIN
+   ENDIF
+END"
+"Pharmaceutical vial inspection and sorting with retry mechanism","PTP + LIN + IF + LOOP","IF $IN[5]==TRUE THEN PASS ELSE RETRY max 2 times, ELSE REJECT","DEF Inspect_And_Sort_Vials()
+   FOR VIAL = 1 TO 10
+      PTP VIAL_PICK[VIAL]
+      LIN INSPECTION_POS
+      TRY_COUNT = 0
+      CHECK:
+      IF $IN[5] == TRUE THEN
+         LIN PASS_BIN
+      ELSE
+         TRY_COUNT = TRY_COUNT + 1
+         IF TRY_COUNT < 3 THEN
+            GOTO CHECK
+         ELSE
+            LIN REJECT_BIN
+         ENDIF
+      ENDIF
+   ENDFOR
+END"
+"Aerospace panel bolt check and auto-tighten with logging of failure location","PTP + LIN + IF + LOG","IF $IN[3]==FALSE THEN TIGHTEN, ELSE LOG","DEF Check_Tighten_And_Log()
+   FOR BOLT = 1 TO 6
+      PTP PANEL_POS[BOLT]
+      IF $IN[3] == FALSE THEN
+         $OUT[6] = TRUE
+         WAIT SEC 2
+         $OUT[6] = FALSE
+      ELSE
+         PTP LOG_STATION
+         $OUT[9] = TRUE
+         WAIT SEC 1
+         $OUT[9] = FALSE
+      ENDIF
+   ENDFOR
+END"
+"Battery module connection with temperature monitoring and safety override","PTP + LIN + IF + MONITOR","IF TEMP > LIMIT THEN ABORT AND COOL","DEF Connect_Battery_Safe()
+   PTP BATTERY_MODULE
+   LIN CONNECTOR_PORT
+   $OUT[5] = TRUE
+   WAIT SEC 3
+   IF $IN[7] == TRUE THEN
+      PTP COOLING_POS
+      $OUT[8] = TRUE
+      WAIT SEC 5
+      $OUT[8] = FALSE
+      RETURN
+   ENDIF
+   $OUT[5] = FALSE
+END"
+"Advanced tool calibration routine with error correction if out of alignment","PTP + LIN + IF + CORRECTION","IF $IN[10]==FALSE THEN CALIBRATE AGAIN","DEF Tool_Calibration_Cycle()
+   PTP TOOL_START
+   LIN CALIBRATION_POS
+   WAIT SEC 2
+   IF $IN[10] == TRUE THEN
+      $OUT[4] = TRUE
+   ELSE
+      LIN CORRECT_POS
+      $OUT[4] = TRUE
+      WAIT SEC 2
+      $OUT[4] = FALSE
+      GOTO CALIBRATION_POS
+   ENDIF
+END"
+"Warehouse bin-picking with AI camera, handling unknown objects and retry if missed","PTP + LIN + IF + LOOP","IF $IN[6]==FALSE THEN RETRY up to 2, ELSE SKIP","DEF Smart_Bin_Picking()
+   FOR ITEM = 1 TO 8
+      PTP CAMERA_SCAN
+      WAIT SEC 1
+      PTP OBJECT_POS[ITEM]
+      LIN PICK_ZONE
+      IF $IN[6] == FALSE THEN
+         RETRIES = 0
+         REPEAT:
+         RETRIES = RETRIES + 1
+         PTP RE_ATTEMPT
+         IF $IN[6] == TRUE OR RETRIES >= 2 THEN
+            EXIT
+         ELSE
+            GOTO REPEAT
+         ENDIF
+      ENDIF
+      LIN PLACE_BIN
+   ENDFOR
+END"
+"Automated EV battery swapping including sensor check, unlock, replace, lock, and confirm","PTP + LIN + IF + IO + WAIT","$OUT[5]=TRUE, IF $IN[8]==TRUE, WAIT SEC 2, $OUT[6]=TRUE","DEF Swap_EV_Battery()
+   PTP CHARGED_PACK_READY
+   IF $IN[8] == TRUE THEN
+      $OUT[5] = TRUE
+      WAIT SEC 2
+      LIN UNDOCK_POSITION
+      PTP REMOVE_PACK
+      LIN PLACE_PACK_BIN
+      PTP NEW_PACK_PICK
+      LIN INSTALL_SLOT
+      $OUT[6] = TRUE
+      WAIT SEC 2
+      PTP CONFIRM_POS
+   ELSE
+      PTP ERROR_HANDLER
+   ENDIF
+END"
+"Satellite panel folding test with torque validation and feedback logging for mission readiness","PTP + LIN + IF + WAIT + LOG","$OUT[3]=TRUE, IF $IN[10]==FALSE, LOG","DEF Fold_Satellite_Panels()
+   PTP PANEL_EXTEND
+   LIN FOLD_POS_A
+   $OUT[3] = TRUE
+   WAIT SEC 3
+   LIN FOLD_POS_B
+   IF $IN[10] == FALSE THEN
+      PTP LOG_STATION
+      $OUT[9] = TRUE
+      WAIT SEC 1
+      $OUT[9] = FALSE
+   ENDIF
+   LIN LOCK_POS
+END"
+"Biotech pipette arm calibration using camera feedback and pressure check with retry","PTP + LIN + IF + LOOP","IF $IN[2]==FALSE THEN retry MAX 2, ELSE mark error","DEF Pipette_Calibration()
+   FOR ATTEMPT = 1 TO 2
+      PTP TOOL_HOME
+      LIN CALIBRATE_SPOT
+      WAIT SEC 1
+      IF $IN[2] == TRUE THEN
+         $OUT[4] = TRUE
+         EXIT
+      ENDIF
+   ENDFOR
+   IF $IN[2] == FALSE THEN
+      PTP ERROR_MARK
+      $OUT[7] = TRUE
+   ENDIF
+END"
+"Smart logistics box sorting by barcode, weight sensor, and AI bin routing","PTP + LIN + IF + SENSOR","IF $IN[3]==TRUE THEN PASS_BIN ELSE REJECT_BIN","DEF Smart_Logistics_Sort()
+   PTP BOX_PICK
+   LIN SCANNER_POS
+   WAIT SEC 1
+   IF $IN[3] == TRUE THEN
+      IF $IN[4] == TRUE THEN
+         LIN BIN_A
+      ELSE
+         LIN BIN_B
+      ENDIF
+   ELSE
+      LIN REJECT_BIN
+   ENDIF
+END"
+"Wind turbine blade inspection with 3-axis scan and vibration check per segment","PTP + LIN + LOOP + IF","LOOP SEGMENTS, $OUT[6]=TRUE, IF $IN[5]==FALSE THEN MARK","DEF Inspect_Turbine_Blade()
+   FOR SEG = 1 TO 5
+      PTP SEG_POS[SEG]
+      LIN SCAN_PATH[SEG]
+      $OUT[6] = TRUE
+      WAIT SEC 2
+      IF $IN[5] == FALSE THEN
+         PTP MARK_SEGMENT
+         $OUT[8] = TRUE
+      ENDIF
+   ENDFOR
+   LIN END_POS
+END"
+"Install car windshield with adhesive application and UV curing after placement","PTP + LIN + IO + WAIT","$OUT[2]=TRUE, WAIT SEC 2, $OUT[3]=TRUE, WAIT SEC 5","DEF Install_Windshield_With_Cure()
+   PTP PICK_WINDSHIELD
+   LIN APPLY_GLUE
+   $OUT[2] = TRUE
+   WAIT SEC 2
+   LIN PLACE_FRAME
+   $OUT[2] = FALSE
+   $OUT[3] = TRUE
+   WAIT SEC 5
+   $OUT[3] = FALSE
+END"
+"Conduct high-precision bolt torqueing on airplane fuselage and verify via sensor","PTP + LIN + IF + IO","$OUT[6]=TRUE, IF $IN[8]==FALSE THEN ALERT","DEF Torque_Bolts_On_Fuselage()
+   FOR BOLT = 1 TO 6
+      PTP BOLT_POS[BOLT]
+      LIN TORQUE_POINT[BOLT]
+      $OUT[6] = TRUE
+      WAIT SEC 1
+      $OUT[6] = FALSE
+      IF $IN[8] == FALSE THEN
+         PTP ALERT_POS
+         $OUT[9] = TRUE
+      ENDIF
+   ENDFOR
+END"
+"Dispense precise chemical drops onto biochips and verify drop detection","PTP + LIN + SENSOR + WAIT","$OUT[4]=TRUE, WAIT SEC 1, IF $IN[6]==FALSE THEN LOG","DEF Dispense_Chemical_On_Chip()
+   FOR CHIP = 1 TO 4
+      PTP CHEM_PICK
+      LIN CHIP_POS[CHIP]
+      $OUT[4] = TRUE
+      WAIT SEC 1
+      $OUT[4] = FALSE
+      IF $IN[6] == FALSE THEN
+         PTP LOG_POS
+         $OUT[7] = TRUE
+         WAIT SEC 1
+         $OUT[7] = FALSE
+      ENDIF
+   ENDFOR
+END"
+"Automate warehouse palletizing based on QR scan and item weight","PTP + LIN + IF","IF $IN[2]==TRUE AND $IN[3]==TRUE THEN PALLET_A ELSE PALLET_B","DEF Smart_Palletizing()
+   PTP SCAN_POS
+   WAIT SEC 1
+   IF $IN[2] == TRUE AND $IN[3] == TRUE THEN
+      PTP ITEM_PICK
+      LIN PALLET_A
+   ELSE
+      PTP ITEM_PICK
+      LIN PALLET_B
+   ENDIF
+END"
+"Automate die press operation, monitor pressure, and halt on overload","PTP + WAIT + SENSOR","IF $IN[9]==TRUE THEN ABORT, ELSE CONTINUE","DEF Die_Press_Monitoring()
+   PTP DIE_START
+   $OUT[5] = TRUE
+   WAIT SEC 2
+   IF $IN[9] == TRUE THEN
+      $OUT[5] = FALSE
+      PTP ABORT_POS
+   ELSE
+      $OUT[6] = TRUE
+      WAIT SEC 3
+      $OUT[6] = FALSE
+   ENDIF
+END"
+"Perform spot welding on car frame sections with pre-check and cooling","PTP + LIN + IF + IO + WAIT","$OUT[10]=TRUE, WAIT SEC 2, $OUT[10]=FALSE, IF $IN[7]==FALSE THEN SKIP","DEF Weld_Car_Frame()
+   FOR SPOT = 1 TO 5
+      PTP FRAME_POS[SPOT]
+      IF $IN[7] == TRUE THEN
+         $OUT[10] = TRUE
+         WAIT SEC 2
+         $OUT[10] = FALSE
+      ELSE
+         CONTINUE
+      ENDIF
+   ENDFOR
+   PTP COOLING_STATION
+   $OUT[3] = TRUE
+   WAIT SEC 5
+   $OUT[3] = FALSE
+END"
+"Assemble PCB into housing and verify proper placement using force sensor","PTP + LIN + IF + WAIT","$OUT[5]=TRUE, WAIT SEC 1, IF $IN[4]==FALSE THEN REPLACE","DEF Assemble_PCB_Tray()
+   PTP PICK_PCB
+   LIN INSERT_SLOT
+   $OUT[5] = TRUE
+   WAIT SEC 1
+   $OUT[5] = FALSE
+   IF $IN[4] == FALSE THEN
+      LIN REMOVE_SLOT
+      PTP RETRY_POS
+   ENDIF
+   PTP NEXT_TRAY
+END"
+"Pick boxes from shelf using barcode check and retry logic if not found","PTP + LIN + IF + LOOP + IO","IF $IN[2]==TRUE THEN PICK, ELSE RETRY UP TO 2","DEF Smart_Box_Picker()
+   FOR ITEM = 1 TO 3
+      PTP SCAN_POS[ITEM]
+      WAIT SEC 1
+      TRY = 0
+      RETRY:
+      IF $IN[2] == TRUE THEN
+         LIN PICK_POS[ITEM]
+         $OUT[1] = TRUE
+         WAIT SEC 1
+         $OUT[1] = FALSE
+         LIN DROP_POS
+      ELSE
+         TRY = TRY + 1
+         IF TRY < 3 THEN
+            GOTO RETRY
+         ELSE
+            PTP ERROR_MARK
+         ENDIF
+      ENDIF
+   ENDFOR
+END"
+"Perform layer-by-layer 3D printing and pause on nozzle error","LIN + IF + LOOP + WAIT + SENSOR","$OUT[2]=TRUE, IF $IN[5]==FALSE THEN PAUSE","DEF Print_Layered_Structure()
+   $OUT[2] = TRUE
+   FOR LAYER = 1 TO 5
+      LIN LAYER_PATH[LAYER]
+      WAIT SEC 3
+      IF $IN[5] == FALSE THEN
+         $OUT[2] = FALSE
+         PTP PAUSE_POS
+         EXIT
+      ENDIF
+   ENDFOR
+   $OUT[2] = FALSE
+   PTP COMPLETE_POS
+END"
+"Fill liquid into bottles, verify fill level, and apply label","PTP + LIN + IO + SENSOR + IF + WAIT","$OUT[8]=TRUE, IF $IN[3]==TRUE, $OUT[9]=TRUE","DEF Fill_And_Label_Bottles()
+   FOR BOTTLE = 1 TO 6
+      PTP BOTTLE_POS[BOTTLE]
+      LIN FILL_NOZZLE_POS
+      $OUT[8] = TRUE
+      WAIT SEC 2
+      $OUT[8] = FALSE
+      IF $IN[3] == TRUE THEN
+         LIN LABEL_POS
+         $OUT[9] = TRUE
+         WAIT SEC 1
+         $OUT[9] = FALSE
+      ELSE
+         PTP REJECT_BIN
+      ENDIF
+   ENDFOR
+END"
+
